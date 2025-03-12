@@ -1,0 +1,47 @@
+<!-- Created by Kammar1006 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Title </title>
+</head>
+<body>
+    
+    <h1> Hello World </h1>
+
+    <hr>
+    <input id="clicker" value="click" type="submit"/>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        (() => {
+            const sock = io();
+
+
+
+            sock.on("set-cookie", (cookie) => {
+                document.cookie = cookie;  // Set Cookie in client-site
+                console.log("Cookie", cookie);
+            });
+
+            sock.on("message", (t) => {
+                console.log("message: ", t);
+            });
+
+
+
+            document
+                .querySelector("#clicker")
+                .addEventListener("click", (e) => {
+                    sock.emit("counter");
+                });
+        })();
+    
+    </script>
+</body>
+</html>
+
+
+
+
