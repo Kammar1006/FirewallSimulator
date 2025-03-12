@@ -18,7 +18,7 @@ const io = socketio(server, {
 });
 
 const { randomBytes } = require('crypto');
-const { parse } = require('path');
+const { firewall } = require('./firewall');
 
 let translationTab = [];
 const setCID = (sock) => {
@@ -47,7 +47,7 @@ const setTranslationTab = (cid) => {
 			user_id: -1,
 			sid: 0,
 			test_counter: 0,
-			firewall: "",
+			firewall: new firewall(),
 			progress: 0,
 			in_progress: 0,
 		};
@@ -69,6 +69,11 @@ io.on('connection', (sock) => {
 	console.log("User: "+cid);
 	if(translationTab[cid].sid) sock.emit("set_sid", true, translationTab[cid].sid);
 
+
+
+
+
+
 	sock.on("set_sid", (sid) => {
 		console.log(sid)
 		if(sid > 270000 && sid < 280000){
@@ -83,6 +88,8 @@ io.on('connection', (sock) => {
 			sock.emit("question", load_question(translationTab[cid].progress+1));
 	});
 
+	sock.on("edit", () => {})
+
 	sock.on("counter", () => {
 		translationTab[cid].test_counter++;
 		sock.emit("message", "Count: "+translationTab[cid].test_counter);
@@ -92,5 +99,4 @@ io.on('connection', (sock) => {
 
 server.listen(PORT, () => {
 	console.log("Work");
-	
 });

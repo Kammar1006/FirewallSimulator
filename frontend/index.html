@@ -8,13 +8,19 @@
 </head>
 <body>
     
-    <h1> Hello World </h1>
-    <hr>
+    <h1 id="title"> Hello World </h1>
 
-    <form id="form_set_sid">
-        <input id="sid" placeholder="Place your sid" />
-        <input type="submit" value="set sid"/>
-    </form>
+    <div id="progress_0">
+        <hr>
+        <form id="form_set_sid">
+            <input id="sid" placeholder="Place your sid" />
+            <input type="submit" value="set sid"/>
+        </form>
+    </div>
+
+    <div id="progress_1" style="display: none;">
+        ....
+    </div>
 
     <hr>
     <input id="clicker" value="click" type="submit"/>
@@ -37,8 +43,12 @@
 
             sock.on("set_sid", (f, sid) => {
                 console.log(f, sid);
-                if(f == true)
-                    document.querySelector("#form_set_sid").style.display = "none";
+                if(f == true){
+                    document.querySelector("#progress_0").style.display = "none";
+                    document.querySelector("#progress_1").style.display = "block";
+
+                    document.querySelector("#title").innerHTML += ", "+sid;
+                }
             })
 
             document

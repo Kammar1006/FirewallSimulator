@@ -1,2 +1,2 @@
-# NodeBaseConnections
-Frontend, backend and db connection via node, express and socketio
+# Firewall
+Application for visualisations and configurations firewalls and ACL's.
