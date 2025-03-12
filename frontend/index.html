@@ -9,6 +9,12 @@
 <body>
     
     <h1> Hello World </h1>
+    <hr>
+
+    <form id="form_set_sid">
+        <input id="sid" placeholder="Place your sid" />
+        <input type="submit" value="set sid"/>
+    </form>
 
     <hr>
     <input id="clicker" value="click" type="submit"/>
@@ -29,13 +35,24 @@
                 console.log("message: ", t);
             });
 
-
+            sock.on("set_sid", (f, sid) => {
+                console.log(f, sid);
+                if(f == true)
+                    document.querySelector("#form_set_sid").style.display = "none";
+            })
 
             document
                 .querySelector("#clicker")
                 .addEventListener("click", (e) => {
                     sock.emit("counter");
                 });
+
+            document
+                .querySelector("#form_set_sid")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    sock.emit("set_sid", document.querySelector("#sid").value)
+                })
         })();
     
     </script>
