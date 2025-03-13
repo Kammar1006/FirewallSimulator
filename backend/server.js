@@ -134,3 +134,10 @@ console.log(f.exportToIptables())
 console.log("--------------------------")
 console.log("To ACL: ")
 console.log(f.exportToCiscoACL())
+
+console.log("--------------------------")
+console.log("Test: ")
+
+console.log(f.test([{packet: packet1, result: "permit"}, {packet: packet2, result: "deny"}]));
+
+console.log("--------------------------")

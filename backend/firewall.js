@@ -46,8 +46,20 @@ function firewall(){
         return true;
     }
 
-    this.test = (packet) => {
+    this.test = (test) => {
+        let status = true;
+        test.forEach(e => {
+            packet = e.packet;
+            result = e.result;
 
+            console.log(this.simulate(packet)[0], result)
+
+            if(this.simulate(packet)[0] != result){
+                status = false;
+            }
+        });
+
+        return status;
     }
 
     this.exportToIptables = () => {
