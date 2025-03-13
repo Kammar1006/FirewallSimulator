@@ -30,7 +30,7 @@ function firewall(){
                 changeable = false;
                 score.push("end");
             }
-            else{
+            else if(changeable){
                 score.push("go_next");
             }
         });
@@ -40,7 +40,10 @@ function firewall(){
 
     this.validate = (record) => {
         /* Function for validate record */
-        return true
+        const validActions = ["permit", "deny", "accept", "drop"];
+        if (!validActions.includes(record.action)) return false;
+        if (!record.src || !record.des || !record.protocol) return false;
+        return true;
     }
 
     this.test = (packet) => {

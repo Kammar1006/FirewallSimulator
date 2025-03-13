@@ -8,7 +8,7 @@
 </head>
 <body>
     
-    <h1 id="title"> Hello World </h1>
+    <h1 id="title"> Firewall Simulator </h1>
 
     <div id="progress_0">
         <hr>
@@ -19,53 +19,14 @@
     </div>
 
     <div id="progress_1" style="display: none;">
-        ....
+        <canvas style="width: 300px; height: 300px;">  </canvas>
     </div>
 
     <hr>
     <input id="clicker" value="click" type="submit"/>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        (() => {
-            const sock = io();
-
-
-
-            sock.on("set-cookie", (cookie) => {
-                document.cookie = cookie;  // Set Cookie in client-site
-                console.log("Cookie", cookie);
-            });
-
-            sock.on("message", (t) => {
-                console.log("message: ", t);
-            });
-
-            sock.on("set_sid", (f, sid) => {
-                console.log(f, sid);
-                if(f == true){
-                    document.querySelector("#progress_0").style.display = "none";
-                    document.querySelector("#progress_1").style.display = "block";
-
-                    document.querySelector("#title").innerHTML += ", "+sid;
-                }
-            })
-
-            document
-                .querySelector("#clicker")
-                .addEventListener("click", (e) => {
-                    sock.emit("counter");
-                });
-
-            document
-                .querySelector("#form_set_sid")
-                .addEventListener("submit", (e) => {
-                    e.preventDefault();
-                    sock.emit("set_sid", document.querySelector("#sid").value)
-                })
-        })();
-    
-    </script>
+    <script src="/main.js"></script>
 </body>
 </html>
 

@@ -100,3 +100,29 @@ io.on('connection', (sock) => {
 server.listen(PORT, () => {
 	console.log("Work");
 });
+/*
+f = new firewall()
+
+f.add({ action: "permit", src: "192.168.1.1", des: "10.0.0.0/24", protocol: "tcp:80", additional: {} });
+f.add({ action: "deny", src: "192.168.1.2", des: "any", protocol: "udp:53", additional: {} });
+f.add({ action: "deny", src: "any", des: "any", protocol: "any", additional: {} });
+
+console.log("firewall rules")
+console.log(f.list)
+
+console.log("-------------------")
+
+// Pakiety do testów
+const packet1 = { src: "192.168.1.1", des: "10.0.0.5", protocol: "tcp:80" };
+const packet2 = { src: "192.168.1.2", des: "8.8.8.8", protocol: "udp:53" };
+console.log("packet1")
+console.log(packet1)
+console.log("packet2")
+console.log(packet2)
+
+console.log("--------------------------")
+console.log("Simulate: ")
+
+console.log("Test pakiet 1:", f.simulate(packet1)); // Powinno zwrócić "permit"
+console.log("Test pakiet 2:", f.simulate(packet2)); // Powinno zwrócić "deny"
+*/
