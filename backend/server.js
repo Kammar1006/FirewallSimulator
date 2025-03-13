@@ -100,7 +100,7 @@ io.on('connection', (sock) => {
 server.listen(PORT, () => {
 	console.log("Work");
 });
-/*
+
 f = new firewall()
 
 f.add({ action: "permit", src: "192.168.1.1", des: "10.0.0.0/24", protocol: "tcp:80", additional: {} });
@@ -125,4 +125,12 @@ console.log("Simulate: ")
 
 console.log("Test pakiet 1:", f.simulate(packet1)); // Powinno zwrócić "permit"
 console.log("Test pakiet 2:", f.simulate(packet2)); // Powinno zwrócić "deny"
-*/
+
+console.log("--------------------------")
+console.log("To Iptables: ")
+console.log(f.exportToIptables())
+
+
+console.log("--------------------------")
+console.log("To ACL: ")
+console.log(f.exportToCiscoACL())

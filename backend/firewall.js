@@ -49,6 +49,51 @@ function firewall(){
     this.test = (packet) => {
 
     }
+
+    this.exportToIptables = () => {
+        return this.list.map(record => {
+            let action = record.action === "permit" ? "ACCEPT" : "DROP";
+            let src = record.src === "any" ? "0.0.0.0/0" : record.src;
+            let des = record.des === "any" ? "0.0.0.0/0" : record.des;
+            
+            let protocol, port;
+            if (record.protocol.includes(":")) {
+                [protocol, port] = record.protocol.split(":");
+            } else {
+                protocol = record.protocol;
+                port = "";
+            }
+
+            let rule = `iptables -A INPUT -p ${protocol}`;
+            if (src) rule += ` -s ${src}`;
+            if (des) rule += ` -d ${des}`;
+            if (port) rule += ` --dport ${port}`;
+            rule += ` -j ${action}`;
+
+            return rule;
+        }).join("\n");
+    }
+
+    this.exportToCiscoACL = () => {
+        return this.list.map(record => {
+            let action = record.action === "permit" ? "permit" : "deny";
+            let protocol, port;
+            if (record.protocol.includes(":")) {
+                [protocol, port] = record.protocol.split(":");
+            } else {
+                protocol = record.protocol;
+                port = "";
+            }
+
+            let src = record.src === "any" ? "any" : `host ${record.src}`;
+            let des = record.des === "any" ? "any" : `host ${record.des}`;
+
+            let rule = `access-list 100 ${action} ${protocol} ${src} ${des}`;
+            if (port) rule += ` eq ${port}`;
+
+            return rule;
+        }).join("\n");
+    }
 }
 
 module.exports = {firewall}
