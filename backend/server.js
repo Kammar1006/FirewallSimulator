@@ -83,12 +83,37 @@ io.on('connection', (sock) => {
 		else sock.emit("set_sid", false);
 	});
 
+	sock.on("get_rules", () => {
+        sock.emit("rules", translationTab[cid].firewall.list);
+    });
+
+	sock.on("add_rule", (rule) => {
+        translationTab[cid].firewall.add(rule);
+        sock.emit("rules", translationTab[cid].firewall.list);
+    });
+
+	sock.on("edit_rule", ({ id, rule }) => {
+        translationTab[cid].firewall.edit(id, rule);
+        sock.emit("rules", translationTab[cid].firewall.list);
+    });
+
+	sock.on("remove_rule", (id) => {
+        translationTab[cid].firewall.remove(id);
+        sock.emit("rules", translationTab[cid].firewall.list);
+    });
+
+	sock.on("export_iptables", () => {
+        sock.emit("iptables_data", translationTab[cid].firewall.exportToIptables());
+    });
+
+	sock.on("export_cisco", () => {
+        sock.emit("cisco_data", translationTab[cid].firewall.exportToCiscoACL());
+    });
+
 	sock.on("get_questions", () => {
 		if(translationTab[cid].in_progress = 0)
 			sock.emit("question", load_question(translationTab[cid].progress+1));
 	});
-
-	sock.on("edit", () => {})
 
 	sock.on("counter", () => {
 		translationTab[cid].test_counter++;
@@ -100,6 +125,8 @@ io.on('connection', (sock) => {
 server.listen(PORT, () => {
 	console.log("Work");
 });
+
+/*
 
 f = new firewall()
 
@@ -138,6 +165,11 @@ console.log(f.exportToCiscoACL())
 console.log("--------------------------")
 console.log("Test: ")
 
-console.log(f.test([{packet: packet1, result: "permit"}, {packet: packet2, result: "deny"}]));
+console.log(f.test([
+	{packet: packet1, result: "permit"}, 
+	{packet: packet2, result: "deny"}
+]));
 
 console.log("--------------------------")
+
+*/
