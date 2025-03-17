@@ -1,0 +1,26 @@
+.activityCard {
+    width: 500px;
+    height: 100%;
+    background: #D3D3D3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.activityCardContainer {
+    width: 90%;
+    height: 95.1%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    /* background-color: blueviolet; */
+}
+
+.activityCardContainerTitleText {
+    font-size: 27px;
+    color: #030303;
+}
+
+.activityCardContainerActivityContainer {
+    margin-top: 15px;
+}

@@ -1,0 +1,30 @@
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 10px;
+    height: calc(100vh - 70px);
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    /* background-color: antiquewhite; */
+}
+
+.dashboardContainer {
+    display: flex;
+    width: 96%;
+    height: 96%;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    /* align-items: center; */
+    height: 100%;
+}

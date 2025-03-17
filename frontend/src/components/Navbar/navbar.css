@@ -1,0 +1,82 @@
+.navbar {
+    background-color: #02C822;
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 70px;
+}
+
+.navbarContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-items: center;
+    height: 100%;
+}
+
+.navbarContainerLeftIcon {
+    height: 25px;
+    width: auto;
+} 
+
+
+.navbarContainerLeft {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbarContainerRightContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.navbarContainerRightContainerButtonOneBtn,
+.navbarContainerRightContainerButtonTwoBtn,
+.navbarContainerRightContainerButtonThreeBtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    background: none;
+    letter-spacing: -0.1px;
+    cursor: pointer;
+}
+
+.navbarContainerRightContainerButtonOneBtn {
+    border: 1px solid #D3D3D3;
+    background-color: #D3D3D3;
+    border-radius: 1px;
+    width: 100px;
+    height: 38px;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 0px;
+    color: #030303;
+}
+
+.navbarContainerRightContainerButtonTwoBtn {
+    border: 1px solid #00ac48;
+    background-color: #00ac48;
+    border-radius: 1px;
+    width: 100px;
+    height: 38px;
+    color: #030303;
+}
+
+.navbarContainerRightContainerButtonThreeBtn {
+    border: 1px solid #02C822;
+    background-color: #02C822;
+    border-radius: 1px;
+    width: 100px;
+    height: 38px;
+    color: #fff;
+}
+
+.navbarContainerLeftNameContainerText {
+    font-size: 30px;
+    font-weight: 400;
+    color: #f5f5f5;
+    letter-spacing: -0.1px;
+    text-align: start;
+    line-height: 34px;
+}
