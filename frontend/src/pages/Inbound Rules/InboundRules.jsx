@@ -6,7 +6,13 @@ import assets from "../../assets/assets.js";
 
 const InboundRules = () => {
   const { rules, addRule, removeRule, editRule } = useContext(RulesContext);
-  const [newRule, setNewRule] = useState({ action: "Allow", protocol: "", source: "", destination: "", port: "" });
+  const [newRule, setNewRule] = useState({
+    action: "Allow",
+    protocol: "",
+    source: "",
+    destination: "",
+    port: "",
+  });
 
   const [addNewRule, setAddNewRule] = useState(false);
 
@@ -31,7 +37,7 @@ const InboundRules = () => {
     setDestinationTwo("");
     setPort("");
     setPortTwo("");
-  }
+  };
 
   const handleAddRule = () => {
     setAddNewRule(false);
@@ -49,7 +55,7 @@ const InboundRules = () => {
   const handleClose = () => {
     setAddNewRule(false);
     resetForm();
-  }
+  };
 
   return (
     <div className="inboundRules">
@@ -69,12 +75,19 @@ const InboundRules = () => {
           <div className="inboundRulesContainerTopRight">
             {/* SearchBar */}
             <div className="inboundRulesContainerTopSearchBar">
-              <input type="text" placeholder="Search Rules..." className="inboundRulesContainerTopSearchBarInput" />
+              <input
+                type="text"
+                placeholder="Search Rules..."
+                className="inboundRulesContainerTopSearchBarInput"
+              />
             </div>
 
             {/* Add Rule Button */}
             <div className="inboundRulesContainerTopAddRuleButton">
-              <button className="inboundRulesContainerTopAddRuleButtonButton" onClick={() => setAddNewRule(true)}>
+              <button
+                className="inboundRulesContainerTopAddRuleButtonButton"
+                onClick={() => setAddNewRule(true)}
+              >
                 Add New Rule
               </button>
             </div>
@@ -96,26 +109,32 @@ const InboundRules = () => {
           {addNewRule && (
             <div className="inboundRulesContainerRulesRuleContainer">
               <div className="inboundRulesContainerRulesRuleContainerDivider">
-
                 <div className="inboundRulesContainerRulesRuleContainerRulesPart">
                   {/* Rule Number */}
                   <div className="inboundRulesContainerRulesRuleContainerRulesPartRuleNr">
-                    <p className="inboundRulesContainerRulesRuleContainerRulesPartRuleNrText">Rule</p>
-                    <p className="inboundRulesContainerRulesRuleContainerRulesPartRuleNrTextNr">{rules.length + 1}</p>
+                    <p className="inboundRulesContainerRulesRuleContainerRulesPartRuleNrText">
+                      Rule
+                    </p>
+                    <p className="inboundRulesContainerRulesRuleContainerRulesPartRuleNrTextNr">
+                      {rules.length + 1}
+                    </p>
                   </div>
 
-
                   <div className="inboundRulesContainerRulesRuleContainerRulesPartTwoRuleContainer">
-
-                  
                     {/* Action - static value (allow) */}
                     <div className="inboundRulesContainerRulesRuleContainerRulesPartAction">
-                      <p className="inboundRulesContainerRulesRuleContainerRulesPartActionText">Allow</p>
+                      <p className="inboundRulesContainerRulesRuleContainerRulesPartActionText">
+                        Allow
+                      </p>
                     </div>
 
                     {/* Protocol choose option input */}
                     <div className="inboundRulesContainerRulesRuleContainerRulesPartProtocol">
-                      <select value={protocol} onChange={(e) => setProtocol(e.target.value)} className="inboundRulesContainerRulesRuleContainerRulesPartProtocolSelect">
+                      <select
+                        value={protocol}
+                        onChange={(e) => setProtocol(e.target.value)}
+                        className="inboundRulesContainerRulesRuleContainerRulesPartProtocolSelect"
+                      >
                         <option value="">Select Protocol</option>
                         <option value="TCP">TCP</option>
                         <option value="UDP">UDP</option>
@@ -137,7 +156,11 @@ const InboundRules = () => {
 
                     {/* Source - choose of any or custom -> if it's custom user enter ip manually */}
                     <div className="inboundRulesContainerRulesRuleContainerSource">
-                      <select value={source} onChange={(e) => setSource(e.target.value)} className="inboundRulesContainerRulesRuleContainerSourceSelect">
+                      <select
+                        value={source}
+                        onChange={(e) => setSource(e.target.value)}
+                        className="inboundRulesContainerRulesRuleContainerSourceSelect"
+                      >
                         <option value="">Select source address</option>
                         <option value="Any">Any</option>
                         <option value="Custom">Custom</option>
@@ -156,7 +179,11 @@ const InboundRules = () => {
 
                     {/* Destination */}
                     <div className="inboundRulesContainerRulesRuleContainerDestination">
-                      <select value={destination} onChange={(e) => setDestination(e.target.value)} className="inboundRulesContainerRulesRuleContainerDestinationSelect">
+                      <select
+                        value={destination}
+                        onChange={(e) => setDestination(e.target.value)}
+                        className="inboundRulesContainerRulesRuleContainerDestinationSelect"
+                      >
                         <option value="">Select destination address</option>
                         <option value="Any">Any</option>
                         <option value="Custom">Custom</option>
@@ -175,7 +202,11 @@ const InboundRules = () => {
 
                     {/* Port */}
                     <div className="inboundRulesContainerRulesRuleContainerPort">
-                      <select value={port} onChange={(e) => setPort(e.target.value)} className="inboundRulesContainerRulesRuleContainerPortSelect">
+                      <select
+                        value={port}
+                        onChange={(e) => setPort(e.target.value)}
+                        className="inboundRulesContainerRulesRuleContainerPortSelect"
+                      >
                         <option value="">Select Port</option>
                         <option value="53">53</option>
                         <option value="80">80</option>
@@ -193,8 +224,6 @@ const InboundRules = () => {
                       )}
                     </div>
                   </div>
-
-
                 </div>
 
                 <div className="inboundRulesContainerRulesRuleContainerCloseAccept">
