@@ -59,7 +59,10 @@ const InboundRules = () => {
           <div className="inboundRulesContainerTopLeft">
             {/* Title */}
             <div className="inboundRulesContainerTopTitle">
-              <p className="inboundRulesContainerTopTitleText">Access Control Rules</p>
+              <p className="inboundRulesContainerTopTitleText">
+                {/* Access Control Rules */}
+                ACL Inboud Rules
+              </p>
             </div>
           </div>
 

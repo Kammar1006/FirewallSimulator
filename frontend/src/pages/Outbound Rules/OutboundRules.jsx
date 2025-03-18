@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import "./outboundRules.css";
 import ACLElement from '../../components/ACLElement/ACLElement';
+import { RulesContext } from '../../context/RulesContext';
 
 const OutboundRules = () => {
+
+  const { rules, addRule, removeRule, editRule } = useContext(RulesContext);
+
   return (
     <div className="outboundRules">
 
@@ -14,8 +18,8 @@ const OutboundRules = () => {
           <div className="outboundRulesContainerTopLeft">
             <div className="outboundRulesContainerTopLeftTitle">
               <p className="outboundRulesContainerTopLeftTitleText">
-                Access Control Rules
-
+                {/* Access Control Rules */}
+                ACL Outbound Rules
               </p>
             </div>
           </div>
@@ -55,41 +59,62 @@ const OutboundRules = () => {
         </div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         {/* Middle Part */}
         <div className="outboundRulesContainerMiddleRules">
-          <ACLElement
-              id="1"
-              action="Deny"
-              protocol="TCP"
-              source="192.168.1.1"
-              destination="192.168.1.1"
-              port="53"
-            />
-            <ACLElement
-              id="2"
-              action="Deny"
-              protocol="TCP"
-              source="192.168.1.2"
-              destination="192.168.1.2"
-              port="80"
-            />
-            <ACLElement
-              id="3"
-              action="Deny"
-              protocol="UDP"
-              source="192.168.1.3"
-              destination="192.168.1.3"
-              port="443"
-            />
-            <ACLElement
-              id="4"
-              action="Deny"
-              protocol="TCP"
-              source="192.168.1.4"
-              destination="192.168.1.4"
-              port="22"
-            />
+          {rules.map((rule) => (
+              <ACLElement
+                key={rule.id}
+                id={rule.id}
+                action={rule.action}
+                protocol={rule.protocol}
+                source={rule.source}
+                destination={rule.destination}
+                port={rule.port}
+                onEdit={editRule}
+                onDelete={() => removeRule(rule.id)}
+              />
+            ))}
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       </div>
       
