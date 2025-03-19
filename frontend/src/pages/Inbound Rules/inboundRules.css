@@ -1,448 +1,384 @@
 .inboundRules {
-    width: 100%;
-    height: 100%;
-    /* background-color: aliceblue; */
-    /* height: 100vh; */
+  width: 100%;
+  height: 100%;
+  /* background-color: aliceblue; */
+  /* height: 100vh; */
 }
 
 .inboundRulesContainer {
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    /* background-color: lightpink !important; */
-    margin-top: 20px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  /* background-color: lightpink !important; */
+  margin-top: 20px;
 }
 
 .inboundRulesContainerTop {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .inboundRulesContainerTopTitleText {
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-    color: #030303;
-    line-height: 25px;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: #030303;
+  line-height: 25px;
 }
 
 .inboundRulesContainerTopSearchBarInput {
-    width: 200px;
-    height: 35px;
-    border-radius: 2px;
-    padding-left: 10px;
-    font-size: 16px;
-    letter-spacing: -0.1px;
-    margin-right: 10px;
-    border: none;
-    outline: none;
-    border: 1px solid #000;
+  width: 200px;
+  height: 35px;
+  border-radius: 2px;
+  padding-left: 10px;
+  font-size: 16px;
+  letter-spacing: -0.1px;
+  margin-right: 10px;
+  border: none;
+  outline: none;
+  border: 1px solid #000;
 }
 
 .inboundRulesContainerTopSearchBar {
-    color: #94A3B8;
+  color: #94a3b8;
 }
 
 .inboundRulesContainerTopSearchBarInput.active {
-    border: none;
-    outline: none;
+  border: none;
+  outline: none;
 }
 
 .inboundRulesContainerTopRight {
-    display: flex;
-    flex-direction: row;
-    gap: 25px;
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
 }
 
 .inboundRulesContainerTopAddRuleButton {
-    height: 35px;
-    width: 160px;
+  height: 35px;
+  width: 160px;
 }
 
 .inboundRulesContainerTopAddRuleButtonButton {
-    height: 100%;
-    width: 100%;
-    font-size: 18px;
-    letter-spacing: -0.1px;
-    text-align: center;
-    cursor: pointer;
-    border: none;
-    outline: none;
-    color: #000;
-    background-color: #5DB996;
-    border-radius: 2px;
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 0px;
-    transition: all 0.2s ease-in-out;
+  height: 100%;
+  width: 100%;
+  font-size: 18px;
+  letter-spacing: -0.1px;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  color: #000;
+  background-color: #5db996;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 0px;
+  transition: all 0.2s ease-in-out;
 }
 
 .inboundRulesContainerTopAddRuleButtonButton:hover {
-    background-color: #00AC48;
+  background-color: #00ac48;
 }
 
 .aCLElementHeaders {
-    display: flex;
-    flex-direction: row;
-    margin-top: 50px;
-    font-size: 28px;
-    justify-content: flex-start;
-    letter-spacing: -1px;
-    padding-left: 390px;
+  display: flex;
+  flex-direction: row;
+  margin-top: 50px;
+  font-size: 28px;
+  justify-content: flex-start;
+  letter-spacing: -1px;
+  padding-left: 390px;
 }
 
 .aCLElementHeaderProtocol {
-    padding-left: 50px;
+  padding-left: 50px;
 }
 
 .aCLElementHeaderSource {
-    padding-left: 65px;
+  padding-left: 65px;
 }
 
 .aCLElementHeaderDestination {
-    padding-left: 70px;
+  padding-left: 70px;
 }
 
 .aCLElementHeaderPort {
-    padding-left: 80px;
+  padding-left: 80px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .inboundRulesContainerRules {
-    margin-top: 10px;
-    /* gap: 15px; */
-    /* margin-bottom: 20px; */
+  margin-top: 10px;
+  /* gap: 15px; */
+  /* margin-bottom: 20px; */
 }
 
-
-
-
-
-
-
-
 .inboundRulesContainerRulesRuleContainer {
-    background-color: #FAF4D3;
-    display: flex;
-    flex-direction: row;
-    /* justify-content: space-between; */
-    align-items: center;
-    height: 120px;
-    margin-bottom: 20px;
+  background-color: #faf4d3;
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  align-items: center;
+  height: 120px;
+  margin-bottom: 20px;
 }
 
 .inboundRulesContainerRulesRuleContainerDivider {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    /* width: 90%; */
-    /* margin-left: auto; */
-    /* margin-right: auto; */
-    /* background-color: yellow; */
-    width: 97%;
-    margin-left: auto;
-    margin-right: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  /* width: 90%; */
+  /* margin-left: auto; */
+  /* margin-right: auto; */
+  /* background-color: yellow; */
+  width: 97%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .inboundRulesContainerRulesRuleContainerRulesPart {
-    display: flex;
-    flex-direction: row;
-    /* justify-content: center; */
-    align-items: center;
-    /* width: 90%; */
-    /* margin-left: auto; */
-    /* margin-right: auto; */
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center; */
+  align-items: center;
+  /* width: 90%; */
+  /* margin-left: auto; */
+  /* margin-right: auto; */
 }
 
 .inboundRulesContainerRulesRuleContainerRulesPartRuleNr {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .inboundRulesContainerRulesRuleContainerRulesPartRuleNrText {
-    font-size: 24px;
-    letter-spacing: -0.5px;
-    font-weight: 600;
-    color: #030303;
-    left: 200px;
-
+  font-size: 24px;
+  letter-spacing: -0.5px;
+  font-weight: 600;
+  color: #030303;
+  left: 200px;
 }
 
 .inboundRulesContainerRulesRuleContainerRulesPartRuleNrTextNr {
-    font-size: 24px;
-    letter-spacing: -0.5px;
-    font-weight: 600;
-    color: #030303;
+  font-size: 24px;
+  letter-spacing: -0.5px;
+  font-weight: 600;
+  color: #030303;
 }
-
-
-
-
-
-
-
 
 .inboundRulesContainerRulesRuleContainerCloseAccept {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin-right: 35px;
-    gap: 105px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-right: 35px;
+  gap: 105px;
 }
-
 
 .inboundRulesContainerRulesRuleContainerCloseAcceptCloseIcon,
 .inboundRulesContainerRulesRuleContainerCloseAcceptAcceptIcon {
-    height: 40px;
-    width: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+  height: 40px;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .inboundRulesContainerRulesRuleContainerRulesPartTwoRuleContainer {
-    display: flex;
-    margin-left: 200px;
-    align-items: center;
-    gap: 20px;
+  display: flex;
+  margin-left: 200px;
+  align-items: center;
+  gap: 20px;
 }
 
 .inboundRulesContainerRulesRuleContainerRulesPartActionText {
-    font-size: 24px;
-    font-weight: 500;
-    color: #030303;
+  font-size: 24px;
+  font-weight: 500;
+  color: #030303;
 }
 
 .inboundRulesContainerRulesRuleContainerRulesPartProtocol {
-    gap: 10px;
-    display: flex;
-    flex-direction: column;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .inboundRulesContainerRulesRuleContainerRulesPartProtocolSelect {
-    width: 160px;
-    height: 40px;
-    border-radius: 2px;
-    /* padding-left: 10px; */
-    font-size: 18px;
-    letter-spacing: -0.2px;
-    margin-right: 10px;
-    border: none;
-    outline: none;
-    border: 1px solid #2f4858;
-    color: #030303;
-    font-weight: 500;
-    background-color: #c2d3b6;
-    border-radius: 4px;
-    /* outline: none;
+  width: 160px;
+  height: 40px;
+  border-radius: 2px;
+  /* padding-left: 10px; */
+  font-size: 18px;
+  letter-spacing: -0.2px;
+  margin-right: 10px;
+  border: none;
+  outline: none;
+  border: 1px solid #2f4858;
+  color: #030303;
+  font-weight: 500;
+  background-color: #c2d3b6;
+  border-radius: 4px;
+  /* outline: none;
     border: none; */
 }
 
 .inboundRulesContainerRulesRuleContainerCloseAcceptCloseIcon {
-    transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .inboundRulesContainerRulesRuleContainerCloseAcceptAcceptIcon {
-    transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .inboundRulesContainerRulesRuleContainerCloseAcceptCloseIcon:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .inboundRulesContainerRulesRuleContainerCloseAcceptAcceptIcon:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .inboundRulesContainerRulesRuleContainerRulesPartProtocolInputCustomInput {
-    width: 160px;
-    height: 40px;
-    padding-left: 5px;
-    font-weight: 500;
-    font-size: 16px;
-    background-color: #c2d3b6;
-    border: 1px solid #2f4858;
-    color: #030303;
-    border-radius: 4px;
-
+  width: 160px;
+  height: 40px;
+  padding-left: 5px;
+  font-weight: 500;
+  font-size: 16px;
+  background-color: #c2d3b6;
+  border: 1px solid #2f4858;
+  color: #030303;
+  border-radius: 4px;
 }
 
-.inboundRulesContainerRulesRuleContainerRulesPartProtocolInputCustom input:focus {
-    border: none;
-    outline: none;
-    border: 1px solid #c2d3b6;
+.inboundRulesContainerRulesRuleContainerRulesPartProtocolInputCustom
+  input:focus {
+  border: none;
+  outline: none;
+  border: 1px solid #c2d3b6;
 }
 
 .inboundRulesContainerRulesRuleContainerSource {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-
 .inboundRulesContainerRulesRuleContainerSourceSelect {
-    width: 230px;
-    height: 40px;
-    border-radius: 2px;
-    /* padding-left: 10px; */
-    font-size: 18px;
-    letter-spacing: -0.2px;
-    margin-right: 10px;
-    border: none;
-    outline: none;
-    background-color: #c2d3b6;
-    border: 1px solid #2f4858;
-    color: #030303;
-    border-radius: 4px;
-    font-weight: 500;
+  width: 230px;
+  height: 40px;
+  border-radius: 2px;
+  /* padding-left: 10px; */
+  font-size: 18px;
+  letter-spacing: -0.2px;
+  margin-right: 10px;
+  border: none;
+  outline: none;
+  background-color: #c2d3b6;
+  border: 1px solid #2f4858;
+  color: #030303;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 .inboundRulesContainerRulesRuleContainerSourceInputCustomInput {
-    width: 230px;
-    height: 40px;
-    padding-left: 5px;
-    font-size: 16px;
-    font-weight: 500;
-    background-color: #c2d3b6;
-    border: 1px solid #2f4858;
-    color: #030303;
-    border-radius: 4px;
+  width: 230px;
+  height: 40px;
+  padding-left: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #c2d3b6;
+  border: 1px solid #2f4858;
+  color: #030303;
+  border-radius: 4px;
 }
 
 .inboundRulesContainerRulesRuleContainerSourceInputCustom input:focus {
-    border: none;
-    outline: none;
-    border: 1px solid #c2d3b6;
+  border: none;
+  outline: none;
+  border: 1px solid #c2d3b6;
 }
 
-
-
-
 .inboundRulesContainerRulesRuleContainerDestination {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .inboundRulesContainerRulesRuleContainerDestinationSelect {
-    width: 230px;
-    height: 40px;
-    border-radius: 2px;
-    /* padding-left: 10px; */
-    font-size: 18px;
-    letter-spacing: -0.2px;
-    margin-right: 10px;
-    border: none;
-    outline: none;
-    background-color: #c2d3b6;
-    border: 1px solid #2f4858;
-    color: #030303;
-    border-radius: 4px;
-    font-weight: 500;
+  width: 230px;
+  height: 40px;
+  border-radius: 2px;
+  /* padding-left: 10px; */
+  font-size: 18px;
+  letter-spacing: -0.2px;
+  margin-right: 10px;
+  border: none;
+  outline: none;
+  background-color: #c2d3b6;
+  border: 1px solid #2f4858;
+  color: #030303;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 .inboundRulesContainerRulesRuleContainerDestinationInputCustomInput {
-    width: 230px;
-    height: 40px;
-    padding-left: 5px;
-    font-size: 16px;
-    font-weight: 500;
-    background-color: #c2d3b6;
-    border: 1px solid #2f4858;
-    color: #030303;
-    border-radius: 4px;
+  width: 230px;
+  height: 40px;
+  padding-left: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #c2d3b6;
+  border: 1px solid #2f4858;
+  color: #030303;
+  border-radius: 4px;
 }
 
 .inboundRulesContainerRulesRuleContainerDestinationInputCustom input:focus {
-    border: none;
-    outline: none;
-    border: 1px solid #c2d3b6;
+  border: none;
+  outline: none;
+  border: 1px solid #c2d3b6;
 }
 
-
-
-
 .inboundRulesContainerRulesRuleContainerPort {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .inboundRulesContainerRulesRuleContainerPortSelect {
-    width: 180px;
-    height: 40px;
-    border-radius: 2px;
-    /* padding-left: 10px; */
-    font-size: 18px;
-    letter-spacing: -0.2px;
-    margin-right: 10px;
-    border: none;
-    outline: none;
-    background-color: #c2d3b6;
-    border: 1px solid #2f4858;
-    color: #030303;
-    border-radius: 4px;
-    font-weight: 500;
+  width: 180px;
+  height: 40px;
+  border-radius: 2px;
+  /* padding-left: 10px; */
+  font-size: 18px;
+  letter-spacing: -0.2px;
+  margin-right: 10px;
+  border: none;
+  outline: none;
+  background-color: #c2d3b6;
+  border: 1px solid #2f4858;
+  color: #030303;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 .inboundRulesContainerRulesRuleContainerPortInputCustomInput {
-    width: 180px;
-    height: 40px;
-    padding-left: 5px;
-    font-size: 16px;
-    font-weight: 500;
-    background-color: #c2d3b6;
-    border: 1px solid #2f4858;
-    color: #030303;
-    border-radius: 4px;
+  width: 180px;
+  height: 40px;
+  padding-left: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #c2d3b6;
+  border: 1px solid #2f4858;
+  color: #030303;
+  border-radius: 4px;
 }
 
 .inboundRulesContainerRulesRuleContainerPortInputCustom input:focus {
-    border: none;
-    outline: none;
-    border: 1px solid #c2d3b6;
+  border: none;
+  outline: none;
+  border: 1px solid #c2d3b6;
 }

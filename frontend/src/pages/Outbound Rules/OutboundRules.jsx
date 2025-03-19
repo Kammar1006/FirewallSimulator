@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import "./outboundRules.css";
 import ACLElement from "../../components/ACLElement/ACLElement";
 import { RulesContext } from "../../context/RulesContext";
@@ -130,7 +130,7 @@ const OutboundRules = () => {
                     {/* Protocol choose option input */}
                     <div className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerProtocol">
                       <select
-                        value={protocl}
+                        value={protocol}
                         className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerProtocolSelect"
                         onChange={(e) => setProtocolTwo(e.target.vallue)}
                       >
