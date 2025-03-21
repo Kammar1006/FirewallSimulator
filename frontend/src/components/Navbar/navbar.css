@@ -25,6 +25,13 @@
     flex-direction: row;
     align-items: center;
     gap: 10px;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+    text-decoration: none;
+}
+
+.navbarContainerLeft:hover {
+    transform: scale(1.03);
 }
 
 .navbarContainerRightContainer {
@@ -79,4 +86,5 @@
     letter-spacing: -0.1px;
     text-align: start;
     line-height: 34px;
+    /* cursor: pointer; */
 }

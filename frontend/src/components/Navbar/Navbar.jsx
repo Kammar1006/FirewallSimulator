@@ -11,13 +11,13 @@ const Navbar = () => {
         <div className="navbarContainer">
 
             {/* Left Part */}
-            <div className="navbarContainerLeft">
+            <NavLink to="/" className="navbarContainerLeft">
                 <img src={assets.flameIcon} alt="" className="navbarContainerLeftIcon" />
 
                 <div className="navbarContainerLeftNameContainer">
                     <p className="navbarContainerLeftNameContainerText">ACL Firewall Manager</p>
                 </div>
-            </div>
+            </NavLink>
 
             {/* Right Part */}
             <div className="navbarContainerRight">
