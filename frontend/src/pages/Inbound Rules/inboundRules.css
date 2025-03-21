@@ -31,7 +31,7 @@
   width: 200px;
   height: 35px;
   border-radius: 2px;
-  padding-left: 10px;
+  padding-left: 35px; /* Add padding for the icon */
   font-size: 16px;
   letter-spacing: -0.1px;
   margin-right: 10px;
@@ -41,12 +41,24 @@
 }
 
 .inboundRulesContainerTopSearchBar {
+  position: relative; /* To position the icon inside the input */
+  display: inline-block;
   color: #94a3b8;
 }
 
 .inboundRulesContainerTopSearchBarInput.active {
   border: none;
   outline: none;
+}
+
+.inboundRulesContainerTopSearchBarIcon {
+  position: absolute;
+  left: 10px; /* Position the icon inside the input */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none; /* Prevent the icon from blocking input clicks */
 }
 
 .inboundRulesContainerTopRight {
@@ -108,15 +120,12 @@
 
 .inboundRulesContainerRules {
   margin-top: 10px;
-  /* gap: 15px; */
-  /* margin-bottom: 20px; */
 }
 
 .inboundRulesContainerRulesRuleContainer {
   background-color: #faf4d3;
   display: flex;
   flex-direction: row;
-  /* justify-content: space-between; */
   align-items: center;
   height: 120px;
   margin-bottom: 20px;
@@ -127,10 +136,6 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  /* width: 90%; */
-  /* margin-left: auto; */
-  /* margin-right: auto; */
-  /* background-color: yellow; */
   width: 97%;
   margin-left: auto;
   margin-right: auto;
@@ -139,11 +144,7 @@
 .inboundRulesContainerRulesRuleContainerRulesPart {
   display: flex;
   flex-direction: row;
-  /* justify-content: center; */
   align-items: center;
-  /* width: 90%; */
-  /* margin-left: auto; */
-  /* margin-right: auto; */
 }
 
 .inboundRulesContainerRulesRuleContainerRulesPartRuleNr {
@@ -210,7 +211,6 @@
   width: 160px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -221,8 +221,6 @@
   font-weight: 500;
   background-color: #c2d3b6;
   border-radius: 4px;
-  /* outline: none;
-    border: none; */
 }
 
 .inboundRulesContainerRulesRuleContainerCloseAcceptCloseIcon {
@@ -270,7 +268,6 @@
   width: 230px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -311,7 +308,6 @@
   width: 230px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -352,7 +348,6 @@
   width: 180px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;

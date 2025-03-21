@@ -27,6 +27,14 @@ const InboundRules = () => {
   const [port, setPort] = useState();
   const [portTwo, setPortTwo] = useState();
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredRules = rules.filter((rule) =>
+    `${rule.action} ${rule.protocol} ${rule.source} ${rule.destination} ${rule.port}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
   const resetForm = () => {
     setAction("Allow");
     setProtocol("");
@@ -67,7 +75,7 @@ const InboundRules = () => {
             <div className="inboundRulesContainerTopTitle">
               <p className="inboundRulesContainerTopTitleText">
                 {/* Access Control Rules */}
-                ACL Inboud Rules
+                ACL Inbound Rules
               </p>
             </div>
           </div>
@@ -79,6 +87,13 @@ const InboundRules = () => {
                 type="text"
                 placeholder="Search Rules..."
                 className="inboundRulesContainerTopSearchBarInput"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <img
+                src={assets.searchIcon} 
+                alt="Search"
+                className="inboundRulesContainerTopSearchBarIcon"
               />
             </div>
 
@@ -249,7 +264,7 @@ const InboundRules = () => {
             </div>
           )}
 
-          {rules.map((rule) => (
+          {filteredRules.map((rule) => (
             <ACLElement
               key={rule.id}
               id={rule.id}
