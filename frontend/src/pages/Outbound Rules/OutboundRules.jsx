@@ -7,26 +7,16 @@ import assets from "../../assets/assets";
 const OutboundRules = () => {
   const { rules, addRule, removeRule, editRule } = useContext(RulesContext);
 
-  const [newRule, setNewRule] = useState({
-    action: "Deny",
-    protocol: "",
-    source: "",
-    destination: "",
-    port: "",
-  });
-
   const [addNewRule, setAddNewRule] = useState(false);
-
-  const [id, setId] = useState();
   const [action, setAction] = useState("Deny");
-  const [protocol, setProtocol] = useState();
-  const [protocolTwo, setProtocolTwo] = useState();
-  const [source, setSource] = useState();
-  const [sourceTwo, setSourceTwo] = useState();
-  const [destination, setDestination] = useState();
-  const [destinationTwo, setDestinationTwo] = useState();
-  const [port, setPort] = useState();
-  const [portTwo, setPortTwo] = useState();
+  const [protocol, setProtocol] = useState("");
+  const [protocolTwo, setProtocolTwo] = useState("");
+  const [source, setSource] = useState("");
+  const [sourceTwo, setSourceTwo] = useState("");
+  const [destination, setDestination] = useState("");
+  const [destinationTwo, setDestinationTwo] = useState("");
+  const [port, setPort] = useState("");
+  const [portTwo, setPortTwo] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredRules = rules.filter((rule) =>
@@ -74,7 +64,6 @@ const OutboundRules = () => {
           <div className="outboundRulesContainerTopLeft">
             <div className="outboundRulesContainerTopLeftTitle">
               <p className="outboundRulesContainerTopLeftTitleText">
-                {/* Access Control Rules */}
                 ACL Outbound Rules
               </p>
             </div>
@@ -131,7 +120,7 @@ const OutboundRules = () => {
                   </div>
 
                   <div className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainer">
-                    {/* Action - statci value (Deny) */}
+                    {/* Action - static value (Deny) */}
                     <div className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerAction">
                       <p className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerActionText">
                         Deny
@@ -142,7 +131,7 @@ const OutboundRules = () => {
                       <select
                         value={protocol}
                         className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerProtocolSelect"
-                        onChange={(e) => setProtocolTwo(e.target.vallue)}
+                        onChange={(e) => setProtocol(e.target.value)} // Poprawka tutaj
                       >
                         <option value="">Select Protocol</option>
                         <option value="TCP">TCP</option>
@@ -186,11 +175,12 @@ const OutboundRules = () => {
                       )}
                     </div>
 
-                    {/* Desination address */}
+                    {/* Destination address */}
                     <div className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerDestination">
                       <select
                         value={destination}
                         onChange={(e) => setDestination(e.target.value)}
+                        className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerDestinationSelect"
                       >
                         <option value="">Select destination address</option>
                         <option value="Any">Any</option>
@@ -224,20 +214,13 @@ const OutboundRules = () => {
                         <div className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerPortCustom">
                           <input
                             type="text"
+                            placeholder="Enter Port"
                             className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerPortCustomInput"
-                            onChange={(e) => setDestinationTwo(e.target.value)}
+                            onChange={(e) => setPortTwo(e.target.value)} // Poprawka tutaj
                           />
                         </div>
                       )}
                     </div>
-
-                    {/* {
-                      destination === "Custom" && (
-                        <div className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerDestinationCustom">
-                          <input type="text" className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerDestinationInput" onChange={(e) => setDestinationTwo(e.target.value)} placeholder="Enter destination" />
-                        </div>
-                      )
-                    } */}
                   </div>
                 </div>
 
@@ -255,18 +238,12 @@ const OutboundRules = () => {
                     <img
                       src={assets.accept}
                       className="outboundRulesContainerMiddleRulesRuleContainerCloseAcceptAcceptIcon"
-                      onChange={() => handleAddRule()}
+                      onClick={handleAddRule} // Poprawka tutaj
                       alt=""
                     />
                   </div>
                 </div>
               </div>
-
-              {/* <div className="outboundRulesContainerMiddleRulesRuleContainerCloseAccept">
-                <div className="outboundRulesContainerMiddleRulesRuleContainerCloseAcceptClose">
-                  <img src={assets.close} alt="" className="outboundRulesContainerMiddleRulesRuleContainerCloseAcceptCloseIcon" onClick={handleClose} />
-                </div>
-              </div> */}
             </div>
           )}
 
