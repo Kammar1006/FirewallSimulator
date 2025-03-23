@@ -27,6 +27,13 @@ const OutboundRules = () => {
   const [destinationTwo, setDestinationTwo] = useState();
   const [port, setPort] = useState();
   const [portTwo, setPortTwo] = useState();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredRules = rules.filter((rule) =>
+    `${rule.action} ${rule.protocol} ${rule.source} ${rule.destination} ${rule.port}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
 
   const resetForm = () => {
     setAction("Deny");
@@ -51,6 +58,7 @@ const OutboundRules = () => {
       port: port === "Custom" ? portTwo : port,
     });
     resetForm();
+    setSearchTerm(""); // Reset search term after adding a rule
   };
 
   const handleClose = () => {
@@ -78,6 +86,8 @@ const OutboundRules = () => {
                 type="text"
                 placeholder="Search Rules..."
                 className="outboundRulesContainerTopRightSearchBarInput"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
@@ -260,7 +270,7 @@ const OutboundRules = () => {
             </div>
           )}
 
-          {rules.map((rule) => (
+          {filteredRules.map((rule) => (
             <ACLElement
               key={rule.id}
               id={rule.id}
