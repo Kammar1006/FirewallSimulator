@@ -62,13 +62,13 @@ const Dashboard = () => {
             optionType={"optionSix"}
           />
 
-          <Card 
+          {/* <Card 
             title={"Tasks"}
             description={"Manage your tasks and to-dos."} 
             btnText={"View Tasks"} 
             location={"/tasks"}
             optionType={"optionSix"}
-          />
+          /> */}
         </div>
 
         <ActivityCard title={"Recent Activity"} />
