@@ -71,7 +71,7 @@ const Dashboard = () => {
           /> */}
         </div>
 
-        <ActivityCard title={"Recent Activity"} />
+        <ActivityCard title={"Tasks"} />
 
 
       </div>

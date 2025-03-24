@@ -1,47 +1,57 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import "./activityCard.css";
-import ActivityElement from '../ActivityElement/ActivityElement';
+import { RulesContext } from '../../context/RulesContext';
 
 const ActivityCard = ({ title }) => {
-  return (
-    <div className="activityCard">
+    const { challenges, validateChallenge } = useContext(RulesContext);
+    const [loading, setLoading] = useState({});
+    const [loadingAll, setLoadingAll] = useState(false);
 
-        <div className="activityCardContainer">
+    const handleCheckAll = async () => {
+        setLoadingAll(true);
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading
+        challenges.forEach((challenge) => validateChallenge(challenge.id));
+        setLoadingAll(false);
+    };
 
-            <div className="activityCardContainerTitle">
-              <p className="activityCardContainerTitleText">
-                {title}
-              </p>
+    return (
+        <div className="activityCard">
+            <div className="activityCardContainer">
+                {/* Title Section */}
+                <div className="activityCardContainerTitle">
+                    <p className="activityCardContainerTitleText">{title}</p>
+                    <button
+                        className="activityCardContainerTitleRightBtn"
+                        onClick={handleCheckAll}
+                        disabled={loadingAll}
+                    >
+                        {loadingAll ? <div className="activityCardContainerTitleRightBtnSpinner"></div> : <p className="activityCardContainerTitleRightBtnText">Check All</p>}
+                    </button>
+                </div>
+
+                {/* Challenges Section */}
+                <div className="activityCardContainerActivityContainer">
+                    {challenges.map((challenge) => (
+                        <div
+                            key={challenge.id}
+                            className={`activityCardContainerActivityContainerContainer ${
+                                challenge.isCorrect === true
+                                    ? "correct"
+                                    : challenge.isCorrect === false
+                                    ? "incorrect"
+                                    : ""
+                            }`}
+                        >
+                            <p className="activityCardContainerActivityContainerContainerDescriptionText">
+                                {challenge.description}
+                            </p>
+                            
+                        </div>
+                    ))}
+                </div>
             </div>
-
-            <div className="activityCardContainerActivityContainer">
-              <ActivityElement 
-                text={"Rule 'Allow HTTP' was added successfully."} ruleType={"fail"}
-              />
-              <ActivityElement 
-                text={"Rule 'Allow HTTP' was added successfully."} ruleType={"warning"}
-              />
-              <ActivityElement 
-                text={"Rule 'Allow HTTP' was added successfully."} ruleType={"success"}
-              />
-              <ActivityElement 
-                text={"Rule 'Allow HTTP' was added successfully. dsafk l;jsdkl;a fjlk;sa djf"} ruleType={"success"}
-              />
-              <ActivityElement 
-                text={"Rule 'Allow HTTP' was added successfully."} ruleType={"success"}
-              />
-              <ActivityElement 
-                text={"Rule 'Allow HTTP' was added successfully."} ruleType={"success"}
-              />
-              <ActivityElement 
-                text={"Rule 'Allow HTTP' was added successfully."} ruleType={"success"}
-              />
-            </div>
-
         </div>
-        
-    </div>
-  )
-}
+    );
+};
 
-export default ActivityCard
+export default ActivityCard;
