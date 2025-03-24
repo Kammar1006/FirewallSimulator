@@ -19,6 +19,8 @@ const io = socketio(server, {
 
 const { randomBytes } = require('crypto');
 const { Firewall } = require('./firewall');
+const { Network } = require('./network');
+const { Device } = require('./device');
 
 let translationTab = [];
 const setCID = (sock) => {
@@ -125,6 +127,19 @@ io.on('connection', (sock) => {
 server.listen(PORT, () => {
 	console.log("Work");
 });
+
+
+
+n = new Network();
+n.set([], [[1], [0, 2], [1, 3, 4], [2], [2]])
+n.simulate(0, 4, []);
+n.simulate(3, 4, []);
+n.simulate(2, 4, []);
+n.simulate(4, 1, []);
+
+
+
+
 
 /*
 
