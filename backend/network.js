@@ -11,6 +11,8 @@ function Network(){
     }
 
     this.simulate = (first_id, end_id, packet) => {
+        if(first_id == end_id) return false;
+
         this.path = [first_id];
         let current_id = first_id;
         let last_id = current_id;
@@ -41,18 +43,24 @@ function Network(){
 
         console.log(this.path)
 
+        let result = [];
 
         console.log(this.path[0])
         console.log("out")
-        this.path.shift()
+        result.push(this.devices[this.path[0]].packet_out(packet, this.connections[this.path[0]].indexOf(this.path[1])))
+        let previos_id = this.path.shift()
         while(this.path.length > 1){
             console.log(this.path[0])
             console.log("in")
+            result.push(this.devices[this.path[0]].packet_in(packet, this.connections[this.path[0]].indexOf(previos_id)))
             console.log("out")
-            this.path.shift()
+            result.push(this.devices[this.path[0]].packet_out(packet, this.connections[this.path[0]].indexOf(this.path[1])))
+            previos_id = this.path.shift()
         }
         console.log(this.path[0])
         console.log("in")
+        result.push(this.devices[this.path[0]].packet_in(packet, this.connections[this.path[0]].indexOf(previos_id)))
+        return result;
     }
 }
 

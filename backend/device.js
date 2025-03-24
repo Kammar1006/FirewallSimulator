@@ -3,28 +3,26 @@
 const { Firewall } = require("./firewall");
 
 function Interface(inet){
-    this.input_rules = Firewall();
-    this.output_rules = Firewall();
+    this.input_rules = new Firewall();
+    this.output_rules = new Firewall();
     this.inet = inet || "127.0.0.1";
 }
 
-function Device(type, inets){
-    this.type = type;
-    if(type == "router"){
-        this.interfaces = [Interface(inets[0]), Interface(inets[1])];
-    }
-    else if(type == "pc"){
-        this.interfaces = [Interface(inets[0])];
-    }
+function Device(name, inets){
+    this.name = name;
+    this.interfaces = [];
+    inets.forEach(element => {
+        this.interfaces.push(new Interface(element))
+    });
 
     this.packet_in = (packet, inet) => {
         result = this.interfaces[inet].input_rules.simulate(packet);
-        status = result[0];
-        logs = result[1];
+        return result
     }
 
     this.packet_out = (packet, inet) => {
         result = this.interfaces[inet].output_rules.simulate(packet);
+        return result
     }
 
     this.configure = (inet, type, action, id, data) => {

@@ -131,8 +131,17 @@ server.listen(PORT, () => {
 
 
 n = new Network();
-n.set([], [[1], [0, 2], [1, 3, 4], [2], [2]])
-n.simulate(0, 4, []);
+n.set(
+	[
+		new Device("PC_1", ["192.168.1.2"]),
+		new Device("R_1", ["192.168.1.1", "10.1.1.1"]),
+		new Device("R_2", ["10.1.1.2", "192.168.2.1", "192.168.3.1"]),
+		new Device("PC_2", ["192.168.2.2"]),
+		new Device("PC_3", ["192.168.3.2"])
+	], 
+	[[1], [0, 2], [1, 3, 4], [2], [2]]
+)
+console.log(n.simulate(0, 4, []));
 n.simulate(3, 4, []);
 n.simulate(2, 4, []);
 n.simulate(4, 1, []);
