@@ -49,7 +49,7 @@ const setTranslationTab = (cid) => {
 			user_id: -1,
 			sid: 0,
 			test_counter: 0,
-			firewall: new Firewall(),
+			network: new Network(),
 			progress: 0,
 			in_progress: 0,
 		};
@@ -72,10 +72,6 @@ io.on('connection', (sock) => {
 	if(translationTab[cid].sid) sock.emit("set_sid", true, translationTab[cid].sid);
 
 
-
-
-
-
 	sock.on("set_sid", (sid) => {
 		console.log(sid)
 		if(sid > 270000 && sid < 280000){
@@ -85,31 +81,28 @@ io.on('connection', (sock) => {
 		else sock.emit("set_sid", false);
 	});
 
-	sock.on("get_rules", () => {
-        sock.emit("rules", translationTab[cid].firewall.list);
+	sock.on("get_rules", (device_id, interface_id, type) => {
+        sock.emit("rules", translationTab[cid].network.configure(device_id, interface_id, type));
     });
 
-	sock.on("add_rule", (rule) => {
-        translationTab[cid].firewall.add(rule);
-        sock.emit("rules", translationTab[cid].firewall.list);
+	sock.on("add_rule", (device_id, interface_id, type, rule) => {
+        sock.emit("rules", translationTab[cid].network.configure(device_id, interface_id, type, "add", -1, rule));
     });
 
-	sock.on("edit_rule", ({ id, rule }) => {
-        translationTab[cid].firewall.edit(id, rule);
-        sock.emit("rules", translationTab[cid].firewall.list);
+	sock.on("edit_rule", ( id, rule ) => {
+        sock.emit("rules", translationTab[cid].network.configure(device_id, interface_id, type, "edit", id, rule));
     });
 
 	sock.on("remove_rule", (id) => {
-        translationTab[cid].firewall.remove(id);
-        sock.emit("rules", translationTab[cid].firewall.list);
+        sock.emit("rules", translationTab[cid].network.configure(device_id, interface_id, type, "remove", id, ""));
     });
 
 	sock.on("export_iptables", () => {
-        sock.emit("iptables_data", translationTab[cid].firewall.exportToIptables());
+        //sock.emit("iptables_data", translationTab[cid].firewall.exportToIptables());
     });
 
 	sock.on("export_cisco", () => {
-        sock.emit("cisco_data", translationTab[cid].firewall.exportToCiscoACL());
+        //sock.emit("cisco_data", translationTab[cid].firewall.exportToCiscoACL());
     });
 
 	sock.on("get_questions", () => {

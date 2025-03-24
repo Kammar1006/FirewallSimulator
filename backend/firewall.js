@@ -32,6 +32,8 @@ function Firewall(){
                 this.remove(id);
             }break;
         }
+
+        return this.list;
     }
 
     this.simulate = (packet) => {

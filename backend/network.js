@@ -62,6 +62,13 @@ function Network(){
         result.push(this.devices[this.path[0]].packet_in(packet, this.connections[this.path[0]].indexOf(previos_id)))
         return result;
     }
+
+    this.configure = (device_id, inet, type, action, id, data) => {
+        if(0 <= device_id && device_id < this.devices.length){
+            return this.devices[device_id].configure(inet, type, action, id, data);
+        }
+        return false;
+    }
 }
 
 module.exports = {Network}

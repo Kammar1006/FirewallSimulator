@@ -27,10 +27,12 @@ function Device(name, inets){
 
     this.configure = (inet, type, action, id, data) => {
         if(type == "input" && 0 <= inet && inet < this.interfaces.length){
-            this.interfaces[inet].input_rules.configure(action, id, data);
+            return this.interfaces[inet].input_rules.configure(action, id, data);
         }
-        else(type == "output" && 0 <= inet && inet < this.interfaces.length)
-            this.interfaces[inet].output_rules.configure(action, id, data);
+        else if(type == "output" && 0 <= inet && inet < this.interfaces.length){
+            return this.interfaces[inet].output_rules.configure(action, id, data);
+        }
+        return false;
     }
 }
 
