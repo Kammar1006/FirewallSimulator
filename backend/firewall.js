@@ -2,7 +2,7 @@
 
 const {compareSRC, compareDES, compareProtocol} = require("./compare");
 
-function firewall(){
+function Firewall(){
     this.list = []
     
     this.add = (data) => {
@@ -18,7 +18,23 @@ function firewall(){
     this.remove = (id) => {
         if(id >= 0 && id < this.list.length)
             this.list.splice(id);
-    }   
+    }
+
+    this.configure = (action, id, data) => {
+        switch(action){
+            case "add":{
+                this.add(data);
+            }break;
+            case "edit":{
+                this.edit(id, data);
+            }break;
+            case "remove":{
+                this.remove(id);
+            }break;
+        }
+
+        return this.list;
+    }
 
     this.simulate = (packet) => {
         let status = true;
@@ -108,4 +124,4 @@ function firewall(){
     }
 }
 
-module.exports = {firewall}
+module.exports = {Firewall}
