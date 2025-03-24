@@ -23,9 +23,9 @@ const ACLElement = ({ id, action, protocol, source, destination, port, onEdit, o
       source: editSource === "Custom" ? editSourceTwo : editSource,
       destination: editDestination === "Custom" ? editDestinationTwo : editDestination,
       port: editPort === "Custom" ? editPortTwo : editPort,
-    }
+    };
 
-    onEdit(updatedRule);
+    onEdit(updatedRule); // Call the onEdit function with the updated rule
     setIsEditing(false);
   }
 
@@ -120,7 +120,7 @@ const ACLElement = ({ id, action, protocol, source, destination, port, onEdit, o
                 <div className="aCLElementContainerMiddleContainerEditPort">
                   <select value={editPort} onChange={(e) => setEditPort(e.target.value)} className="aCLElementContainerMiddleContainerEditPortSelect">
                     <option value="">Select Port</option>
-                    <option value="Any">Any</option>
+                    <option value="any">any</option>
                     <option value="Custom">Custom</option>
                   </select>
                   {

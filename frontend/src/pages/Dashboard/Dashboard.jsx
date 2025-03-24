@@ -61,6 +61,14 @@ const Dashboard = () => {
             location={"/alertsAndNotifications"}
             optionType={"optionSix"}
           />
+
+          <Card 
+            title={"Tasks"}
+            description={"Manage your tasks and to-dos."} 
+            btnText={"View Tasks"} 
+            location={"/tasks"}
+            optionType={"optionSix"}
+          />
         </div>
 
         <ActivityCard title={"Recent Activity"} />

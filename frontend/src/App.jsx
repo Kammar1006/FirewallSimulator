@@ -4,8 +4,7 @@ import "./App.css";
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Dashboard from './pages/Dashboard/Dashboard';
-
-
+import Tasks from './pages/Tasks/Tasks';
 import Navbar from './components/Navbar/Navbar';
 
 
@@ -34,6 +33,7 @@ const App = () => {
             <Route path="/securityPolicies" element={<SecurityPolicies />} />
             <Route path="/trafficMonitoring" element={<TrafficMonitoring />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/tasks" element={<Tasks />} />
             {/* <Route component={NotFound} /> */}
           </Routes>
       </div>

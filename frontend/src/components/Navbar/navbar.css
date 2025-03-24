@@ -42,7 +42,8 @@
 
 .navbarContainerRightContainerButtonOneBtn,
 .navbarContainerRightContainerButtonTwoBtn,
-.navbarContainerRightContainerButtonThreeBtn {
+.navbarContainerRightContainerButtonThreeBtn,
+.navbarContainerRightContainerButtonTasksBtn {
     font-size: 16px;
     border: none;
     outline: none;
@@ -87,4 +88,14 @@
     text-align: start;
     line-height: 34px;
     /* cursor: pointer; */
+}
+
+.navbarContainerRightContainerButtonTasksBtn {
+    border: 1px solid #D3D3D3;
+    background-color: #D3D3D3;
+    border-radius: 1px;
+    width: 100px;
+    height: 38px;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 0px;
+    color: #030303;
 }

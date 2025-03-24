@@ -256,7 +256,7 @@ const OutboundRules = () => {
               source={rule.source}
               destination={rule.destination}
               port={rule.port}
-              onEdit={editRule}
+              onEdit={editRule} // Pass the editRule function here
               onDelete={() => removeRule(rule.id)}
             />
           ))}

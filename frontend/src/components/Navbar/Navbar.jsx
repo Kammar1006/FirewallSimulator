@@ -28,6 +28,11 @@ const Navbar = () => {
                     <div className="navbarContainerRightContainerButtonTwo">
                         <button className="navbarContainerRightContainerButtonTwoBtn">Settings</button>
                     </div>
+
+                    <NavLink to="/tasks" className="navbarContainerRightContainerButtonTasks">
+                        <button className="navbarContainerRightContainerButtonTasksBtn">Tasks</button>
+                    </NavLink>
+
                     <NavLink to="/login" className="navbarContainerRightContainerButtonThree">
                         <button className="navbarContainerRightContainerButtonThreeBtn glow-on-hover">
                             <span>Logout</span>

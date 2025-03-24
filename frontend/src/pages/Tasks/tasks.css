@@ -1,0 +1,132 @@
+.tasksContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.tasksContainerTop {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+
+.tasksContainerTopLeftText {
+    font-size: 48px;
+    font-weight: 600;
+    color: #030303;
+}
+
+.tasksContainerTopRightContainerBtn {
+    display: flex;
+    font-size: 24px;
+    font-weight: 500;
+    width: 160px;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    border-radius: none;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.tasksContainerTopRightContainerBtn:hover {
+    background-color: #0056b3;
+}
+
+.tasksContainerTopRightContainerBtn p {
+    transition: all 0.5s ease-in-out;
+}
+
+.tasksContainerTopRightContainerBtn:hover p {
+    transform: scale(1.05);
+}
+
+.tasksContainerMiddle {
+    display: flex;
+    flex-direction: column;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tasksContainerMiddleChallengeContainer {
+    border: 1px solid #000;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.tasksContainerMiddleChallengeContainer.correct {
+    background-color: #28a745;
+}
+
+.tasksContainerMiddleChallengeContainer.incorrect {
+    background-color: #FB4141;
+}
+
+.tasksContainerMiddleChallengeContainerBtn {
+    display: flex;
+    font-size: 24px;
+    font-weight: 500;
+    width: 130px;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    border-radius: none;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.tasksContainerMiddleChallengeContainerBtn:hover {
+    background-color: #0056b3;
+}
+
+.tasksContainerMiddleChallengeContainerBtnText {
+    transition: all 0.3s ease-in-out;
+}
+
+.tasksContainerMiddleChallengeContainerBtn:hover .tasksContainerMiddleChallengeContainerBtnText {
+    transform: scale(1.05);
+}
+
+.tasksContainerMiddleChallengeContainerRuleText {
+    font-size: 24px;
+    font-weight: 500;
+    margin-right: 10px;
+    transition: all 0.3s ease-in-out;
+    color: #fff;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
