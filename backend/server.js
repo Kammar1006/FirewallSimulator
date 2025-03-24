@@ -18,7 +18,7 @@ const io = socketio(server, {
 });
 
 const { randomBytes } = require('crypto');
-const { firewall } = require('./firewall');
+const { Task } = require('./task');
 
 let translationTab = [];
 const setCID = (sock) => {
@@ -47,7 +47,7 @@ const setTranslationTab = (cid) => {
 			user_id: -1,
 			sid: 0,
 			test_counter: 0,
-			firewall: new firewall(),
+			task: new Task(),
 			progress: 0,
 			in_progress: 0,
 		};
@@ -70,10 +70,6 @@ io.on('connection', (sock) => {
 	if(translationTab[cid].sid) sock.emit("set_sid", true, translationTab[cid].sid);
 
 
-
-
-
-
 	sock.on("set_sid", (sid) => {
 		console.log(sid)
 		if(sid > 270000 && sid < 280000){
@@ -83,31 +79,28 @@ io.on('connection', (sock) => {
 		else sock.emit("set_sid", false);
 	});
 
-	sock.on("get_rules", () => {
-        sock.emit("rules", translationTab[cid].firewall.list);
+	sock.on("get_rules", (device_id, interface_id, type) => {
+        sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type));
     });
 
-	sock.on("add_rule", (rule) => {
-        translationTab[cid].firewall.add(rule);
-        sock.emit("rules", translationTab[cid].firewall.list);
+	sock.on("add_rule", (device_id, interface_id, type, rule) => {
+        sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "add", -1, rule));
     });
 
-	sock.on("edit_rule", ({ id, rule }) => {
-        translationTab[cid].firewall.edit(id, rule);
-        sock.emit("rules", translationTab[cid].firewall.list);
+	sock.on("edit_rule", ( id, rule ) => {
+        sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "edit", id, rule));
     });
 
 	sock.on("remove_rule", (id) => {
-        translationTab[cid].firewall.remove(id);
-        sock.emit("rules", translationTab[cid].firewall.list);
+        sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "remove", id, ""));
     });
 
 	sock.on("export_iptables", () => {
-        sock.emit("iptables_data", translationTab[cid].firewall.exportToIptables());
+        //sock.emit("iptables_data", translationTab[cid].firewall.exportToIptables());
     });
 
 	sock.on("export_cisco", () => {
-        sock.emit("cisco_data", translationTab[cid].firewall.exportToCiscoACL());
+        //sock.emit("cisco_data", translationTab[cid].firewall.exportToCiscoACL());
     });
 
 	sock.on("get_questions", () => {
@@ -126,50 +119,21 @@ server.listen(PORT, () => {
 	console.log("Work");
 });
 
+
 /*
-
-f = new firewall()
-
-f.add({ action: "permit", src: "192.168.1.1", des: "10.0.0.0/24", protocol: "tcp:80", additional: {} });
-f.add({ action: "deny", src: "192.168.1.2", des: "any", protocol: "udp:53", additional: {} });
-f.add({ action: "deny", src: "any", des: "any", protocol: "any", additional: {} });
-
-console.log("firewall rules")
-console.log(f.list)
-
-console.log("-------------------")
-
-// Pakiety do testów
-const packet1 = { src: "192.168.1.1", des: "10.0.0.5", protocol: "tcp:80" };
-const packet2 = { src: "192.168.1.2", des: "8.8.8.8", protocol: "udp:53" };
-console.log("packet1")
-console.log(packet1)
-console.log("packet2")
-console.log(packet2)
-
-console.log("--------------------------")
-console.log("Simulate: ")
-
-console.log("Test pakiet 1:", f.simulate(packet1)); // Powinno zwrócić "permit"
-console.log("Test pakiet 2:", f.simulate(packet2)); // Powinno zwrócić "deny"
-
-console.log("--------------------------")
-console.log("To Iptables: ")
-console.log(f.exportToIptables())
-
-
-console.log("--------------------------")
-console.log("To ACL: ")
-console.log(f.exportToCiscoACL())
-
-console.log("--------------------------")
-console.log("Test: ")
-
-console.log(f.test([
-	{packet: packet1, result: "permit"}, 
-	{packet: packet2, result: "deny"}
-]));
-
-console.log("--------------------------")
-
+n = new Network();
+n.set(
+	[
+		new Device("PC_1", ["192.168.1.2"]),
+		new Device("R_1", ["192.168.1.1", "10.1.1.1"]),
+		new Device("R_2", ["10.1.1.2", "192.168.2.1", "192.168.3.1"]),
+		new Device("PC_2", ["192.168.2.2"]),
+		new Device("PC_3", ["192.168.3.2"])
+	], 
+	[[1], [0, 2], [1, 3, 4], [2], [2]]
+)
+console.log(n.simulate(0, 4, []));
+n.simulate(3, 4, []);
+n.simulate(2, 4, []);
+n.simulate(4, 1, []);
 */
