@@ -18,7 +18,7 @@ const io = socketio(server, {
 });
 
 const { randomBytes } = require('crypto');
-const { firewall } = require('./firewall');
+const { Firewall } = require('./firewall');
 
 let translationTab = [];
 const setCID = (sock) => {
@@ -47,7 +47,7 @@ const setTranslationTab = (cid) => {
 			user_id: -1,
 			sid: 0,
 			test_counter: 0,
-			firewall: new firewall(),
+			firewall: new Firewall(),
 			progress: 0,
 			in_progress: 0,
 		};
