@@ -34,13 +34,9 @@ const App = () => {
             <Route path="/trafficMonitoring" element={<TrafficMonitoring />} />
             <Route path="/login" element={<Login />} />
             <Route path="/tasks" element={<Tasks />} />
-            {/* <Route component={NotFound} /> */}
+            <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Routes>
       </div>
-
-      <Routes>
-        <Route path="/login" element={<Login />} />
-      </Routes>
 
       
     </div>

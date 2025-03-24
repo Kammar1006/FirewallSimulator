@@ -1,107 +1,79 @@
 import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
 export const RulesContext = createContext();
 
 const RulesContextProvider = (props) => {
-    // Load rules from localStorage or initialize as an empty array
-    const [rules, setRules] = useState(() => {
-        const savedRules = localStorage.getItem("rules");
-        return savedRules ? JSON.parse(savedRules) : [];
-    });
+    const [rules, setRules] = useState([]);
+    const [challenges, setChallenges] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Load challenges from localStorage or initialize with predefined challenges
-    const [challenges, setChallenges] = useState(() => {
-        const savedChallenges = localStorage.getItem("challenges");
-        return savedChallenges
-            ? JSON.parse(savedChallenges)
-            : [
-                  {
-                      id: 1,
-                      description: "Allow TCP from 192.168.1.1 to any on port 53",
-                      expected: {
-                          action: "Allow",
-                          protocol: "TCP",
-                          source: "192.168.1.1",
-                          destination: "192.168.1.1",
-                          port: "53",
-                      },
-                      isCorrect: null,
-                  },
-                  {
-                      id: 2,
-                      description: "Deny UDP from 192.168.1.3 to 192.168.1.3 on port 443",
-                      expected: {
-                          action: "Deny",
-                          protocol: "UDP",
-                          source: "192.168.1.3",
-                          destination: "192.168.1.3",
-                          port: "443",
-                      },
-                      isCorrect: null,
-                  },
-                  {
-                      id: 3,
-                      description: "Allow TCP from 192.168.1.4 to 192.168.1.4 on port 22",
-                      expected: {
-                          action: "Allow",
-                          protocol: "TCP",
-                          source: "192.168.1.4",
-                          destination: "192.168.1.4",
-                          port: "22",
-                      },
-                      isCorrect: null,
-                  },
-              ];
-    });
-
-    // Save rules to localStorage whenever they change
     useEffect(() => {
-        localStorage.setItem("rules", JSON.stringify(rules));
-    }, [rules]);
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                console.log("Fetching rules and challenges...");
+                const rulesResponse = await axios.get("http://localhost:5000/rules");
+                const challengesResponse = await axios.get("http://localhost:5000/challenges");
+                console.log("Rules fetched:", rulesResponse.data);
+                console.log("Challenges fetched:", challengesResponse.data);
+                setRules(rulesResponse.data);
+                setChallenges(challengesResponse.data);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+                setError("Failed to fetch data from the backend.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
-    // Save challenges to localStorage whenever they change
-    useEffect(() => {
-        localStorage.setItem("challenges", JSON.stringify(challenges));
-    }, [challenges]);
-
-    const areRulesEqual = (rule1, rule2) => {
-        return (
-            rule1.action === rule2.action &&
-            rule1.protocol === rule2.protocol &&
-            rule1.source === rule2.source &&
-            rule1.destination === rule2.destination &&
-            rule1.port === rule2.port
-        );
+    const addRule = async (rule) => {
+        try {
+            const response = await axios.post("http://localhost:5000/rules", rule);
+            console.log("Rule added:", response.data);
+            setRules((prev) => [...prev, response.data]);
+        } catch (error) {
+            console.error("Error adding rule:", error);
+        }
     };
 
-    const validateChallenge = (challengeId) => {
-        setChallenges((prevChallenges) =>
-            prevChallenges.map((challenge) => {
-                if (challenge.id === challengeId) {
-                    const matchingRule = rules.find((rule) =>
-                        areRulesEqual(rule, challenge.expected)
-                    );
-                    return { ...challenge, isCorrect: !!matchingRule };
-                }
-                return challenge;
-            })
-        );
+    const removeRule = async (id) => {
+        try {
+            await axios.delete(`http://localhost:5000/rules/${id}`);
+            console.log("Rule removed with ID:", id);
+            setRules((prev) => prev.filter((rule) => rule.id !== id));
+        } catch (error) {
+            console.error("Error removing rule:", error);
+        }
     };
 
-    const addRule = (rule) => {
-        setRules([...rules, rule]);
+    const editRule = async (updatedRule) => {
+        try {
+            const response = await axios.put(`http://localhost:5000/rules/${updatedRule.id}`, updatedRule);
+            console.log("Rule updated:", response.data);
+            setRules((prev) =>
+                prev.map((rule) => (rule.id === updatedRule.id ? response.data : rule))
+            );
+        } catch (error) {
+            console.error("Error editing rule:", error);
+        }
     };
 
-    const removeRule = (id) => {
-        setRules(rules.filter((rule) => rule.id !== id));
-    };
-
-    const editRule = (updatedRule) => {
-        setRules((prevRules) =>
-            prevRules.map((rule) =>
-                rule.id === updatedRule.id ? updatedRule : rule
-            )
-        );
+    const validateChallenge = async (challengeId) => {
+        try {
+            const response = await axios.post(`http://localhost:5000/challenges/${challengeId}/validate`);
+            console.log("Challenge validated:", response.data);
+            setChallenges((prev) =>
+                prev.map((challenge) =>
+                    challenge.id === challengeId ? response.data : challenge
+                )
+            );
+        } catch (error) {
+            console.error("Error validating challenge:", error);
+        }
     };
 
     const value = {
@@ -111,6 +83,8 @@ const RulesContextProvider = (props) => {
         editRule,
         challenges,
         validateChallenge,
+        loading,
+        error,
     };
 
     return (

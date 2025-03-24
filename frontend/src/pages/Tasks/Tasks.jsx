@@ -1,17 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { RulesContext } from "../../context/RulesContext";
 import "./tasks.css";
 
 const Tasks = () => {
-    const { challenges, validateChallenge } = useContext(RulesContext);
-    const [loading, setLoading] = useState({});
+    const { challenges, validateChallenge, loading, error } = useContext(RulesContext);
+    const [loadingState, setLoadingState] = useState({});
     const [loadingAll, setLoadingAll] = useState(false);
 
+    useEffect(() => {
+        console.log("Challenges in Tasks component:", challenges);
+    }, [challenges]);
+
     const handleCheck = async (challengeId) => {
-        setLoading((prev) => ({ ...prev, [challengeId]: true }));
+        setLoadingState((prev) => ({ ...prev, [challengeId]: true }));
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading
         validateChallenge(challengeId);
-        setLoading((prev) => ({ ...prev, [challengeId]: false }));
+        setLoadingState((prev) => ({ ...prev, [challengeId]: false }));
     };
 
     const handleCheckAll = async () => {
@@ -21,59 +25,60 @@ const Tasks = () => {
         setLoadingAll(false);
     };
 
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
     return (
         <div className="tasksContainer">
-
             {/* Top Part */}
             <div className="tasksContainerTop">
-                {/* Left Text */}
                 <div className="tasksContainerTopLeft">
-                    <p className="tasksContainerTopLeftText">
-                        Tasks
-                    </p>
+                    <p className="tasksContainerTopLeftText">Tasks</p>
                 </div>
-
-                {/* Right Part */}
                 <div className="tasksContainerTopRight">
-                    <div className="tasksContainerTopRightContainer">
-                        <button
-                            className="tasksContainerTopRightContainerBtn"
-                            onClick={handleCheckAll}
-                            disabled={loadingAll}
-                        >
-                            {loadingAll ? <div className="spinner"></div> : <p>Check All</p>}
-                        </button>
-                    </div>
+                    <button
+                        className="tasksContainerTopRightContainerBtn"
+                        onClick={handleCheckAll}
+                        disabled={loadingAll}
+                    >
+                        {loadingAll ? <div className="spinner"></div> : <p>Check All</p>}
+                    </button>
                 </div>
             </div>
 
             {/* Middle Part */}
             <div className="tasksContainerMiddle">
-                
-                {/* Display Tasks */}
-                {
-                    challenges.map(challenge => (
-                        <div key={challenge.id} className={`tasksContainerMiddleChallengeContainer ${challenge.isCorrect === true ? "correct" : "incorrect"}`}>
-                            <div className="tasksContainerMiddleChallengeContainerRule">
-                                <p className="tasksContainerMiddleChallengeContainerRuleText">
-                                    {challenge.description}
-                                </p>
-                            </div>
-                            <button
-                                className="tasksContainerMiddleChallengeContainerBtn"
-                                onClick={() => handleCheck(challenge.id)}
-                                disabled={loading[challenge.id]}
-                            >
-                                <p className="tasksContainerMiddleChallengeContainerBtnText">
-                                    {loading[challenge.id] ? <div className="spinner"></div> : "Check"}
-                                </p>
-                            </button>
+                {challenges.map((challenge) => (
+                    <div
+                        key={challenge.id}
+                        className={`tasksContainerMiddleChallengeContainer ${
+                            challenge.isCorrect === true ? "correct" : "incorrect"
+                        }`}
+                    >
+                        <div className="tasksContainerMiddleChallengeContainerRule">
+                            <p className="tasksContainerMiddleChallengeContainerRuleText">
+                                {challenge.description}
+                            </p>
                         </div>
-                    ))
-                }
-
+                        <button
+                            className="tasksContainerMiddleChallengeContainerBtn"
+                            onClick={() => handleCheck(challenge.id)}
+                            disabled={loadingState[challenge.id]}
+                        >
+                            {loadingState[challenge.id] ? (
+                                <div className="spinner"></div>
+                            ) : (
+                                "Check"
+                            )}
+                        </button>
+                    </div>
+                ))}
             </div>
-
         </div>
     );
 };

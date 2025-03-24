@@ -7,10 +7,10 @@ import RulesContextProvider from './context/RulesContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <RulesContextProvider>
+    <RulesContextProvider>
+      <BrowserRouter>
         <App />
-      </RulesContextProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </RulesContextProvider>
   </StrictMode>,
 )
