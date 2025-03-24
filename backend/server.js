@@ -18,9 +18,7 @@ const io = socketio(server, {
 });
 
 const { randomBytes } = require('crypto');
-const { Firewall } = require('./firewall');
-const { Network } = require('./network');
-const { Device } = require('./device');
+const { Task } = require('./task');
 
 let translationTab = [];
 const setCID = (sock) => {
@@ -49,7 +47,7 @@ const setTranslationTab = (cid) => {
 			user_id: -1,
 			sid: 0,
 			test_counter: 0,
-			network: new Network(),
+			task: new Task(),
 			progress: 0,
 			in_progress: 0,
 		};
@@ -82,19 +80,19 @@ io.on('connection', (sock) => {
 	});
 
 	sock.on("get_rules", (device_id, interface_id, type) => {
-        sock.emit("rules", translationTab[cid].network.configure(device_id, interface_id, type));
+        sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type));
     });
 
 	sock.on("add_rule", (device_id, interface_id, type, rule) => {
-        sock.emit("rules", translationTab[cid].network.configure(device_id, interface_id, type, "add", -1, rule));
+        sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "add", -1, rule));
     });
 
 	sock.on("edit_rule", ( id, rule ) => {
-        sock.emit("rules", translationTab[cid].network.configure(device_id, interface_id, type, "edit", id, rule));
+        sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "edit", id, rule));
     });
 
 	sock.on("remove_rule", (id) => {
-        sock.emit("rules", translationTab[cid].network.configure(device_id, interface_id, type, "remove", id, ""));
+        sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "remove", id, ""));
     });
 
 	sock.on("export_iptables", () => {
@@ -122,7 +120,7 @@ server.listen(PORT, () => {
 });
 
 
-
+/*
 n = new Network();
 n.set(
 	[
@@ -138,55 +136,4 @@ console.log(n.simulate(0, 4, []));
 n.simulate(3, 4, []);
 n.simulate(2, 4, []);
 n.simulate(4, 1, []);
-
-
-
-
-
-/*
-
-f = new firewall()
-
-f.add({ action: "permit", src: "192.168.1.1", des: "10.0.0.0/24", protocol: "tcp:80", additional: {} });
-f.add({ action: "deny", src: "192.168.1.2", des: "any", protocol: "udp:53", additional: {} });
-f.add({ action: "deny", src: "any", des: "any", protocol: "any", additional: {} });
-
-console.log("firewall rules")
-console.log(f.list)
-
-console.log("-------------------")
-
-// Pakiety do testów
-const packet1 = { src: "192.168.1.1", des: "10.0.0.5", protocol: "tcp:80" };
-const packet2 = { src: "192.168.1.2", des: "8.8.8.8", protocol: "udp:53" };
-console.log("packet1")
-console.log(packet1)
-console.log("packet2")
-console.log(packet2)
-
-console.log("--------------------------")
-console.log("Simulate: ")
-
-console.log("Test pakiet 1:", f.simulate(packet1)); // Powinno zwrócić "permit"
-console.log("Test pakiet 2:", f.simulate(packet2)); // Powinno zwrócić "deny"
-
-console.log("--------------------------")
-console.log("To Iptables: ")
-console.log(f.exportToIptables())
-
-
-console.log("--------------------------")
-console.log("To ACL: ")
-console.log(f.exportToCiscoACL())
-
-console.log("--------------------------")
-console.log("Test: ")
-
-console.log(f.test([
-	{packet: packet1, result: "permit"}, 
-	{packet: packet2, result: "deny"}
-]));
-
-console.log("--------------------------")
-
 */
