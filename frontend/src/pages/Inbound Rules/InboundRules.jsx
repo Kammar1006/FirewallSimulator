@@ -29,11 +29,13 @@ const InboundRules = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredRules = rules.filter((rule) =>
-    `${rule.action} ${rule.protocol} ${rule.source} ${rule.destination} ${rule.port}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+  const filteredRules = rules
+    .filter((rule) => rule.action === "Allow")
+    .filter((rule) =>
+      `${rule.action} ${rule.protocol} ${rule.source} ${rule.destination} ${rule.port}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
 
   const resetForm = () => {
     setAction("Allow");

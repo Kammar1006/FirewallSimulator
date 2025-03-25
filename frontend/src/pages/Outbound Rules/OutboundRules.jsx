@@ -19,11 +19,13 @@ const OutboundRules = () => {
   const [portTwo, setPortTwo] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredRules = rules.filter((rule) =>
-    `${rule.action} ${rule.protocol} ${rule.source} ${rule.destination} ${rule.port}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+  const filteredRules = rules
+    .filter((rule) => rule.action === "Deny")
+    .filter((rule) =>
+      `${rule.action} ${rule.protocol} ${rule.source} ${rule.destination} ${rule.port}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
 
   const resetForm = () => {
     setAction("Deny");
@@ -48,7 +50,7 @@ const OutboundRules = () => {
       port: port === "Custom" ? portTwo : port,
     });
     resetForm();
-    setSearchTerm(""); // Reset search term after adding a rule
+    setSearchTerm("");
   };
 
   const handleClose = () => {
@@ -131,7 +133,7 @@ const OutboundRules = () => {
                       <select
                         value={protocol}
                         className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerProtocolSelect"
-                        onChange={(e) => setProtocol(e.target.value)} // Poprawka tutaj
+                        onChange={(e) => setProtocol(e.target.value)}
                       >
                         <option value="">Select Protocol</option>
                         <option value="TCP">TCP</option>
@@ -216,7 +218,7 @@ const OutboundRules = () => {
                             type="text"
                             placeholder="Enter Port"
                             className="outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerPortCustomInput"
-                            onChange={(e) => setPortTwo(e.target.value)} // Poprawka tutaj
+                            onChange={(e) => setPortTwo(e.target.value)}
                           />
                         </div>
                       )}
@@ -238,7 +240,7 @@ const OutboundRules = () => {
                     <img
                       src={assets.accept}
                       className="outboundRulesContainerMiddleRulesRuleContainerCloseAcceptAcceptIcon"
-                      onClick={handleAddRule} // Poprawka tutaj
+                      onClick={handleAddRule}
                       alt=""
                     />
                   </div>
@@ -256,7 +258,7 @@ const OutboundRules = () => {
               source={rule.source}
               destination={rule.destination}
               port={rule.port}
-              onEdit={editRule} // Pass the editRule function here
+              onEdit={editRule}
               onDelete={() => removeRule(rule.id)}
             />
           ))}
