@@ -1,6 +1,8 @@
 .inboundRules {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
 .inboundRulesContainer {
@@ -373,4 +375,89 @@
   border: none;
   outline: none;
   border: 1px solid #c2d3b6;
+}
+
+.inboundRulesRightTasks {
+  /* margin-left: 20px; */
+}
+
+.inboundRulesRightTasksContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.inboundRulesRightTasksContainerDiv {
+  width: 440px;
+  height: calc(100vh - 70px);
+  background-color: #D3F1DF;
+  border-left: 1px solid #7ED4AD;
+  z-index: -1;
+  transition: all 0.3s ease-in-out;
+}
+
+.inboundRulesRightTasksContainerDivClose {
+  transform: translateX(100%);
+  width: 0;
+}
+
+.inboundRulesRightTasksContainerSidebar {
+  cursor: pointer;
+}
+
+.inboundRulesRightTasksContainerArrowImg {
+  width: 50px;
+  /* transform: rotate(180deg); */
+  height: auto;
+  /* background-color: lightblue; */
+  margin-top: 13px;
+  transition: all 0.3s ease-in-out;
+}
+
+.inboundRulesRightTasksContainerArrowImgClose {
+  transform: rotate(180deg);
+}
+
+.inboundRulesRightTasksContainerArrowImgOpen {
+  transform: rotate(0deg);
+  /* margin-left: 50px; */
+}
+
+.inboundRulesRightTasksContainerArrowImgOpen .inboundRulesRightTasks {
+  margin-left: 100px;
+}
+
+.inboundRulesRightTasksOpen {
+  margin-left: 20px;
+}
+
+.inboundRulesRightTasksClose {
+  margin-left: 0;
+}
+
+.inboundRulesRightTasksContainerDivChallangeContainer {
+  display: flex;
+  flex-direction: row;
+  /* background-color: lightgray; */
+  border: 2px solid #7ED4AD;
+  width: 92%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  line-height: 25px;
+}
+
+.inboundRulesRightTasksContainerDivChallangeContainer.correct {
+  background-color: green;
+}
+
+.inboundRulesRightTasksContainerDivChallangeContainer.incorrect {
+  background-color: red;
 }

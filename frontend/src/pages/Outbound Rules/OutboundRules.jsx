@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./outboundRules.css";
 import ACLElement from "../../components/ACLElement/ACLElement";
 import { RulesContext } from "../../context/RulesContext";
@@ -6,8 +6,7 @@ import assets from "../../assets/assets";
 import { useLocation } from "react-router-dom";
 
 const OutboundRules = () => {
-  const { rules, addRule, removeRule, editRule } = useContext(RulesContext);
-
+  const { rules, addRule, removeRule, editRule, challenges, validateChallenge, loading, error } = useContext(RulesContext);
   const [addNewRule, setAddNewRule] = useState(false);
   const [action, setAction] = useState("Deny");
   const [protocol, setProtocol] = useState("");
@@ -18,8 +17,10 @@ const OutboundRules = () => {
   const [destinationTwo, setDestinationTwo] = useState("");
   const [port, setPort] = useState("");
   const [portTwo, setPortTwo] = useState("");
-  // const [device, setDevice] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [loadingState, setLoadingState] = useState({});
+  const [loadingAll, setLoadingAll] = useState(false);
+  const [sidebar, setSidebar] = useState(false);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -65,6 +66,27 @@ const OutboundRules = () => {
   const handleClose = () => {
     setAddNewRule(false);
     resetForm();
+  };
+
+  const handleCheck = async (challengeId) => {
+    setLoadingState((prev) => ({ ...prev, [challengeId]: true }));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    validateChallenge(challengeId);
+    setLoadingState((prev) => ({ ...prev, [challengeId]: false }));
+  };
+
+  const handleCheckAll = async () => {
+    setLoadingAll(true);
+    const updatedLoadingState = {};
+    for (const challenge of challenges) {
+      updatedLoadingState[challenge.id] = true;
+      setLoadingState({ ...updatedLoadingState });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      validateChallenge(challenge.id);
+      updatedLoadingState[challenge.id] = false;
+      setLoadingState({ ...updatedLoadingState });
+    }
+    setLoadingAll(false);
   };
 
   return (
@@ -287,6 +309,52 @@ const OutboundRules = () => {
               onDelete={() => removeRule(rule.id)}
             />
           ))}
+        </div>
+      </div>
+
+      <div className={`inboundRulesRightTasks ${sidebar ? "inboundRulesRightTasksOpen" : "inboundRulesRightTasksClose"}`}>
+        <div className="inboundRulesRightTasksContainer">
+          <div className="inboundRulesRightTasksContainerSidebar" onClick={() => setSidebar(!sidebar)}>
+            <img
+              src={assets.leftArrow}
+              alt=""
+              className={`inboundRulesRightTasksContainerArrowImg ${
+                sidebar ? "inboundRulesRightTasksContainerArrowImgClose" : "inboundRulesRightTasksContainerArrowImgOpen"
+              }`}
+            />
+          </div>
+
+          <div
+            className={`inboundRulesRightTasksContainerDiv ${
+              sidebar ? "inboundRulesRightTasksContainerDivOpen" : "inboundRulesRightTasksContainerDivClose"
+            }`}
+          >
+            <button className="tasksContainerTopRightContainerBtn" onClick={handleCheckAll} disabled={loadingAll}>
+              {loadingAll ? <div className="spinner"></div> : <p>Check All</p>}
+            </button>
+
+            {challenges.map((challenge) => (
+              <div
+                key={challenge.id}
+                className={`inboundRulesRightTasksContainerDivChallangeContainer ${challenge.isCorrect === true ? "correct" : challenge.isCorrect === false ? "incorrect" : ""}`}
+              >
+                <div className="inboundRulesRightTasksContainerDivContainerRule">
+                  <p className="inboundRulesRightTasksContainerDivContainerRuleText">{challenge.description}</p>
+                </div>
+                <button
+                  className="tasksContainerMiddleChallengeContainerBtn"
+                  onClick={() => handleCheck(challenge.id)}
+                  disabled={loadingState[challenge.id]}
+                >
+                  {loadingState[challenge.id] ? (
+                    <div className="spinner"></div>
+                  ) : (
+                    "Check"
+                  )}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

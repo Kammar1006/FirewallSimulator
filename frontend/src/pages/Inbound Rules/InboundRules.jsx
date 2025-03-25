@@ -1,4 +1,4 @@
-import React, { use, useContext, useEffect, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./inboundRules.css";
 import ACLElement from "../../components/ACLElement/ACLElement";
 import { RulesContext } from "../../context/RulesContext.jsx";
@@ -6,7 +6,7 @@ import assets from "../../assets/assets.js";
 import { useLocation } from "react-router-dom";
 
 const InboundRules = () => {
-  const { rules, addRule, removeRule, editRule } = useContext(RulesContext);
+  const { rules, addRule, removeRule, editRule, challenges, validateChallenge, loading, error } = useContext(RulesContext);
   const [newRule, setNewRule] = useState({
     action: "Allow",
     protocol: "",
@@ -14,13 +14,9 @@ const InboundRules = () => {
     destination: "",
     port: "",
   });
-
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const device = queryParams.get("device");
-
+  const [loadingState, setLoadingState] = useState({});
+  const [loadingAll, setLoadingAll] = useState(false);
   const [addNewRule, setAddNewRule] = useState(false);
-
   const [id, setId] = useState();
   const [action, setAction] = useState("Allow");
   const [protocol, setProtocol] = useState();
@@ -31,9 +27,12 @@ const InboundRules = () => {
   const [destinationTwo, setDestinationTwo] = useState();
   const [port, setPort] = useState();
   const [portTwo, setPortTwo] = useState();
-  // const [device, setDevice] = useState("");
-
   const [searchTerm, setSearchTerm] = useState("");
+  const [sidebar, setSidebar] = useState(false);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const device = queryParams.get("device");
 
   useEffect(() => {
     if (device) {
@@ -43,13 +42,44 @@ const InboundRules = () => {
     }
   }, [device]);
 
+  useEffect(() => {
+    console.log("Challenges in Tasks component:", challenges);
+  }, [challenges]);
+
+  const handleCheck = async (challengeId) => {
+    setLoadingState((prev) => ({ ...prev, [challengeId]: true }));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    validateChallenge(challengeId);
+    setLoadingState((prev) => ({ ...prev, [challengeId]: false }));
+  };
+
+  const handleCheckAll = async () => {
+    setLoadingAll(true);
+    const updatedLoadingState = {};
+    for (const challenge of challenges) {
+        updatedLoadingState[challenge.id] = true;
+        setLoadingState({ ...updatedLoadingState }); // Update loading state for each challenge
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading
+        validateChallenge(challenge.id);
+        updatedLoadingState[challenge.id] = false;
+        setLoadingState({ ...updatedLoadingState });
+    }
+    setLoadingAll(false);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   const filteredRules = rules
     .filter((rule) => rule.action === "Allow")
     .filter((rule) => rule.device === device)
     .filter((rule) =>
-      `${rule.action} ${rule.protocol} ${rule.source} ${rule.destination} ${rule.port}`
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+      `${rule.action} ${rule.protocol} ${rule.source} ${rule.destination} ${rule.port}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   const resetForm = () => {
@@ -108,19 +138,12 @@ const InboundRules = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <img
-                src={assets.searchIcon}
-                alt="Search"
-                className="inboundRulesContainerTopSearchBarIcon"
-              />
+              <img src={assets.searchIcon} alt="Search" className="inboundRulesContainerTopSearchBarIcon" />
             </div>
 
             {/* Add Rule Button */}
             <div className="inboundRulesContainerTopAddRuleButton">
-              <button
-                className="inboundRulesContainerTopAddRuleButtonButton"
-                onClick={() => setAddNewRule(true)}
-              >
+              <button className="inboundRulesContainerTopAddRuleButtonButton" onClick={() => setAddNewRule(true)}>
                 Add New Rule
               </button>
             </div>
@@ -145,20 +168,14 @@ const InboundRules = () => {
                 <div className="inboundRulesContainerRulesRuleContainerRulesPart">
                   {/* Rule Number */}
                   <div className="inboundRulesContainerRulesRuleContainerRulesPartRuleNr">
-                    <p className="inboundRulesContainerRulesRuleContainerRulesPartRuleNrText">
-                      Rule
-                    </p>
-                    <p className="inboundRulesContainerRulesRuleContainerRulesPartRuleNrTextNr">
-                      {rules.length + 1}
-                    </p>
+                    <p className="inboundRulesContainerRulesRuleContainerRulesPartRuleNrText">Rule</p>
+                    <p className="inboundRulesContainerRulesRuleContainerRulesPartRuleNrTextNr">{rules.length + 1}</p>
                   </div>
 
                   <div className="inboundRulesContainerRulesRuleContainerRulesPartTwoRuleContainer">
                     {/* Action - static value (allow) */}
                     <div className="inboundRulesContainerRulesRuleContainerRulesPartAction">
-                      <p className="inboundRulesContainerRulesRuleContainerRulesPartActionText">
-                        Allow
-                      </p>
+                      <p className="inboundRulesContainerRulesRuleContainerRulesPartActionText">Allow</p>
                     </div>
 
                     {/* Protocol choose option input */}
@@ -235,11 +252,7 @@ const InboundRules = () => {
 
                     {/* Port */}
                     <div className="inboundRulesContainerRulesRuleContainerPort">
-                      <select
-                        value={port}
-                        onChange={(e) => setPort(e.target.value)}
-                        className="inboundRulesContainerRulesRuleContainerPortSelect"
-                      >
+                      <select value={port} onChange={(e) => setPort(e.target.value)} className="inboundRulesContainerRulesRuleContainerPortSelect">
                         <option value="">Select Port</option>
                         <option value="53">53</option>
                         <option value="80">80</option>
@@ -275,12 +288,7 @@ const InboundRules = () => {
 
                 <div className="inboundRulesContainerRulesRuleContainerCloseAccept">
                   <div className="inboundRulesContainerRulesRuleContainerCloseAcceptClose">
-                    <img
-                      src={assets.close}
-                      alt=""
-                      className="inboundRulesContainerRulesRuleContainerCloseAcceptCloseIcon"
-                      onClick={handleClose}
-                    />
+                    <img src={assets.close} alt="" className="inboundRulesContainerRulesRuleContainerCloseAcceptCloseIcon" onClick={handleClose} />
                   </div>
 
                   <div className="inboundRulesContainerRulesRuleContainerCloseAcceptAccept">
@@ -310,7 +318,63 @@ const InboundRules = () => {
             />
           ))}
         </div>
+
+        {/* <div className="inboundRulesContainerSidebar">
+          kfdj;sa
+        </div> */}
       </div>
+
+      <div className={`inboundRulesRightTasks ${sidebar ? "inboundRulesRightTasksOpen" : "inboundRulesRightTasksClose"}`}>
+        <div className="inboundRulesRightTasksContainer">
+          <div className="inboundRulesRightTasksContainerSidebar" onClick={() => setSidebar(!sidebar)}>
+            <img
+              src={assets.leftArrow}
+              alt=""
+              className={`inboundRulesRightTasksContainerArrowImg ${
+                sidebar ? "inboundRulesRightTasksContainerArrowImgClose" : "inboundRulesRightTasksContainerArrowImgOpen"
+              }`}
+              // onClick={() => setSidebar(!sidebar)}
+            />
+          </div>
+
+          <div
+            className={`inboundRulesRightTasksContainerDiv ${
+              sidebar ? "inboundRulesRightTasksContainerDivOpen" : "inboundRulesRightTasksContainerDivClose"
+            }`}
+          >
+            <button className="tasksContainerTopRightContainerBtn" onClick={handleCheckAll} disabled={loadingAll}>
+              {loadingAll ? <div className="spinner"></div> : <p>Check All</p>}
+            </button>
+
+            {challenges.map((challenge) => (
+              <div
+                key={challenge.id}
+                className={`inboundRulesRightTasksContainerDivChallangeContainer ${challenge.isCorrect === true ? "correct" : "incorrect"}`}
+              >
+                <div className="inboundRulesRightTasksContainerDivContainerRule">
+                  <p className="inboundRulesRightTasksContainerDivContainerRuleText">{challenge.description}</p>
+                </div>
+                {/* <button
+                            className="tasksContainerMiddleChallengeContainerBtn"
+                            onClick={() => handleCheck(challenge.id)}
+                            disabled={loadingState[challenge.id]
+
+                            }
+                        >
+                            {loadingState[challenge.id] ? (
+                                <div className="spinner"></div>
+                            ) : (
+                                "Check"
+                            )}
+                        </button> */}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/*   const [sidebar, setSidebar] = useState(false);
+       */}
     </div>
   );
 };

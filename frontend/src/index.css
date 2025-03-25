@@ -8,4 +8,11 @@
 
 body {
   font-family: "Nunito", sans-serif;
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  scrollbar-width: none; /* For Firefox */
+}
+
+/* hide scrollbar */
+::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge */
 }

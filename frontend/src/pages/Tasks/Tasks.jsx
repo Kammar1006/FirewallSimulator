@@ -3,7 +3,7 @@ import { RulesContext } from "../../context/RulesContext";
 import "./tasks.css";
 
 const Tasks = () => {
-    const { challenges, validateChallenge, loading, error } = useContext(RulesContext);
+    const { challenges = [], validateChallenge = () => {}, loading, error } = useContext(RulesContext);
     const [loadingState, setLoadingState] = useState({});
     const [loadingAll, setLoadingAll] = useState(false);
 

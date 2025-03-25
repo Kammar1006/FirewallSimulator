@@ -7,6 +7,8 @@ import close from "./close.png";
 
 import searchIcon from "./searchIcon.png";
 
+import leftArrow from "./leftArrow.png";
+
 export default {
     flameIcon,
     infoIcon,
@@ -14,4 +16,5 @@ export default {
     accept,
     close,
     searchIcon,
+    leftArrow,
 }
