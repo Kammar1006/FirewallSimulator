@@ -27,6 +27,7 @@ const OutboundRules = () => {
 
   const filteredRules = rules
     .filter((rule) => rule.action === "Deny")
+    .filter((rule) => rule.device === device)
     .filter((rule) =>
       `${rule.action} ${rule.protocol} ${rule.source} ${rule.destination} ${rule.port}`
         .toLowerCase()
@@ -246,7 +247,7 @@ const OutboundRules = () => {
                       </select>
                     </div> */}
 
-                    
+
                   </div>
                 </div>
 

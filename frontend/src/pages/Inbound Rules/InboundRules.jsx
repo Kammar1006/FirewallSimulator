@@ -45,6 +45,7 @@ const InboundRules = () => {
 
   const filteredRules = rules
     .filter((rule) => rule.action === "Allow")
+    .filter((rule) => rule.device === device)
     .filter((rule) =>
       `${rule.action} ${rule.protocol} ${rule.source} ${rule.destination} ${rule.port}`
         .toLowerCase()
