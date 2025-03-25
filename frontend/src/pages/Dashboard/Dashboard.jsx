@@ -1,13 +1,18 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import "./dashboard.css";
 import Card from '../../components/Card/Card';
 import ActivityCard from '../../components/ActivityCard/ActivityCard';
 
 const Dashboard = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const device = queryParams.get("device");
+
   return (
     <div className="dashboard">
       <div className="dashboardContainer">
-
+        {/* <h1>Dashboard for {device || "Unknown Device"}</h1> */}
         <div className="column">
           <Card 
             title={"Inbound Rules"}
@@ -15,9 +20,7 @@ const Dashboard = () => {
             btnText={"Add Rule"} 
             location={"/inboundRules"}
             optionType={"optionOne"}
-            
           />
-
           <Card 
             title={"Security Policies"}
             description={"Set security policies for the network."} 
@@ -26,7 +29,6 @@ const Dashboard = () => {
             optionType={"optionTwo"}
           />
         </div>
-
         <div className="column">
           <Card 
             title={"Outbound Rules"}
@@ -35,7 +37,6 @@ const Dashboard = () => {
             location={"/outboundRules"}
             optionType={"optionThree"}
           />
-
           <Card 
             title={"Traffic Monitoring"}
             description={"Analyze network traffic data."} 
@@ -44,7 +45,6 @@ const Dashboard = () => {
             optionType={"optionFour"}
           />
         </div>
-
         <div className="column">
           <Card 
             title={"Network Settings"}
@@ -53,7 +53,6 @@ const Dashboard = () => {
             location={"/networkSettings"}
             optionType={"optionFive"}
           />
-
           <Card 
             title={"Alerts and Notifications"}
             description={"Set up alerts for potential threats."} 
@@ -61,22 +60,11 @@ const Dashboard = () => {
             location={"/alertsAndNotifications"}
             optionType={"optionSix"}
           />
-
-          {/* <Card 
-            title={"Tasks"}
-            description={"Manage your tasks and to-dos."} 
-            btnText={"View Tasks"} 
-            location={"/tasks"}
-            optionType={"optionSix"}
-          /> */}
         </div>
-
         <ActivityCard title={"Tasks"} />
-
-
       </div>
     </div>
   );
-}
+};
 
-export default Dashboard
+export default Dashboard;

@@ -22,9 +22,9 @@ const Navbar = () => {
             {/* Right Part */}
             <div className="navbarContainerRight">
                 <div className="navbarContainerRightContainer">
-                    <NavLink to="/dashboard" className="navbarContainerRightContainerButtonOne">
+                    {/* <NavLink to="/dashboard" className="navbarContainerRightContainerButtonOne">
                         <button className="navbarContainerRightContainerButtonOneBtn">Dashboard</button>
-                    </NavLink>
+                    </NavLink> */}
                     <div className="navbarContainerRightContainerButtonTwo">
                         <button className="navbarContainerRightContainerButtonTwoBtn">Settings</button>
                     </div>
