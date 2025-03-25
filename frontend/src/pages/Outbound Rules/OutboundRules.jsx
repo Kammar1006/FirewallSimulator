@@ -17,6 +17,7 @@ const OutboundRules = () => {
   const [destinationTwo, setDestinationTwo] = useState("");
   const [port, setPort] = useState("");
   const [portTwo, setPortTwo] = useState("");
+  const [device, setDevice] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredRules = rules
@@ -37,6 +38,7 @@ const OutboundRules = () => {
     setDestinationTwo("");
     setPort("");
     setPortTwo("");
+    setDevice("");
   };
 
   const handleAddRule = () => {
@@ -48,6 +50,7 @@ const OutboundRules = () => {
       source: source === "Custom" ? sourceTwo : source,
       destination: destination === "Custom" ? destinationTwo : destination,
       port: port === "Custom" ? portTwo : port,
+      device,
     });
     resetForm();
     setSearchTerm("");
@@ -222,6 +225,20 @@ const OutboundRules = () => {
                           />
                         </div>
                       )}
+                    </div>
+
+                    {/* Add Device Input */}
+                    <div className="outboundRulesContainerMiddleRulesRuleContainerDevice">
+                      <select
+                        value={device}
+                        onChange={(e) => setDevice(e.target.value)}
+                        className="outboundRulesContainerMiddleRulesRuleContainerDeviceSelect"
+                      >
+                        <option value="">Select Device</option>
+                        <option value="Device-A">Device-A</option>
+                        <option value="Device-B">Device-B</option>
+                        <option value="Device-C">Device-C</option>
+                      </select>
                     </div>
                   </div>
                 </div>

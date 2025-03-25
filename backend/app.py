@@ -9,25 +9,27 @@ rules = []
 challenges = [
     {
         "id": 1,
-        "description": "Allow TCP from 192.168.1.1 to any on port 53",
+        "description": "Allow TCP from 192.168.1.1 to any on port 53 on Device-A",
         "expected": {
             "action": "Allow",
             "protocol": "TCP",
             "source": "192.168.1.1",
-            "destination": "192.168.1.1",  # Fixed to match the description
+            "destination": "any",
             "port": "53",
+            "device": "Device-A",
         },
         "isCorrect": None,
     },
     {
         "id": 2,
-        "description": "Deny UDP from 192.168.1.3 to 192.168.1.3 on port 443",
+        "description": "Deny UDP from 192.168.1.3 to 192.168.1.3 on port 443 on Device-B",
         "expected": {
             "action": "Deny",
             "protocol": "UDP",
             "source": "192.168.1.3",
             "destination": "192.168.1.3",
             "port": "443",
+            "device": "Device-B",
         },
         "isCorrect": None,
     },
@@ -41,6 +43,7 @@ def are_rules_equal(rule1, rule2):
         and (rule1["source"] == rule2["source"] or rule2["source"] == "any")
         and (rule1["destination"] == rule2["destination"] or rule2["destination"] == "any")
         and rule1["port"] == rule2["port"]
+        and rule1.get("device") == rule2.get("device")
     )
 
 # Routes
@@ -68,9 +71,22 @@ def modify_rule(rule_id):
         rules = [r for r in rules if r["id"] != rule_id]
         return jsonify({"message": "Rule deleted"})
 
-@app.route("/challenges", methods=["GET"])
-def get_challenges():
-    return jsonify(challenges)
+@app.route("/challenges", methods=["GET", "POST"])
+def handle_challenges():
+    if request.method == "GET":
+        device = request.args.get("device")
+        if device:
+            filtered_challenges = [c for c in challenges if c["expected"]["device"] == device]
+            return jsonify(filtered_challenges)
+        return jsonify(challenges)
+    elif request.method == "POST":
+        new_challenge = request.json
+        if "expected" not in new_challenge or "device" not in new_challenge["expected"]:
+            return jsonify({"error": "Device parameter is required in expected"}), 400
+        new_challenge["id"] = len(challenges) + 1
+        new_challenge["isCorrect"] = None
+        challenges.append(new_challenge)
+        return jsonify(new_challenge), 201
 
 @app.route("/challenges/<int:challenge_id>/validate", methods=["POST"])
 def validate_challenge(challenge_id):

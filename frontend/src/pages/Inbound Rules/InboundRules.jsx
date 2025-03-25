@@ -26,6 +26,7 @@ const InboundRules = () => {
   const [destinationTwo, setDestinationTwo] = useState();
   const [port, setPort] = useState();
   const [portTwo, setPortTwo] = useState();
+  const [device, setDevice] = useState("");
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -47,6 +48,7 @@ const InboundRules = () => {
     setDestinationTwo("");
     setPort("");
     setPortTwo("");
+    setDevice("");
   };
 
   const handleAddRule = () => {
@@ -58,6 +60,7 @@ const InboundRules = () => {
       source: source === "Custom" ? sourceTwo : source,
       destination: destination === "Custom" ? destinationTwo : destination,
       port: port === "Custom" ? portTwo : port,
+      device,
     });
     resetForm();
   };
@@ -239,6 +242,20 @@ const InboundRules = () => {
                           />
                         </div>
                       )}
+                    </div>
+
+                    {/* Add Device Input */}
+                    <div className="inboundRulesContainerRulesRuleContainerDevice">
+                      <select
+                        value={device}
+                        onChange={(e) => setDevice(e.target.value)}
+                        className="inboundRulesContainerRulesRuleContainerDeviceSelect"
+                      >
+                        <option value="">Select Device</option>
+                        <option value="Device-A">Device-A</option>
+                        <option value="Device-B">Device-B</option>
+                        <option value="Device-C">Device-C</option>
+                      </select>
                     </div>
                   </div>
                 </div>
