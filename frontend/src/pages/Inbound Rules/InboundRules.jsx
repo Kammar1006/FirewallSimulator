@@ -1,8 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import "./inboundRules.css";
 import ACLElement from "../../components/ACLElement/ACLElement";
 import { RulesContext } from "../../context/RulesContext.jsx";
 import assets from "../../assets/assets.js";
+import { useLocation } from "react-router-dom";
 
 const InboundRules = () => {
   const { rules, addRule, removeRule, editRule } = useContext(RulesContext);
@@ -13,6 +14,10 @@ const InboundRules = () => {
     destination: "",
     port: "",
   });
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const device = queryParams.get("device");
 
   const [addNewRule, setAddNewRule] = useState(false);
 
@@ -26,9 +31,17 @@ const InboundRules = () => {
   const [destinationTwo, setDestinationTwo] = useState();
   const [port, setPort] = useState();
   const [portTwo, setPortTwo] = useState();
-  const [device, setDevice] = useState("");
+  // const [device, setDevice] = useState("");
 
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    if (device) {
+      console.log("Device: ", device);
+    } else {
+      console.warn("Device parameter is missing in the URL.");
+    }
+  }, [device]);
 
   const filteredRules = rules
     .filter((rule) => rule.action === "Allow")
@@ -48,7 +61,6 @@ const InboundRules = () => {
     setDestinationTwo("");
     setPort("");
     setPortTwo("");
-    setDevice("");
   };
 
   const handleAddRule = () => {
@@ -96,7 +108,7 @@ const InboundRules = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <img
-                src={assets.searchIcon} 
+                src={assets.searchIcon}
                 alt="Search"
                 className="inboundRulesContainerTopSearchBarIcon"
               />
@@ -245,7 +257,7 @@ const InboundRules = () => {
                     </div>
 
                     {/* Add Device Input */}
-                    <div className="inboundRulesContainerRulesRuleContainerDevice">
+                    {/* <div className="inboundRulesContainerRulesRuleContainerDevice">
                       <select
                         value={device}
                         onChange={(e) => setDevice(e.target.value)}
@@ -256,7 +268,7 @@ const InboundRules = () => {
                         <option value="Device-B">Device-B</option>
                         <option value="Device-C">Device-C</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./home.css";
 
 const Home = () => {
@@ -14,16 +14,28 @@ const Home = () => {
       <div className="homeContainer">
         <div className="homeContainerSet">
           <div className="homeContainerSetOne">
-            <div className="homeContainerSetOneSquare One" onClick={() => handleDeviceClick("PC-A")}>
+            <div
+              className="homeContainerSetOneSquare One"
+              onClick={() => handleDeviceClick("PC-A")}
+            >
               <p className="homeContainerSetOneSquareText">PC-A</p>
             </div>
-            <div className="homeContainerSetOneSquare Two" onClick={() => handleDeviceClick("PC-B")}>
+            <div
+              className="homeContainerSetOneSquare Two"
+              onClick={() => handleDeviceClick("PC-B")}
+            >
               <p className="homeContainerSetOneSquareText">PC-B</p>
             </div>
-            <div className="homeContainerSetOneSquare Three" onClick={() => handleDeviceClick("PC-C")}>
+            <div
+              className="homeContainerSetOneSquare Three"
+              onClick={() => handleDeviceClick("PC-C")}
+            >
               <p className="homeContainerSetOneSquareText">PC-C</p>
             </div>
-            <div className="homeContainerSetOneSquare Four" onClick={() => handleDeviceClick("PC-D")}>
+            <div
+              className="homeContainerSetOneSquare Four"
+              onClick={() => handleDeviceClick("PC-D")}
+            >
               <p className="homeContainerSetOneSquareText">PC-D</p>
             </div>
           </div>
@@ -36,10 +48,16 @@ const Home = () => {
           </div>
 
           <div className="homeContainerSetThree">
-            <div className="homeContainerSetThreeSwitch One" onClick={() => handleDeviceClick("S1")}>
+            <div
+              className="homeContainerSetThreeSwitch One"
+              onClick={() => handleDeviceClick("S1")}
+            >
               <p className="homeContainerSetThreeSwitchText">S1</p>
             </div>
-            <div className="homeContainerSetThreeSwitch Two" onClick={() => handleDeviceClick("S2")}>
+            <div
+              className="homeContainerSetThreeSwitch Two"
+              onClick={() => handleDeviceClick("S2")}
+            >
               <p className="homeContainerSetThreeSwitchText">S2</p>
             </div>
           </div>
@@ -50,10 +68,16 @@ const Home = () => {
           </div>
 
           <div className="homeContainerSetFive">
-            <div className="homeContainerSetFiveRounter One" onClick={() => handleDeviceClick("R1")}>
+            <div
+              className="homeContainerSetFiveRounter One"
+              onClick={() => handleDeviceClick("R1")}
+            >
               <p>R1</p>
             </div>
-            <div className="homeContainerSetFiveRounter Two" onClick={() => handleDeviceClick("R2")}>
+            <div
+              className="homeContainerSetFiveRounter Two"
+              onClick={() => handleDeviceClick("R2")}
+            >
               <p>R2</p>
             </div>
           </div>
@@ -64,7 +88,10 @@ const Home = () => {
           </div>
 
           <div className="homeContainerSetSeven">
-            <div className="homeContainerSetSevenRouter" onClick={() => handleDeviceClick("R3")}>
+            <div
+              className="homeContainerSetSevenRouter"
+              onClick={() => handleDeviceClick("R3")}
+            >
               <p>R3</p>
             </div>
           </div>
@@ -74,7 +101,10 @@ const Home = () => {
           </div>
 
           <div className="homeContainerSetNine">
-            <div className="homeContainerSetNineSwitch" onClick={() => handleDeviceClick("S3")}>
+            <div
+              className="homeContainerSetNineSwitch"
+              onClick={() => handleDeviceClick("S3")}
+            >
               <p>S3</p>
             </div>
           </div>
@@ -85,10 +115,16 @@ const Home = () => {
           </div>
 
           <div className="homeContainerSetEleven">
-            <div className="homeContainerSetElevenSquare One" onClick={() => handleDeviceClick("PC-E")}>
+            <div
+              className="homeContainerSetElevenSquare One"
+              onClick={() => handleDeviceClick("PC-E")}
+            >
               <p>PC-E</p>
             </div>
-            <div className="homeContainerSetElevenSquare Two" onClick={() => handleDeviceClick("PC-F")}>
+            <div
+              className="homeContainerSetElevenSquare Two"
+              onClick={() => handleDeviceClick("PC-F")}
+            >
               <p>PC-F</p>
             </div>
           </div>
