@@ -46,7 +46,7 @@ const Dashboard = () => {
             title={"Outbound Rules"}
             description={"Manage rules for outgoing traffic."}
             btnText={"Add Rule"}
-            location={"/outboundRules"}
+            location={`/outboundRules?device=${deviceName}`}
             optionType={"optionThree"}
             // device={deviceName}
           />

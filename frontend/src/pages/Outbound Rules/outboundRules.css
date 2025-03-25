@@ -113,7 +113,6 @@
   background-color: #faf4d3;
   display: flex;
   flex-direction: row;
-  /* justify-content: space-between; */
   align-items: center;
   height: 120px;
   margin-bottom: 20px;
@@ -124,10 +123,6 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  /* width: 90%; */
-  /* margin-left: auto; */
-  /* margin-right: auto; */
-  /* background-color: yellow; */
   width: 97%;
   margin-left: auto;
   margin-right: auto;
@@ -188,7 +183,6 @@
 }
 
 .outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerProtocol {
-  /* gap: 10px; */
   display: flex;
   flex-direction: column;
 }
@@ -197,7 +191,6 @@
   width: 160px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -208,14 +201,11 @@
   font-weight: 500;
   background-color: #c2d3b6;
   border-radius: 4px;
-  /* outline: none;
-    border: none; */
 }
 
 .outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerProtocolCustomInput {
   width: 160px;
   height: 40px;
-  /* padding-left: 5px; */
   font-weight: 500;
   font-size: 16px;
   background-color: #c2d3b6;
@@ -229,7 +219,6 @@
   width: 220px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -240,15 +229,12 @@
   font-weight: 500;
   background-color: #c2d3b6;
   border-radius: 4px;
-  /* outline: none;
-    border: none; */
 }
 
 .outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerDestinationSelect {
   width: 250px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -259,15 +245,12 @@
   font-weight: 500;
   background-color: #c2d3b6;
   border-radius: 4px;
-  /* outline: none;
-    border: none; */
 }
 
 .outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerSelect {
   width: 160px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -278,15 +261,12 @@
   font-weight: 500;
   background-color: #c2d3b6;
   border-radius: 4px;
-  /* outline: none;
-    border: none; */
 }
 
 .outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerProtocolCustomInput {
   width: 160px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -299,15 +279,12 @@
   border-radius: 4px;
   margin-top: 10px;
   padding-left: 10px;
-  /* outline: none;
-    border: none; */
 }
 
 .outboundRulesContainerMiddleRulesRuleContainerDividerPartRuleTwoContainerSourceInput {
   width: 220px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -319,8 +296,6 @@
   background-color: #c2d3b6;
   border-radius: 4px;
   margin-top: 10px;
-  /* outline: none;
-    border: none; */
   padding-left: 10px;
 }
 
@@ -328,7 +303,6 @@
   width: 250px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -339,8 +313,6 @@
   font-weight: 500;
   background-color: #c2d3b6;
   border-radius: 4px;
-  /* outline: none;
-    border: none; */
   margin-top: 10px;
   padding-left: 10px;
 }
@@ -349,7 +321,6 @@
   width: 160px;
   height: 40px;
   border-radius: 2px;
-  /* padding-left: 10px; */
   font-size: 18px;
   letter-spacing: -0.2px;
   margin-right: 10px;
@@ -360,8 +331,6 @@
   font-weight: 500;
   background-color: #c2d3b6;
   border-radius: 4px;
-  /* outline: none;
-    border: none; */
   margin-top: 10px;
   padding-left: 10px;
 }

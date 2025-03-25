@@ -3,6 +3,7 @@ import "./outboundRules.css";
 import ACLElement from "../../components/ACLElement/ACLElement";
 import { RulesContext } from "../../context/RulesContext";
 import assets from "../../assets/assets";
+import { useLocation } from "react-router-dom";
 
 const OutboundRules = () => {
   const { rules, addRule, removeRule, editRule } = useContext(RulesContext);
@@ -17,8 +18,12 @@ const OutboundRules = () => {
   const [destinationTwo, setDestinationTwo] = useState("");
   const [port, setPort] = useState("");
   const [portTwo, setPortTwo] = useState("");
-  const [device, setDevice] = useState("");
+  // const [device, setDevice] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const device = queryParams.get("device");
 
   const filteredRules = rules
     .filter((rule) => rule.action === "Deny")
@@ -228,7 +233,7 @@ const OutboundRules = () => {
                     </div>
 
                     {/* Add Device Input */}
-                    <div className="outboundRulesContainerMiddleRulesRuleContainerDevice">
+                    {/* <div className="outboundRulesContainerMiddleRulesRuleContainerDevice">
                       <select
                         value={device}
                         onChange={(e) => setDevice(e.target.value)}
@@ -239,7 +244,9 @@ const OutboundRules = () => {
                         <option value="Device-B">Device-B</option>
                         <option value="Device-C">Device-C</option>
                       </select>
-                    </div>
+                    </div> */}
+
+                    
                   </div>
                 </div>
 

@@ -1,15 +1,12 @@
 .inboundRules {
   width: 100%;
   height: 100%;
-  /* background-color: aliceblue; */
-  /* height: 100vh; */
 }
 
 .inboundRulesContainer {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
-  /* background-color: lightpink !important; */
   margin-top: 20px;
 }
 
@@ -31,7 +28,7 @@
   width: 200px;
   height: 35px;
   border-radius: 2px;
-  padding-left: 35px; /* Add padding for the icon */
+  padding-left: 35px;
   font-size: 16px;
   letter-spacing: -0.1px;
   margin-right: 10px;
@@ -41,7 +38,7 @@
 }
 
 .inboundRulesContainerTopSearchBar {
-  position: relative; /* To position the icon inside the input */
+  position: relative;
   display: inline-block;
   color: #94a3b8;
 }
@@ -53,12 +50,12 @@
 
 .inboundRulesContainerTopSearchBarIcon {
   position: absolute;
-  left: 10px; /* Position the icon inside the input */
+  left: 10px;
   top: 50%;
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  pointer-events: none; /* Prevent the icon from blocking input clicks */
+  pointer-events: none;
 }
 
 .inboundRulesContainerTopRight {
