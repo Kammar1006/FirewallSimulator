@@ -4,7 +4,7 @@ const { Device } = require("./device");
 const { Network } = require("./network");
 
 function Task(){
-    this.network = Network();
+    this.network = new Network();
     this.network.set(
         [
             new Device("PC_1", ["192.168.1.2"]),
