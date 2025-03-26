@@ -1,0 +1,39 @@
+.activityElement {
+    /* width: 85%;
+    margin-left: auto;
+    margin-right: auto; */
+    width: 100%;
+}
+
+.activityElement.success {
+    background-color: #CEF2D4;
+}
+
+.activityElement.fail {
+    background-color: #ED4337;
+}
+
+.activityElement.warning {
+    background-color: #F8C463;
+}
+
+.activityElementContainer {
+    width: 100%;
+    height: 100%;
+    padding-left: 11px;
+    padding-right: 11px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.activityElementContainerTextContainer {
+    /* margin-bottom: 10px; */
+}
+
+.activityElementContainerTextContainerText {
+    font-size: 20px;
+    letter-spacing: -0.1px;
+    line-height: 25px;
+}

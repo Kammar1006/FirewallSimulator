@@ -1,0 +1,277 @@
+.home {
+    width: 100%;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.homeContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    height: auto;
+    margin: auto; 
+    background-color: white;
+}
+
+.homeContainerSet {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.homeContainerSetOne,
+.homeContainerSetThree,
+.homeContainerSetFive,
+.homeContainerSetSeven,
+.homeContainerSetNine,
+.homeContainerSetEleven {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.homeContainerSetOne {
+    gap: 50px;
+}
+
+.homeContainerSetThree {
+    gap: 200px;
+}
+
+.homeContainerSetFive {
+    gap: 100px;
+}
+
+.homeContainerSetEleven {
+    gap: 50px;
+}
+
+.homeContainerSetOneSquare,
+.homeContainerSetThreeSwitch,
+.homeContainerSetFiveRounter,
+.homeContainerSetSevenRouter,
+.homeContainerSetNineSwitch,
+.homeContainerSetElevenSquare {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #000;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 700;
+    text-align: center;
+    z-index: 1;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.homeContainerSetOneSquare:hover {
+    transform: scale(1.1);
+}
+
+.homeContainerSetTwo {
+    display: flex;
+    /* background-color: red; */
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.homeContainerSetFour {
+    display: flex;
+    /* background-color: red; */
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.homeContainerSetSix {
+    display: flex;
+    /* background-color: red; */
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.homeContainerSetEight {
+    display: flex;
+    /* background-color: red; */
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.homeContainerSetTen {
+    display: flex;
+    /* background-color: red; */
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.homeContainerSetTwoLineOne,
+.homeContainerSetTwoLineTwo,
+.homeContainerSetTwoLineThree,
+.homeContainerSetTwoLineFour  {
+    width: 120px;
+    height: 2px;
+    background-color: #000;
+    z-index: 1;
+}
+
+.homeContainerSetFourLineOne,
+.homeContainerSetFourLineTwo {
+    width: 120px;
+    height: 2px;
+    background-color: #000;
+    z-index: 1;
+}
+
+.homeContainerSetSixLineOne,
+.homeContainerSetSixLineTwo {
+    width: 160px;
+    height: 2px;
+    background-color: #000;
+    z-index: 1;
+}
+
+.homeContainerSetEightLineOne {
+    width: 120px;
+    height: 2px;
+    background-color: #000;
+    z-index: 1;
+}
+
+.homeContainerSetTenLineOne,
+.homeContainerSetTenLineTwo {
+    width: 120px;
+    height: 2px;
+    background-color: #000;
+    z-index: 1;
+}
+
+.homeContainerSetTwoLineOne {
+    transform: rotate(70deg);
+    z-index: 0;
+}
+
+.homeContainerSetTwoLineTwo {
+    transform: rotate(-60deg);
+    z-index: 0;
+    position: relative; 
+    left: -35px;
+}
+
+.homeContainerSetTwoLineThree {
+    transform: rotate(60deg);
+    z-index: 0;
+    position: relative;
+    left: 30px;
+}
+
+.homeContainerSetTwoLineFour {
+    transform: rotate(-70deg);
+    z-index: 0;
+    /* left: -10px; */
+}
+
+.homeContainerSetFourLineOne {
+    transform: rotate(65deg);
+    z-index: 0;
+    position: relative;
+    left: -55px;
+}
+
+.homeContainerSetFourLineTwo {
+    transform: rotate(-70deg);
+    z-index: 0;
+    position: relative;
+    left: 55px;
+}
+
+.homeContainerSetSixLineOne {
+    transform: rotate(50deg);
+    z-index: 0;
+    position: relative;
+    /* left: -55px; */
+    left: 25px;
+}
+
+.homeContainerSetSixLineTwo {
+    transform: rotate(-50deg);
+    z-index: 0;
+    position: relative;
+    /* left: 55px; */
+    left: -25px;
+}
+
+.homeContainerSetEightLineOne {
+    transform: rotate(90deg);
+    z-index: 0;
+    position: relative;
+    /* left: -55px; */
+}
+
+.homeContainerSetTenLineOne {
+    transform: rotate(-60deg);
+    z-index: 0;
+    position: relative;
+    /* left: -55px; */
+    left: 20px;
+}
+
+.homeContainerSetTenLineTwo {
+    transform: rotate(60deg);
+    z-index: 0;
+    position: relative;
+    /* left: 55px; */
+    left: -20px;
+}
+
+.homeContainerSetThreeSwitch,
+.homeContainerSetThreeSwitch,
+.homeContainerSetFiveRounter,
+.homeContainerSetSevenRouter,
+.homeContainerSetNineSwitch,
+.homeContainerSetElevenSquare {
+    transition: all 0.3s ease-in-out;
+}
+
+.homeContainerSetElevenSquare:hover {
+    transform: scale(1.1);
+}
+
+.homeContainerSetNineSwitch:hover {
+    transform: scale(1.1);
+}
+
+.homeContainerSetSevenRouter:hover {
+    transform: scale(1.1);
+}
+
+.homeContainerSetFiveRounter:hover {
+    transform: scale(1.1);
+}
+
+.homeContainerSetThreeSwitch:hover {
+    transform: scale(1.1);
+}
