@@ -1,0 +1,13 @@
+add run test option (some btn)
+also there might be need to add some more websockets in case to be able to add only specific sets of rules to the specific assigments
+
+
+add eyes when the person makes some big mistake
+
+
+!If is's possible we should divide our webSocket API into smaller pieces -> the reacon of this is to enagle it to allow our users to only add allow rules/deny rules.
+Couse of this user doesn't have to make any more changes it he want to put new element into result array.
+Adictionally being able to add specific rules couses extra safety for our users same as the whole page security
+
+
+Talk with Kamil about mysql database or postgressql database
