@@ -52,6 +52,7 @@ const RulesContextProvider = (props) => {
 
     const editRule = async (updatedRule) => {
         try {
+            // Fixed error handling
             const response = await axios.put(`http://localhost:5000/rules/${updatedRule.id}`, updatedRule);
             console.log("Rule updated:", response.data);
             setRules((prev) =>

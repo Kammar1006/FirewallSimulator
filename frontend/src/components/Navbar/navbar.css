@@ -99,3 +99,40 @@
     box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 0px;
     color: #030303;
 }
+
+@media (max-width: 768px) {
+    .navbar {
+        padding-left: 15px;
+        padding-right: 15px;
+        height: auto;
+    }
+
+    .navbarContainer {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .navbarContainerLeft {
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .navbarContainerRightContainer {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbarContainerLeftNameContainerText {
+        font-size: 24px;
+        line-height: 28px;
+    }
+
+    .navbarContainerRightContainer {
+        gap: 10px;
+    }
+}

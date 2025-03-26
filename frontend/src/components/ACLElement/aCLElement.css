@@ -249,3 +249,63 @@
 .aCLElementContainerMiddleContainerEditPort input {
   cursor:text
 }
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .aCLElementContainer {
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .aCLElementContainerMiddle {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .aCLElementContainerMiddleActionTextAllow,
+  .aCLElementContainerMiddleActionTextDeny,
+  .aCLElementContainerMiddleProtocol,
+  .aCLElementContainerMiddleSource,
+  .aCLElementContainerMiddleDestination,
+  .aCLElementContainerMiddlePort {
+    width: 100%;
+  }
+
+  .aCLElementContainerRight {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .aCLElementContainerRightEditBtn,
+  .aCLElementContainerRightDeleteDelete {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .aCLElementContainerLeftNumerText {
+    font-size: 18px;
+  }
+
+  .aCLElementContainerMiddleActionText,
+  .aCLElementContainerMiddleProtocolText,
+  .aCLElementContainerMiddleSourceText,
+  .aCLElementContainerMiddleDestinationText,
+  .aCLElementContainerMiddlePortText,
+  .aCLElementContainerMiddlePortPort {
+    font-size: 16px;
+  }
+
+  .aCLElementContainerMiddleContainerEditProtocol select,
+  .aCLElementContainerMiddleContainerEditProtocol input,
+  .aCLElementContainerMiddleContainerEditSource select,
+  .aCLElementContainerMiddleContainerEditSource input,
+  .aCLElementContainerMiddleContainerEditDesination select,
+  .aCLElementContainerMiddleContainerEditDesination input,
+  .aCLElementContainerMiddleContainerEditPort select,
+  .aCLElementContainerMiddleContainerEditPort input {
+    font-size: 14px;
+    height: 35px;
+  }
+}

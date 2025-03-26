@@ -26,3 +26,47 @@
     justify-content: space-between; 
     height: 100%;
 }
+
+@media (max-width: 1024px) {
+    .dashboardContainer {
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+    }
+
+    .column {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        gap: 5px;
+        padding: 10px;
+    }
+
+    .dashboardContainer {
+        width: 100%;
+        gap: 10px;
+    }
+
+    .column {
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard {
+        height: auto;
+    }
+
+    .dashboardContainer {
+        gap: 5px;
+    }
+
+    .column {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
