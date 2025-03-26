@@ -6,7 +6,16 @@ import assets from "../../assets/assets";
 import { useLocation } from "react-router-dom";
 
 const OutboundRules = () => {
-  const { rules, addRule, removeRule, editRule, challenges, validateChallenge, loading, error } = useContext(RulesContext);
+  const {
+    rules,
+    addRule,
+    removeRule,
+    editRule,
+    challenges,
+    validateChallenge,
+    loading,
+    error,
+  } = useContext(RulesContext);
   const [addNewRule, setAddNewRule] = useState(false);
   const [action, setAction] = useState("Deny");
   const [protocol, setProtocol] = useState("");
@@ -268,8 +277,6 @@ const OutboundRules = () => {
                         <option value="Device-C">Device-C</option>
                       </select>
                     </div> */}
-
-
                   </div>
                 </div>
 
@@ -312,36 +319,59 @@ const OutboundRules = () => {
         </div>
       </div>
 
-      <div className={`inboundRulesRightTasks ${sidebar ? "inboundRulesRightTasksOpen" : "inboundRulesRightTasksClose"}`}>
+      <div
+        className={`inboundRulesRightTasks ${
+          sidebar ? "inboundRulesRightTasksOpen" : "inboundRulesRightTasksClose"
+        }`}
+      >
         <div className="inboundRulesRightTasksContainer">
-          <div className="inboundRulesRightTasksContainerSidebar" onClick={() => setSidebar(!sidebar)}>
+          <div
+            className="inboundRulesRightTasksContainerSidebar"
+            onClick={() => setSidebar(!sidebar)}
+          >
             <img
               src={assets.leftArrow}
               alt=""
               className={`inboundRulesRightTasksContainerArrowImg ${
-                sidebar ? "inboundRulesRightTasksContainerArrowImgClose" : "inboundRulesRightTasksContainerArrowImgOpen"
+                sidebar
+                  ? "inboundRulesRightTasksContainerArrowImgClose"
+                  : "inboundRulesRightTasksContainerArrowImgOpen"
               }`}
             />
           </div>
 
           <div
             className={`inboundRulesRightTasksContainerDiv ${
-              sidebar ? "inboundRulesRightTasksContainerDivOpen" : "inboundRulesRightTasksContainerDivClose"
+              sidebar
+                ? "inboundRulesRightTasksContainerDivOpen"
+                : "inboundRulesRightTasksContainerDivClose"
             }`}
           >
-            <button className="tasksContainerTopRightContainerBtn" onClick={handleCheckAll} disabled={loadingAll}>
+            <button
+              className="tasksContainerTopRightContainerBtn"
+              onClick={handleCheckAll}
+              disabled={loadingAll}
+            >
               {loadingAll ? <div className="spinner"></div> : <p>Check All</p>}
             </button>
 
             {challenges.map((challenge) => (
               <div
                 key={challenge.id}
-                className={`inboundRulesRightTasksContainerDivChallangeContainer ${challenge.isCorrect === true ? "correct" : challenge.isCorrect === false ? "incorrect" : ""}`}
+                className={`inboundRulesRightTasksContainerDivChallangeContainer ${
+                  challenge.isCorrect === true
+                    ? "correct"
+                    : challenge.isCorrect === false
+                    ? "incorrect"
+                    : ""
+                }`}
               >
                 <div className="inboundRulesRightTasksContainerDivContainerRule">
-                  <p className="inboundRulesRightTasksContainerDivContainerRuleText">{challenge.description}</p>
+                  <p className="inboundRulesRightTasksContainerDivContainerRuleText">
+                    {challenge.description}
+                  </p>
                 </div>
-                <button
+                {/* <button
                   className="tasksContainerMiddleChallengeContainerBtn"
                   onClick={() => handleCheck(challenge.id)}
                   disabled={loadingState[challenge.id]}
@@ -351,7 +381,7 @@ const OutboundRules = () => {
                   ) : (
                     "Check"
                   )}
-                </button>
+                </button> */}
               </div>
             ))}
           </div>

@@ -187,7 +187,7 @@
 .aCLElementContainerMiddleContainerEditProtocol input {
   width: 170px;
   height: 40px;
-  background-color: #ACFADF;
+  background-color: #acfadf;
   border: none;
   outline: none;
   cursor: pointer;
@@ -196,14 +196,14 @@
 }
 
 .aCLElementContainerMiddleContainerEditProtocol input {
-  cursor:text
+  cursor: text;
 }
 
 .aCLElementContainerMiddleContainerEditSource select,
 .aCLElementContainerMiddleContainerEditSource input {
   width: 170px;
   height: 40px;
-  background-color: #ACFADF;
+  background-color: #acfadf;
   border: none;
   outline: none;
   cursor: pointer;
@@ -212,15 +212,14 @@
 }
 
 .aCLElementContainerMiddleContainerEditSource input {
-  cursor:text
+  cursor: text;
 }
-
 
 .aCLElementContainerMiddleContainerEditDesination select,
 .aCLElementContainerMiddleContainerEditDesination input {
   width: 190px;
   height: 40px;
-  background-color: #ACFADF;
+  background-color: #acfadf;
   border: none;
   outline: none;
   cursor: pointer;
@@ -229,16 +228,14 @@
 }
 
 .aCLElementContainerMiddleContainerEditDesination input {
-  cursor:text
+  cursor: text;
 }
-
-
 
 .aCLElementContainerMiddleContainerEditPort select,
 .aCLElementContainerMiddleContainerEditPort input {
   width: 140px;
   height: 40px;
-  background-color: #ACFADF;
+  background-color: #acfadf;
   border: none;
   outline: none;
   cursor: pointer;
@@ -247,65 +244,19 @@
 }
 
 .aCLElementContainerMiddleContainerEditPort input {
-  cursor:text
+  cursor: text;
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
-  .aCLElementContainer {
-    flex-direction: column;
-    width: 100%;
-    padding: 10px;
-  }
-
-  .aCLElementContainerMiddle {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .aCLElementContainerMiddleActionTextAllow,
-  .aCLElementContainerMiddleActionTextDeny,
-  .aCLElementContainerMiddleProtocol,
-  .aCLElementContainerMiddleSource,
-  .aCLElementContainerMiddleDestination,
-  .aCLElementContainerMiddlePort {
-    width: 100%;
-  }
-
-  .aCLElementContainerRight {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .aCLElementContainerRightEditBtn,
-  .aCLElementContainerRightDeleteDelete {
-    width: 100%;
-  }
+.aCLElementOpen {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
-@media (max-width: 480px) {
-  .aCLElementContainerLeftNumerText {
-    font-size: 18px;
-  }
-
-  .aCLElementContainerMiddleActionText,
-  .aCLElementContainerMiddleProtocolText,
-  .aCLElementContainerMiddleSourceText,
-  .aCLElementContainerMiddleDestinationText,
-  .aCLElementContainerMiddlePortText,
-  .aCLElementContainerMiddlePortPort {
-    font-size: 16px;
-  }
-
-  .aCLElementContainerMiddleContainerEditProtocol select,
-  .aCLElementContainerMiddleContainerEditProtocol input,
-  .aCLElementContainerMiddleContainerEditSource select,
-  .aCLElementContainerMiddleContainerEditSource input,
-  .aCLElementContainerMiddleContainerEditDesination select,
-  .aCLElementContainerMiddleContainerEditDesination input,
-  .aCLElementContainerMiddleContainerEditPort select,
-  .aCLElementContainerMiddleContainerEditPort input {
-    font-size: 14px;
-    height: 35px;
-  }
+.aCLElementContainerLeftNumerTextOpen {
+  font-size: 18px;
+  font-weight: 500;
 }

@@ -377,20 +377,16 @@
   border: 1px solid #c2d3b6;
 }
 
-.inboundRulesRightTasks {
-  /* margin-left: 20px; */
-}
-
 .inboundRulesRightTasksContainer {
   display: flex;
   flex-direction: row;
 }
 
 .inboundRulesRightTasksContainerDiv {
-  width: 440px;
+  width: 340px;
   height: calc(100vh - 70px);
-  background-color: #D3F1DF;
-  border-left: 1px solid #7ED4AD;
+  background-color: #d3f1df;
+  border-left: 1px solid #7ed4ad;
   z-index: -1;
   transition: all 0.3s ease-in-out;
 }
@@ -438,7 +434,7 @@
   display: flex;
   flex-direction: row;
   /* background-color: lightgray; */
-  border: 2px solid #7ED4AD;
+  border: 2px solid #7ed4ad;
   width: 92%;
   margin-left: auto;
   margin-right: auto;
