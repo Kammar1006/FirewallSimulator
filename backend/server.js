@@ -14,7 +14,11 @@ app.use(express.static(`${__dirname}/../frontend`));
 
 const server = http.createServer(app);
 const io = socketio(server, {
-	cookie: true,
+	cors: {
+		origin: "http://localhost:5173",
+		methods: ["GET", "POST"],
+		credentials: true
+	}
 });
 
 const { randomBytes } = require('crypto');
