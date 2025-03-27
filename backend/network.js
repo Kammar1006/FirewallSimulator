@@ -1,5 +1,31 @@
 /* Created by Kammar1006 */
 
+const reFinder = (topology, c_path, last_id) => {
+
+    console.log(topology, c_path, last_id)
+
+    let c_id = c_path[c_path.length-1];
+
+    console.log(topology[c_id], c_path)
+
+    let posibilities = topology[c_id].filter((e) => c_path.indexOf(e) == -1);
+
+    for(const p of posibilities){
+        let n_path = [...c_path];
+        n_path.push(p);
+        console.log(n_path);
+        if(p == last_id) return n_path;
+
+        let path = reFinder(topology, n_path, last_id);
+
+        if(path)
+            return path; 
+        
+    }
+
+    return false;
+}
+
 function Network(){
     this.devices = [];
     this.connections = [];
@@ -10,36 +36,12 @@ function Network(){
         this.connections = connections;
     }
 
-    this.simulate = (first_id, end_id, packet) => {
-        if(first_id == end_id) return false;
+    this.simulate = (first_id, last_id, packet) => {
+        if(first_id == last_id) return false;
 
-        this.path = [first_id];
-        let current_id = first_id;
-        let last_id = current_id;
-        let i = 10;
-        let connections = [...this.connections]
-        while(i > 0){
-            let posibilities = [...connections[current_id]];
-            console.log(connections, posibilities, current_id, posibilities.indexOf(current_id));
-            let remove_id = posibilities.indexOf(last_id);
+        this.path = reFinder(this.connections, [first_id], last_id);
 
-            last_id = current_id;
-
-            if(remove_id != -1)
-                posibilities.splice(remove_id, 1);
-            if(posibilities.length == 1){
-                current_id = posibilities[0];
-                this.path.push(current_id);
-                if(current_id == end_id) break;
-            }
-            else{
-                if(posibilities.indexOf(end_id) != -1){
-                    this.path.push(end_id);
-                    break;
-                }
-            }
-            i--;
-        }
+        let path = [...this.path]
 
         console.log(this.path)
 
@@ -60,7 +62,10 @@ function Network(){
         console.log(this.path[0])
         console.log("in")
         result.push(this.devices[this.path[0]].packet_in(packet, this.connections[this.path[0]].indexOf(previos_id)))
-        return result;
+        return {
+            path: path,
+            result: result
+        };
     }
 
     this.configure = (device_id, inet, type, action, id, data) => {

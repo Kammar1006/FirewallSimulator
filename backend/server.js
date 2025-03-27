@@ -156,7 +156,10 @@ server.listen(PORT, () => {
   console.log("Work");
 });
 
-/*
+
+
+const { Network } = require("./network");
+const { Device } = require("./device");
 n = new Network();
 n.set(
 	[
@@ -172,4 +175,4 @@ console.log(n.simulate(0, 4, []));
 n.simulate(3, 4, []);
 n.simulate(2, 4, []);
 n.simulate(4, 1, []);
-*/
+
