@@ -128,22 +128,12 @@ server.listen(PORT, () => {
 
 
 
-	const { Network } = require("./network");
-	const { Device } = require("./device");
-	n = new Network();
-	n.set(
-		[
-			new Device("PC_1", ["192.168.1.2"]),
-			new Device("R_1", ["192.168.1.1", "10.1.1.1"]),
-			new Device("R_2", ["10.1.1.2", "192.168.2.1", "192.168.3.1"]),
-			new Device("PC_2", ["192.168.2.2"]),
-			new Device("PC_3", ["192.168.3.2"])
-		], 
-		[[1], [0, 2], [1, 3, 4], [2], [2]]
-	)
-	n.configure(1, 0, "input", "add", 0, {action: "permit", src: "192.168.1.6 0.0.0.252", des: "192.168.3.2 0.0.0.255", protocol: "ip:80"})
-	n.configure(1, 0, "input", "add", 0, {action: "deny", src: "any", des: "any", protocol: "any"})
-	let logs = n.simulate(0, 4, {src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80"});
+	task = new Task;
+	task.set(1);
+	task.network.configure(1, 0, "input", "add", 0, {action: "permit", src: "192.168.1.6 0.0.0.252", des: "192.168.3.2 0.0.0.255", protocol: "ip:80"})
+	task.network.configure(1, 0, "input", "add", 0, {action: "deny", src: "any", des: "any", protocol: "any"})
+	let logs = task.network.simulate(0, 4, {src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80"});
 	console.log(logs.path);
 	console.log(logs.result);
+	console.log(task.check());
 
