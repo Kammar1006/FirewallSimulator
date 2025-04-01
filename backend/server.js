@@ -127,7 +127,7 @@ server.listen(PORT, () => {
 });
 
 
-/*
+
 	const { Network } = require("./network");
 	const { Device } = require("./device");
 	n = new Network();
@@ -141,8 +141,9 @@ server.listen(PORT, () => {
 		], 
 		[[1], [0, 2], [1, 3, 4], [2], [2]]
 	)
-	console.log(n.simulate(0, 4, []));
-	n.simulate(3, 4, []);
-	n.simulate(2, 4, []);
-	n.simulate(4, 1, []);
-*/
+	n.configure(1, 0, "input", "add", 0, {action: "permit", src: "192.168.1.6 0.0.0.252", des: "192.168.3.2 0.0.0.255", protocol: "ip:80"})
+	n.configure(1, 0, "input", "add", 0, {action: "deny", src: "any", des: "any", protocol: "any"})
+	let logs = n.simulate(0, 4, {src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80"});
+	console.log(logs.path);
+	console.log(logs.result);
+
