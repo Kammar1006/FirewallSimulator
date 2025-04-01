@@ -27,12 +27,14 @@ function Task(){
                 ];
                 this.tests = [
                     {
-                        packet: { src: "192.168.1.1", des: "10.0.0.5", protocol: "tcp:80" },
+                        endpoints: [0, 4],
+                        packet: {src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80"},
                         result: [true, 6]
                     },
                     {
-                        packet: { src: "192.168.1.1", des: "192.168.2.2", protocol: "tcp:80" },
-                        result: [false, 3]
+                        endpoints: [0, 4],
+                        packet: {src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:443"},
+                        result: [false, 2]
                     }
                 ];
             }break;
@@ -61,17 +63,22 @@ function Task(){
             
             
             let result = this.network.simulate(
-                this.network.recognize(test.packet.src),
-                this.network.recognize(test.packet.des),
-                this.packet
+                //this.network.recognize(test.packet.src),
+                //this.network.recognize(test.packet.des),
+                test.endpoints[0],
+                test.endpoints[1],
+                test.packet
             )
 
-            if(test.result[0])
-                if(result.resul.filter(e => {e[0] == true}).length != test.result[1])
+            if(test.result[0] == true || test.result[0] == "permit"){
+                if(result.result.filter(e => (e[0] == true || e[0] == 'permit')).length != test.result[1]){
                     flag = false;
+                }
+            }
             else{
-                if(result.result.filter((e, i) => {e[0] == true && i < test.result[1]}) != test.result[1]-1)
+                if(result.result.filter((e, i) => ((e[0] == true || e[0] == 'permit') && i < test.result[1])).length != test.result[1]-1){
                     flag = false;
+                } 
             }
         }
         return flag;
