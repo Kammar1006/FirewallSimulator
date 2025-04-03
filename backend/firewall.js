@@ -31,6 +31,12 @@ function Firewall(){
             case "remove":{
                 this.remove(id);
             }break;
+            case "export_iptables":{
+                this.exportToIptables();
+            }break;
+            case "export_cisco":{
+                this.exportToCiscoACL();
+            }break;
         }
 
         return this.list;
@@ -113,8 +119,8 @@ function Firewall(){
                 port = "";
             }
 
-            let src = record.src === "any" ? "any" : `host ${record.src}`;
-            let des = record.des === "any" ? "any" : `host ${record.des}`;
+            let src = record.src === "any" ? "any" : (record.src.split(" ").length === 1 ? `host ${record.src}` : record.src);
+            let des = record.des === "any" ? "any" : (record.des.split(" ").length === 1 ? `host ${record.des}` : record.des);
 
             let rule = `access-list 100 ${action} ${protocol} ${src} ${des}`;
             if (port) rule += ` eq ${port}`;
