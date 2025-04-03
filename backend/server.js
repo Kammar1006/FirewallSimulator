@@ -95,20 +95,20 @@ io.on("connection", (sock) => {
 		sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "add", -1, rule));
 	});
 
-	sock.on("edit_rule", (id, rule) => {
+	sock.on("edit_rule", (device_id, interface_id, type, id, rule) => {
 		sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "edit", id, rule));
 	});
 
-	sock.on("remove_rule", (id) => {
+	sock.on("remove_rule", (device_id, interface_id, type, id) => {
 		sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "remove", id, ""));
 	});
 
-	sock.on("export_iptables", () => {
-		//sock.emit("iptables_data", translationTab[cid].firewall.exportToIptables());
+	sock.on("export_iptables", (device_id, interface_id, type) => {
+		sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "export_iptables"));
 	});
 
-	sock.on("export_cisco", () => {
-		//sock.emit("cisco_data", translationTab[cid].firewall.exportToCiscoACL());
+	sock.on("export_cisco", (device_id, interface_id, type) => {
+		sock.emit("rules", translationTab[cid].task.network.configure(device_id, interface_id, type, "export_cisco"));
 	});
 
 	sock.on("get_questions", () => {
