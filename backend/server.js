@@ -135,5 +135,5 @@ server.listen(PORT, () => {
 	let logs = task.network.simulate(0, 4, {src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80"});
 	console.log(logs.path);
 	console.log(logs.result);
-	console.log(task.check());
+	//console.log(task.check());
 

@@ -41,29 +41,46 @@ function Network(){
 
         this.path = reFinder(this.connections, [first_id], last_id);
 
-        let path = [...this.path]
+        let path = [[...this.path], [...this.path.reverse()]]
 
-        console.log(this.path)
+        console.log(path)
 
-        let result = [];
+        let result = [[], []];
 
-        console.log(this.path[0])
+        console.log(path[0])
         console.log("out")
-        result.push(this.devices[this.path[0]].packet_out(packet, this.connections[this.path[0]].indexOf(this.path[1])))
-        let previos_id = this.path.shift()
-        while(this.path.length > 1){
-            console.log(this.path[0])
+        result[0].push(this.devices[path[0][0]].packet_out(packet, this.connections[path[0][0]].indexOf(path[0][1])))
+        let previos_id = path[0].shift()
+        while(path[0].length > 1){
+            console.log(path[0][0])
             console.log("in")
-            result.push(this.devices[this.path[0]].packet_in(packet, this.connections[this.path[0]].indexOf(previos_id)))
+            result[0].push(this.devices[path[0][0]].packet_in(packet, this.connections[path[0][0]].indexOf(previos_id)))
             console.log("out")
-            result.push(this.devices[this.path[0]].packet_out(packet, this.connections[this.path[0]].indexOf(this.path[1])))
-            previos_id = this.path.shift()
+            result[0].push(this.devices[path[0][0]].packet_out(packet, this.connections[path[0][0]].indexOf(path[0][1])))
+            previos_id = path[0].shift()
         }
-        console.log(this.path[0])
+        console.log(path[0][0])
         console.log("in")
-        result.push(this.devices[this.path[0]].packet_in(packet, this.connections[this.path[0]].indexOf(previos_id)))
+        result[0].push(this.devices[path[0][0]].packet_in(packet, this.connections[path[0][0]].indexOf(previos_id)))
+
+        console.log(path[1])
+        console.log("out")
+        result[1].push(this.devices[path[1][0]].packet_out(packet, this.connections[path[1][0]].indexOf(path[1][1])))
+        previos_id = path[1].shift()
+        while(path[1].length > 1){
+            console.log(path[1][0])
+            console.log("in")
+            result[1].push(this.devices[path[1][0]].packet_in(packet, this.connections[path[1][0]].indexOf(previos_id)))
+            console.log("out")
+            result[1].push(this.devices[path[1][0]].packet_out(packet, this.connections[path[1][0]].indexOf(path[1][1])))
+            previos_id = path[1].shift()
+        }
+        console.log(path[1][0])
+        console.log("in")
+        result[1].push(this.devices[path[1][0]].packet_in(packet, this.connections[path[1][0]].indexOf(previos_id)))
+
         return {
-            path: path,
+            path: this.path,
             result: result
         };
     }
