@@ -39,7 +39,7 @@
 }
 
 .consoleOutput {
-    height: 200px;
+    height: 300px; /* Increased height for better visibility */
     overflow-y: auto;
     background-color: #000;
     color: #0f0;
@@ -48,6 +48,7 @@
     margin-bottom: 10px;
     font-family: "Courier New", monospace;
     font-size: 14px;
+    white-space: pre-wrap; /* Preserve line breaks */
 }
 
 .consoleOutput pre {

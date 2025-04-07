@@ -17,6 +17,18 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
         }
     };
 
+    const handleConsoleCommand = (deviceId, command) => {
+        if (socket) {
+            socket.emit("console_command", { deviceId, command });
+            socket.once("console_output", (data) => {
+                setConsoleOutput((prevState) => ({
+                    ...prevState,
+                    [deviceId]: (prevState[deviceId] || "") + `\n> ${command}\n${data.output}`, // Append command and output
+                }));
+            });
+        }
+    };
+
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             handleSendCommand();
