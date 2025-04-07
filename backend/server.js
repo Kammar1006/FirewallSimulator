@@ -134,7 +134,100 @@ io.on("connection", (sock) => {
 
 	sock.on("console_command", ({ deviceId, command }) => {
 		console.log(`Received command "${command}" for device ${deviceId}`);
-		const output = `Executed command "${command}" on device ${deviceId}`;
+		let output = "";
+
+		const args = command.split(" ");
+		const cmd = args[0].toLowerCase();
+
+		switch (cmd) {
+			case "show":
+				if (args[1] === "ip" && args[2] === "interface") {
+					output = `Device ${deviceId} - IP Interfaces:\n- Interface 1: 192.168.1.1\n- Interface 2: 10.0.0.1`;
+				} else {
+					output = `Unknown show command: ${command}`;
+				}
+				break;
+
+			case "add_rule":
+				if (args.length === 6) {
+					const rule = {
+						action: args[1],
+						src: args[2],
+						des: args[3],
+						protocol: args[4],
+						port: args[5],
+					};
+					translationTab[cid].task.network.configure(deviceId, 0, "input", "add", -1, rule);
+					output = `Rule added to Device ${deviceId}: ${JSON.stringify(rule)}`;
+				} else {
+					output = `Invalid add_rule syntax. Usage: add_rule <action> <src> <des> <protocol> <port>`;
+				}
+				break;
+
+			case "list_rules":
+				const rules = translationTab[cid].task.network.configure(deviceId, 0, "input");
+				output = `Rules for Device ${deviceId}:\n${rules.map((rule, index) => `${index + 1}. ${JSON.stringify(rule)}`).join("\n")}`;
+				break;
+
+			case "delete_rule":
+				if (args.length === 2) {
+					const ruleIndex = parseInt(args[1], 10) - 1;
+					const rulesBefore = translationTab[cid].task.network.configure(deviceId, 0, "input");
+					if (ruleIndex >= 0 && ruleIndex < rulesBefore.length) {
+						translationTab[cid].task.network.configure(deviceId, 0, "input", "remove", ruleIndex, "");
+						output = `Rule ${ruleIndex + 1} deleted from Device ${deviceId}.`;
+					} else {
+						output = `Invalid rule index. Use "list_rules" to see available rules.`;
+					}
+				} else {
+					output = `Invalid delete_rule syntax. Usage: delete_rule <rule_index>`;
+				}
+				break;
+
+			case "ping":
+				if (args.length === 2) {
+					const targetIp = args[1];
+					output = `Pinging ${targetIp} from Device ${deviceId}...\nReply from ${targetIp}: bytes=32 time<1ms TTL=64`;
+				} else {
+					output = `Invalid ping syntax. Usage: ping <target_ip>`;
+				}
+				break;
+
+			case "run_tests":
+				const task = translationTab[cid].task;
+				const results = task.tests.map((test, index) => {
+					const result = task.network.simulate(
+						test.endpoints[0],
+						test.endpoints[1],
+						test.packet
+					);
+					const passed = result.result.some(
+						(e, i) =>
+							(e[0] === test.result[0] || e[0] === "permit") &&
+							i === test.result[1] - 1
+					);
+					return {
+						test: index + 1,
+						passed,
+						expected: test.result,
+						actual: result.result,
+					};
+				});
+
+				output = results
+					.map(
+						(res) =>
+							`Test ${res.test}: ${res.passed ? "PASSED" : "FAILED"}\n` +
+							`Expected: ${JSON.stringify(res.expected)}\n` +
+							`Actual: ${JSON.stringify(res.actual)}`
+					)
+					.join("\n\n");
+				break;
+
+			default:
+				output = `Unknown command: ${command}`;
+		}
+
 		sock.emit("console_output", { deviceId, output });
 	});
 });

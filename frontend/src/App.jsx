@@ -16,6 +16,7 @@ import SecurityPolicies from './pages/Security Policies/SecurityPolicies';
 import TrafficMonitoring from './pages/Traffic Monitoring/TrafficMonitoring';
 import Login from './pages/Login/Login';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import NotFound from "./pages/NotFound/NotFound";
 
 const App = () => {
   return (
@@ -37,7 +38,7 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/task/:taskId" element={<TaskDetails />} />
-              <Route path="*" element={<div>404 - Page Not Found</div>} />
+              <Route path="/404" element={<NotFound />} />
             </Routes>
         </div>
 
