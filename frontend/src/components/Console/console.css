@@ -1,0 +1,89 @@
+.consoleModal {
+    position: absolute;
+    width: 400px;
+    background-color: #1e1e1e;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.consoleTitleBar {
+    background-color: #333;
+    padding: 8px;
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.consoleTitleBar .closeButton {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.consoleTitleBar .closeButton:hover {
+    color: #f00;
+}
+
+.consoleContent {
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.consoleOutput {
+    height: 150px;
+    overflow-y: auto;
+    background-color: #000;
+    color: #0f0;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.consoleOutput pre {
+    margin: 0;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.consoleContent input {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #222;
+    color: #fff;
+}
+
+.consoleActions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.consoleActions button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.consoleActions button:hover {
+    background-color: #0056b3;
+}

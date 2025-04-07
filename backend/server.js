@@ -47,7 +47,7 @@ const setCID = (sock) => {
 };
 
 const setTranslationTab = (cid) => {
-	if(translationTab[cid] == undefined){
+	if (translationTab[cid] == undefined) {
 		translationTab[cid] = {
 			user_id: -1,
 			sid: 0,
@@ -56,6 +56,7 @@ const setTranslationTab = (cid) => {
 			progress: 0,
 			in_progress: 0,
 		};
+		translationTab[cid].task.set(1); // Initialize the task with ID 1
 	}
 };
 
@@ -119,6 +120,22 @@ io.on("connection", (sock) => {
 	sock.on("counter", () => {
 		translationTab[cid].test_counter++;
 		sock.emit("message", "Count: " + translationTab[cid].test_counter);
+	});
+
+	sock.on("get_tasks", () => {
+		const taskData = {
+			desc: translationTab[cid].task.desc || ["No description available."],
+			tests: translationTab[cid].task.tests || [],
+			subtasks: translationTab[cid].task.subtasks || [],
+			topology: translationTab[cid].task.topology || {}, // Include topology
+		};
+		sock.emit("tasks", taskData);
+	});
+
+	sock.on("console_command", ({ deviceId, command }) => {
+		console.log(`Received command "${command}" for device ${deviceId}`);
+		const output = `Executed command "${command}" on device ${deviceId}`;
+		sock.emit("console_output", { deviceId, output });
 	});
 });
 

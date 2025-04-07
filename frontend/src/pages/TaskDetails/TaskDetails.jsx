@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { RulesContext } from "../../context/RulesContext";
+import Console from "../../components/Console/Console";
 
 const TaskDetails = () => {
     const { taskId } = useParams();
     const { socket } = useContext(RulesContext);
     const [task, setTask] = useState(null);
+    const [openConsoles, setOpenConsoles] = useState([]); // Track open consoles
+    const [consoleOutput, setConsoleOutput] = useState({}); // Output for each device console
 
     useEffect(() => {
         if (socket) {
@@ -30,6 +33,28 @@ const TaskDetails = () => {
         };
     }, [socket, taskId]);
 
+    const openConsole = (deviceId) => {
+        if (!openConsoles.includes(deviceId)) {
+            setOpenConsoles((prev) => [...prev, deviceId]); // Add device to open consoles
+        }
+    };
+
+    const closeConsole = (deviceId) => {
+        setOpenConsoles((prev) => prev.filter((id) => id !== deviceId)); // Remove device from open consoles
+    };
+
+    const handleConsoleCommand = (deviceId, command) => {
+        if (socket) {
+            socket.emit("console_command", { deviceId, command });
+            socket.once("console_output", (data) => {
+                setConsoleOutput((prevState) => ({
+                    ...prevState,
+                    [deviceId]: data.output, // Update console output for the active device
+                }));
+            });
+        }
+    };
+
     return (
         <div className="taskDetailsContainer">
             {task ? (
@@ -50,7 +75,7 @@ const TaskDetails = () => {
                     <div className="networkTopology">
                         <svg width="500" height="500">
                             {task.topology.devices.map((device, index) => (
-                                <g key={index}>
+                                <g key={index} onClick={() => openConsole(index)} style={{ cursor: "pointer" }}>
                                     <circle
                                         cx={100 + index * 100}
                                         cy={100}
@@ -79,6 +104,18 @@ const TaskDetails = () => {
                             ))}
                         </svg>
                     </div>
+
+                    {/* Render all open consoles */}
+                    {openConsoles.map((deviceId) => (
+                        <Console
+                            key={deviceId}
+                            deviceName={task.topology.devices[deviceId].name}
+                            deviceId={deviceId}
+                            onClose={() => closeConsole(deviceId)}
+                            onCommand={handleConsoleCommand}
+                            output={consoleOutput[deviceId]}
+                        />
+                    ))}
                 </>
             ) : (
                 <p>Loading task details...</p>
