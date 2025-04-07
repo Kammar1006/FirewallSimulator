@@ -83,3 +83,20 @@
 .consoleActions button:hover {
     background-color: #0056b3;
 }
+
+.consolePrompt {
+    display: flex;
+    align-items: center;
+    font-family: "Courier New", monospace;
+    color: #0f0;
+}
+
+.consolePrompt input {
+    flex: 1;
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: "Courier New", monospace;
+}

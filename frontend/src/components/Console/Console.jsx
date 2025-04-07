@@ -69,13 +69,20 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
                     <div className="consoleOutput">
                         <pre>{output || "No output yet..."}</pre>
                     </div>
-                    <input
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder="Enter command"
-                    />
+                    <div className="consolePrompt">
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            placeholder="Enter command"
+                        />
+                    </div>
+                    <div className="consoleActions">
+                        <button onClick={() => onCommand(deviceId, "run_tests")}>
+                            Run Tests
+                        </button>
+                    </div>
                 </div>
             </div>
         </Draggable>
