@@ -16,6 +16,7 @@ const TaskDetails = () => {
                     id: taskId,
                     description: data.desc[taskId - 1] || "No description available.",
                     difficulty: ["Easy", "Medium", "Hard"][(taskId - 1) % 3],
+                    subtasks: data.subtasks || [],
                 });
             });
         }
@@ -40,6 +41,15 @@ const TaskDetails = () => {
                     <h2>Task {task.id}</h2>
                     <p>{task.description}</p>
                     <p><strong>Difficulty:</strong> {task.difficulty}</p>
+                    <h3>Subtasks</h3>
+                    <ul>
+                        {task.subtasks.map((subtask) => (
+                            <li key={subtask.id}>
+                                <h4>{subtask.title}</h4>
+                                <p>{subtask.description}</p>
+                            </li>
+                        ))}
+                    </ul>
                     {/* Add rule configuration UI here */}
                 </>
             ) : (

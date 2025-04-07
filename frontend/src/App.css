@@ -28,3 +28,23 @@
 .taskCard.hard {
     background-color: #f8d7da;
 }
+
+.taskDetailsContainer ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.taskDetailsContainer li {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.taskDetailsContainer li h4 {
+    margin: 0 0 10px;
+}
+
+.taskDetailsContainer li p {
+    margin: 0;
+}
