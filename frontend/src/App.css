@@ -29,6 +29,10 @@
     background-color: #f8d7da;
 }
 
+.taskDetailsContainer {
+    padding: 20px;
+}
+
 .taskDetailsContainer ul {
     list-style-type: none;
     padding: 0;
@@ -47,4 +51,22 @@
 
 .taskDetailsContainer li p {
     margin: 0;
+}
+
+.networkTopology {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.device {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    width: 150px;
+    text-align: center;
+    background-color: #f9f9f9;
 }
