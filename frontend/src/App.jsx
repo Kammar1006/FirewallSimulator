@@ -15,32 +15,35 @@ import OutboundRules from './pages/Outbound Rules/OutboundRules';
 import SecurityPolicies from './pages/Security Policies/SecurityPolicies';
 import TrafficMonitoring from './pages/Traffic Monitoring/TrafficMonitoring';
 import Login from './pages/Login/Login';
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
 const App = () => {
   return (
-    <div className="App">
+    <ErrorBoundary>
+      <div className="App">
 
-      <div className="appContainer">
-          <Navbar />
+        <div className="appContainer">
+            <Navbar />
 
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/alertsAndNotifications" element={<AlertsAndNotifications />} />
-            <Route path="/inboundRules" element={<InboundRules />} />
-            <Route path="/networkSettings" element={<NetworkSettings />} />
-            <Route path="/outboundRules" element={<OutboundRules />} />
-            <Route path="/securityPolicies" element={<SecurityPolicies />} />
-            <Route path="/trafficMonitoring" element={<TrafficMonitoring />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/task/:taskId" element={<TaskDetails />} />
-            <Route path="*" element={<div>404 - Page Not Found</div>} />
-          </Routes>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/alertsAndNotifications" element={<AlertsAndNotifications />} />
+              <Route path="/inboundRules" element={<InboundRules />} />
+              <Route path="/networkSettings" element={<NetworkSettings />} />
+              <Route path="/outboundRules" element={<OutboundRules />} />
+              <Route path="/securityPolicies" element={<SecurityPolicies />} />
+              <Route path="/trafficMonitoring" element={<TrafficMonitoring />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/tasks" element={<Tasks />} />
+              <Route path="/task/:taskId" element={<TaskDetails />} />
+              <Route path="*" element={<div>404 - Page Not Found</div>} />
+            </Routes>
+        </div>
+
+        
       </div>
-
-      
-    </div>
+    </ErrorBoundary>
   )
 }
 

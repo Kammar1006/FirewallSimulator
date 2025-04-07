@@ -4,16 +4,16 @@ import "./console.css";
 
 const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
     const [input, setInput] = useState("");
-    const [history, setHistory] = useState([]); // Command history
-    const [historyIndex, setHistoryIndex] = useState(-1); // Track history navigation
+    const [history, setHistory] = useState([]); // Historia poleceń
+    const [historyIndex, setHistoryIndex] = useState(-1); // Nawigacja po historii
     const consoleRef = useRef(null);
 
     const handleSendCommand = () => {
         if (input.trim()) {
             onCommand(deviceId, input);
-            setHistory((prev) => [...prev, input]); // Add command to history
-            setInput(""); // Clear input after sending
-            setHistoryIndex(-1); // Reset history navigation
+            setHistory((prev) => [...prev, input]); // Dodaj polecenie do historii
+            setInput(""); // Wyczyść pole po wysłaniu
+            setHistoryIndex(-1); // Zresetuj nawigację po historii
         }
     };
 
@@ -33,14 +33,14 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
         if (e.key === "Enter") {
             handleSendCommand();
         } else if (e.key === "ArrowUp") {
-            // Navigate up in history
+            // Nawigacja w górę po historii
             if (historyIndex < history.length - 1) {
                 const newIndex = historyIndex + 1;
                 setHistoryIndex(newIndex);
                 setInput(history[history.length - 1 - newIndex]);
             }
         } else if (e.key === "ArrowDown") {
-            // Navigate down in history
+            // Nawigacja w dół po historii
             if (historyIndex > 0) {
                 const newIndex = historyIndex - 1;
                 setHistoryIndex(newIndex);
@@ -54,7 +54,7 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
 
     useEffect(() => {
         if (consoleRef.current) {
-            consoleRef.current.scrollTop = consoleRef.current.scrollHeight; // Auto-scroll to the bottom
+            consoleRef.current.scrollTop = consoleRef.current.scrollHeight; // Automatyczne przewijanie do dołu
         }
     }, [output]);
 
