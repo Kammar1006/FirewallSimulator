@@ -1,0 +1,30 @@
+.tasksGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.taskCard {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.taskCard:hover {
+    transform: scale(1.05);
+}
+
+.taskCard.easy {
+    background-color: #d4edda;
+}
+
+.taskCard.medium {
+    background-color: #fff3cd;
+}
+
+.taskCard.hard {
+    background-color: #f8d7da;
+}

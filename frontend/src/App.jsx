@@ -6,7 +6,7 @@ import Home from './pages/Home/Home';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Tasks from './pages/Tasks/Tasks';
 import Navbar from './components/Navbar/Navbar';
-
+import TaskDetails from './pages/TaskDetails/TaskDetails';
 
 import AlertsAndNotifications from './pages/Alerts and Notifications/AlertsAndNotifications';
 import InboundRules from './pages/Inbound Rules/InboundRules';
@@ -34,6 +34,7 @@ const App = () => {
             <Route path="/trafficMonitoring" element={<TrafficMonitoring />} />
             <Route path="/login" element={<Login />} />
             <Route path="/tasks" element={<Tasks />} />
+            <Route path="/task/:taskId" element={<TaskDetails />} />
             <Route path="*" element={<div>404 - Page Not Found</div>} />
           </Routes>
       </div>
