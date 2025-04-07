@@ -1,17 +1,17 @@
 .consoleModal {
     position: absolute;
-    width: 400px;
-    background-color: #1e1e1e;
-    color: #fff;
-    border: 1px solid #333;
+    width: 500px;
+    background-color: #000;
+    color: #0f0;
+    border: 1px solid #555;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: "Courier New", monospace;
     z-index: 1000;
     overflow: hidden;
 }
 
 .consoleTitleBar {
-    background-color: #333;
+    background-color: #222;
     padding: 8px;
     cursor: move;
     display: flex;
@@ -19,6 +19,7 @@
     align-items: center;
     font-size: 14px;
     font-weight: bold;
+    color: #fff;
 }
 
 .consoleTitleBar .closeButton {
@@ -35,38 +36,32 @@
 
 .consoleContent {
     padding: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-    width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .consoleOutput {
-    height: 150px;
+    height: 200px;
     overflow-y: auto;
     background-color: #000;
     color: #0f0;
     padding: 10px;
     border-radius: 4px;
     margin-bottom: 10px;
-    font-family: monospace;
+    font-family: "Courier New", monospace;
     font-size: 14px;
 }
 
 .consoleOutput pre {
     margin: 0;
-    font-family: monospace;
-    font-size: 14px;
 }
 
 .consoleContent input {
     width: calc(100% - 20px);
     padding: 8px;
-    margin-bottom: 10px;
     border: 1px solid #555;
     border-radius: 4px;
     background-color: #222;
     color: #fff;
+    font-family: "Courier New", monospace;
 }
 
 .consoleActions {

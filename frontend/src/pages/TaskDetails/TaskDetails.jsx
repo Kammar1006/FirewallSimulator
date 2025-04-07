@@ -49,7 +49,7 @@ const TaskDetails = () => {
             socket.once("console_output", (data) => {
                 setConsoleOutput((prevState) => ({
                     ...prevState,
-                    [deviceId]: data.output, // Update console output for the active device
+                    [deviceId]: (prevState[deviceId] || "") + `\n> ${command}\n${data.output}`, // Append command and output
                 }));
             });
         }
