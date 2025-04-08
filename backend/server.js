@@ -143,6 +143,8 @@ io.on("connection", (sock) => {
 			case "show":
 				if (args[1] === "ip" && args[2] === "interface") {
 					output = `Device ${deviceId} - IP Interfaces:\n- Interface 1: 192.168.1.1\n- Interface 2: 10.0.0.1`;
+				} else if (args[1] === "running-config") {
+					output = "Displaying running configuration...";
 				} else {
 					output = `Unknown show command: ${command}`;
 				}
@@ -222,6 +224,43 @@ io.on("connection", (sock) => {
 							`Actual: ${JSON.stringify(res.actual)}`
 					)
 					.join("\n\n");
+				break;
+
+			case "configure":
+				if (args[1] === "terminal") {
+					output = "Enter configuration commands, one per line. End with CNTL/Z.";
+				} else {
+					output = `Invalid configure syntax. Usage: configure terminal`;
+				}
+				break;
+
+			case "hostname":
+				if (args.length === 2) {
+					const newHostname = args[1];
+					output = `Hostname changed to ${newHostname}`;
+				} else {
+					output = `Invalid hostname syntax. Usage: hostname <name>`;
+				}
+				break;
+
+			case "interface":
+				if (args.length === 2) {
+					output = `Configuring interface ${args[1]}`;
+				} else {
+					output = `Invalid interface syntax. Usage: interface <name>`;
+				}
+				break;
+
+			case "ip":
+				if (args[1] === "address" && args.length === 4) {
+					output = `IP address ${args[2]} with subnet mask ${args[3]} configured.`;
+				} else {
+					output = `Invalid IP syntax. Usage: ip address <ip> <subnet>`;
+				}
+				break;
+
+			case "exit":
+				output = "Exiting configuration mode.";
 				break;
 
 			default:

@@ -10,10 +10,10 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
 
     const handleSendCommand = () => {
         if (input.trim()) {
-            onCommand(deviceId, input);
-            setHistory((prev) => [...prev, input]); // Dodaj polecenie do historii
-            setInput(""); // Wyczyść pole po wysłaniu
-            setHistoryIndex(-1); // Zresetuj nawigację po historii
+            onCommand(deviceId, input); // Send command to backend
+            setHistory((prev) => [...prev, input]); // Add to history
+            setInput(""); // Clear input
+            setHistoryIndex(-1); // Reset history navigation
         }
     };
 
