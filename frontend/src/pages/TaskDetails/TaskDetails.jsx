@@ -16,11 +16,11 @@ const TaskDetails = () => {
 
     const predefinedPositions = {
         1: {
-            0: { x: 10, y: 150 },  // PC_1
-            1: { x: 200, y: 150 }, // R_1
-            2: { x: 350, y: 150 }, // R_2
-            3: { x: 350, y: 300 }, // PC_2
-            4: { x: 500, y: 150 }, // PC_3
+            0: { x: 200, y: 100 },  // PC_1
+            1: { x: 400, y: 100 }, // R_1
+            2: { x: 650, y: 100 }, // R_2
+            3: { x: 650, y: 250 }, // PC_2
+            4: { x: 900, y: 100 }, // PC_3
         },
         // Add predefined positions for other tasks here...
     };
@@ -72,10 +72,10 @@ const TaskDetails = () => {
     };
 
     const getDeviceIcon = (name) => {
-        if (name.startsWith("PC")) return "💻"; // Icon for PC
-        if (name.startsWith("R")) return "📡"; // Icon for Router
-        if (name.startsWith("S")) return "🔀"; // Icon for Switch
-        return "❓"; // Default icon
+        if (name.startsWith("PC")) return <img src={assets.pcIcon} alt="" className="taskDetailsPcIcon" />;
+        if (name.startsWith("R")) return <img src={assets.routerIcon} alt="" className="taskDetailsRouterIcon" />;
+        if (name.startsWith("S")) return <img src={assets.switchIcon} alt="" className="taskDetailsSwitchIcon" />;
+        return "❓"
     };
 
     const renderConnections = () => {
@@ -123,6 +123,11 @@ const TaskDetails = () => {
                                     {/* Right Part */}
                                     <div className="taskDetailsContainerTopFirstContainerRight">
                                         <div className="taskDetailsContainerTopFirstContainerRightContainer">
+                                            <button className="taskDetailsContainerTopFirstContainerRightContainerBtnOne">
+                                                <p className="taskDetailsContainerTopFirstContainerRightContainerBtnOneText">
+                                                    Run Tests
+                                                </p>
+                                            </button>
                                             <button className="taskDetailsContainerTopFirstContainerRightContainerBtn">
                                                 <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
                                                     Submit
@@ -184,47 +189,33 @@ const TaskDetails = () => {
                             </div>
                         </div>
 
+                        {/* Bottom Part */}
+                        <div className="taskDetailsContainerBottom">
+                            <div className="taskDetailsContainerBottomContainer">
+                                <svg className="taskDetailsContainerBottomContainerSvg">
+                                    {renderConnections()}
+                                </svg>
+                                {task.topology.devices.map((device, index) => {
+                                    const position = predefinedPositions[taskId]?.[index];
+                                    return (
+                                        <div
+                                            key={index}
+                                            className="deviceIcon"
+                                            style={{
+                                                left: position?.x || 0,
+                                                top: position?.y || 0,
+                                            }}
+                                            onClick={() => openConsole(index)}
+                                        >
+                                            <span>{getDeviceIcon(device.name)}</span>
+                                            <p>{device.name}</p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
                     </div>
-
-
-{/* 
-                    <h2>Task {task.id}</h2>
-                    <p>{task.description}</p>
-                    <p><strong>Difficulty:</strong> {task.difficulty}</p>
-                    <h3>Subtasks</h3>
-                    <ul>
-                        {task.subtasks.map((subtask) => (
-                            <li key={subtask.id}>
-                                <h4>{subtask.title}</h4>
-                                <p>{subtask.description}</p>
-                            </li>
-                        ))}
-                    </ul> */}
-                    {/* <h3>Network Topology</h3> */}
-                    {/* <div className="networkTopology">
-                        <svg width="600" height="400">
-                            {renderConnections()}
-                        </svg>
-                        {task.topology.devices.map((device, index) => {
-                            const position = predefinedPositions[taskId]?.[index];
-                            return (
-                                <div
-                                    key={index}
-                                    className="deviceIcon"
-                                    style={{
-                                        position: "absolute",
-                                        left: position.x,
-                                        top: position.y,
-                                        cursor: "pointer",
-                                    }}
-                                    onClick={() => openConsole(index)}
-                                >
-                                    <span>{getDeviceIcon(device.name)}</span>
-                                    <p>{device.name}</p>
-                                </div>
-                            );
-                        })}
-                    </div> */}
 
                     {/* Render all open consoles */}
                     {openConsoles.map((deviceId) => (
