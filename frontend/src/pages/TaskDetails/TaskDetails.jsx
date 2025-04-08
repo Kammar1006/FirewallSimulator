@@ -5,6 +5,8 @@ import { RulesContext } from "../../context/RulesContext";
 import Console from "../../components/Console/Console";
 import "./taskDetails.css";
 
+import assets from "../../assets/assets"; // Adjust the path as necessary
+
 const TaskDetails = () => {
     const { taskId } = useParams();
     const { socket } = useContext(RulesContext);
@@ -29,6 +31,7 @@ const TaskDetails = () => {
             socket.on("tasks", (data) => {
                 const taskData = {
                     id: taskId,
+                    title: data.titles[taskId - 1] || `Task ${taskId}`, // Poprawne przypisanie tytułu
                     description: data.desc[taskId - 1] || "No description available.",
                     difficulty: ["Easy", "Medium", "Hard"][(taskId - 1) % 3],
                     subtasks: data.subtasks || [],
@@ -100,9 +103,91 @@ const TaskDetails = () => {
     };
 
     return (
-        <div className="taskDetailsContainer">
+        <div className="taskDetails">
             {task ? (
                 <>
+                    <div className="taskDetailsContainer">
+
+                        {/* Top Part */}
+                        <div className="taskDetailsContainerTop">
+                            {/* First Element */}
+                            <div className="taskDetailsContainerTopFirst">
+                                <div className="taskDetailsContainerTopFirstContainer">
+                                    {/* Left Part */}
+                                    <div className="taskDetailsContainerTopFirstContainerLeft">
+                                        <p className="taskDetailsContainerTopFirstContainerLeftText">
+                                            Task #{task.id}: {task.title}
+                                        </p>
+                                    </div>
+
+                                    {/* Right Part */}
+                                    <div className="taskDetailsContainerTopFirstContainerRight">
+                                        <div className="taskDetailsContainerTopFirstContainerRightContainer">
+                                            <button className="taskDetailsContainerTopFirstContainerRightContainerBtn">
+                                                <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
+                                                    Submit
+                                                </p>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Second Element */}
+                            <div className="taskDetailsContainerTopElement">
+                                <div className="taskDetailsContainerTopElementContainer">
+                                    {/* First Part */}
+                                    <div className="taskDetailsContainerTopElementContainerFirst">
+                                        <div className="taskDetailsContainerTopElementContainerFirstContainer">
+                                            <div className="taskDetailsContainerTopElementContainerFirstContainerDiv">
+                                                <p className="taskDetailsContainerTopElementContainerFirstContainerDivText">
+                                                    Difficulty: {task.difficulty}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Second Part */}
+                                    <div className="taskDetailsContainerTopElementContainerSecond">
+                                        <div className="taskDetailsContainerTopElementContainerSecondContainer">
+                                            <p className="taskDetailsContainerTopElementContainerSecondContainerText">
+                                                Time: 45 minutes
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Third Element */}
+                            <div className="taskDetailsContainerTopThird">
+                                <div className="taskDetailsContainerTopThirdContainer">
+                                    <p className="taskDetailsContainerTopThirdContainerText">
+                                        Configure the firewall rules for a secure network environment following the given requirements:
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Fourth Element */}
+                            <div className="taskDetailsContainerTopFourth">
+                                <div className="taskDetailsContainerTopFourthContainer">
+                                    {
+                                        task.subtasks.map((subtask) => (
+                                            <div key={subtask.id} className="taskDetailsContainerTopFourthContainerSubtask">
+                                                <img src={assets.dotIcon} alt="" className="taskDetailsContainerTopFourthContainerSubtaskDotIcon" />
+                                                <p className="taskDetailsContainerTopFourthContainerSubtaskText">
+                                                    {subtask.description}
+                                                </p>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+{/* 
                     <h2>Task {task.id}</h2>
                     <p>{task.description}</p>
                     <p><strong>Difficulty:</strong> {task.difficulty}</p>
@@ -114,9 +199,9 @@ const TaskDetails = () => {
                                 <p>{subtask.description}</p>
                             </li>
                         ))}
-                    </ul>
-                    <h3>Network Topology</h3>
-                    <div className="networkTopology">
+                    </ul> */}
+                    {/* <h3>Network Topology</h3> */}
+                    {/* <div className="networkTopology">
                         <svg width="600" height="400">
                             {renderConnections()}
                         </svg>
@@ -139,7 +224,7 @@ const TaskDetails = () => {
                                 </div>
                             );
                         })}
-                    </div>
+                    </div> */}
 
                     {/* Render all open consoles */}
                     {openConsoles.map((deviceId) => (

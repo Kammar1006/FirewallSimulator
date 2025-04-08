@@ -1,3 +1,263 @@
+.taskDetails {
+    display: flex;
+    background-color: #F3F4F6;
+    width: 100%;
+    height: 100%;
+}
+
+.taskDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 15px;
+}
+
+
+
+
+.taskDetailsContainerTop {
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+.taskDetailsContainerTopFirst {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.taskDetailsContainerTopFirstContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+}
+
+.taskDetailsContainerTopFirstContainerLeftText {
+    font-size: 22px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.taskDetailsContainerTopFirstContainerRightContainerBtn {
+    width: 110px;
+    height: 35px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background-color: #1F2937;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+}
+
+.taskDetailsContainerTopFirstContainerRightContainerBtn:hover {
+    background-color: #374151;
+}
+
+.taskDetailsContainerTopFirstContainerRightContainerBtnText {
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+.taskDetailsContainerTopElement {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 5px;
+}
+
+.taskDetailsContainerTopElementContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+}
+
+.taskDetailsContainerTopElementContainerFirstContainerDiv {
+    background-color: #E5E7EB;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 50px;
+}
+
+.taskDetailsContainerTopElementContainerFirstContainerDivText {
+    color: #000000;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.taskDetailsContainerTopThird {
+    display: flex;
+    margin-top: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+/* Edit time color etc */
+.taskDetailsContainerTopThirdContainerText {
+    color: #374151;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+
+.taskDetailsContainerTopFourth {
+    display: flex;
+    margin-top: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 15px;
+}
+
+.taskDetailsContainerTopFourthContainerSubtask {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.taskDetailsContainerTopFourthContainerSubtaskDotIcon {
+    width: 25px;
+    height: auto;
+}
+
+.taskDetailsContainerTopFourthContainerSubtaskText {
+    color: #374151;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+.taskDetailsContainerTopElementContainerSecondContainerText {
+    color: #4B5563;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .networkTopology {
     position: relative;
     width: 600px;
