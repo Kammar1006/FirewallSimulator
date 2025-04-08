@@ -12,10 +12,12 @@ const Navbar = () => {
 
             {/* Left Part */}
             <NavLink to="/" className="navbarContainerLeft">
-                <img src={assets.flameIcon} alt="" className="navbarContainerLeftIcon" />
+                <img src={assets.icon} alt="" className="navbarContainerLeftIcon" />
 
                 <div className="navbarContainerLeftNameContainer">
-                    <p className="navbarContainerLeftNameContainerText">ACL Firewall Manager</p>
+                    <p className="navbarContainerLeftNameContainerText">
+                        Network Firewall Simulator
+                    </p>
                 </div>
             </NavLink>
 
