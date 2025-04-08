@@ -16,7 +16,7 @@ const Tasks = () => {
             socket.on("tasks", (data) => {
                 const taskList = Array.from({ length: 6 }, (_, i) => ({
                     id: i + 1,
-                    title: data.titles[i] || `Task ${i + 1}`, // Include the title
+                    title: data.titles[i] || `Task ${i + 1}`,
                     description: data.desc[i] || `Task ${i + 1}: No description available.`,
                     difficulty: ["Easy", "Medium", "Hard"][i % 3],
                 }));
@@ -74,18 +74,6 @@ const Tasks = () => {
                 </div>
 
             </div>
-
-            {/* <h1>Network Management Tasks</h1>
-            <p>Select a task to practice network and firewall management skills</p>
-            <div className="tasksGrid">
-                {tasks.map((task) => (
-                    <TaskCard
-                        key={task.id}
-                        task={task}
-                        onClick={() => handleTaskClick(task.id)}
-                    />
-                ))}
-            </div> */}
         </div>
     );
 };

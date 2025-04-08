@@ -28,7 +28,9 @@ const TaskCard = ({ task, onClick }) => {
 
                 {/* Second Part */}
                 <div className="taskCardContainerSecond">
-                    <h4 className="taskCardContainerSecondTitle">{task.title}</h4> {/* Display the title */}
+                    <p className="taskCardContainerSecondText">
+                        {task.title}
+                    </p>
                 </div>
 
                 {/* Third Part */}

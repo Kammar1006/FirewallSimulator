@@ -34,8 +34,8 @@ function Task() {
 
                 this.title = "Basic Firewall Configuration";
                 this.desc = [
-                    "Task 1: Configure the firewall to allow traffic from PC_1 to PC_3 on port 80.",
-                    "Task 2: Block all other traffic.",
+                    "Configure the firewall to allow traffic from PC_1 to PC_3 on port 80.",
+                    // "Task 2: Block all other traffic.",
                 ];
                 this.tests = [
                     {

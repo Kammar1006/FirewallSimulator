@@ -1,8 +1,9 @@
 .navbar {
+    height: 70px;
+    flex-shrink: 0;
     background-color: #02C822;
     padding-left: 30px;
     padding-right: 30px;
-    height: 70px;
 }
 
 .navbarContainer {
