@@ -124,6 +124,7 @@ io.on("connection", (sock) => {
 
 	sock.on("get_tasks", () => {
 		const taskData = {
+			titles: [translationTab[cid].task.title], // Include the title
 			desc: translationTab[cid].task.desc || ["No description available."],
 			tests: translationTab[cid].task.tests || [],
 			subtasks: translationTab[cid].task.subtasks || [],

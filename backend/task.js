@@ -32,6 +32,7 @@ function Task() {
                     ),
                 };
 
+                this.title = "Basic Firewall Configuration";
                 this.desc = [
                     "Task 1: Configure the firewall to allow traffic from PC_1 to PC_3 on port 80.",
                     "Task 2: Block all other traffic.",
@@ -76,6 +77,7 @@ function Task() {
                     ),
                 };
 
+                this.title = "Intermediate Firewall Rules";
                 this.desc = ["Task 2: Configure the firewall to allow traffic from PC_A to PC_B."];
                 this.tests = [];
                 this.difficulty = "Medium";
@@ -106,6 +108,7 @@ function Task() {
                     ),
                 };
 
+                this.title = "Advanced Network Security";
                 this.desc = ["Task 3: Configure the firewall to allow traffic from PC_X to PC_Y."];
                 this.tests = [];
                 this.difficulty = "Hard";

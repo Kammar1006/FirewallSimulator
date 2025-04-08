@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { RulesContext } from "../../context/RulesContext";
 import { useNavigate } from "react-router-dom";
+import TaskCard from "../../components/TaskCard/TaskCard";
 import "./tasks.css";
 
 const Tasks = () => {
@@ -15,8 +16,9 @@ const Tasks = () => {
             socket.on("tasks", (data) => {
                 const taskList = Array.from({ length: 6 }, (_, i) => ({
                     id: i + 1,
+                    title: data.titles[i] || `Task ${i + 1}`, // Include the title
                     description: data.desc[i] || `Task ${i + 1}: No description available.`,
-                    difficulty: ["Easy", "Medium", "Hard"][i % 3], // Example difficulty rotation
+                    difficulty: ["Easy", "Medium", "Hard"][i % 3],
                 }));
                 setTasks(taskList);
             });
@@ -34,21 +36,56 @@ const Tasks = () => {
     };
 
     return (
-        <div className="tasksContainer">
-            <h2>Tasks</h2>
+        <div className="tasks">
+
+            <div className="tasksContainer">
+
+                {/* Top Part */}
+                <div className="tasksContainerTop">
+                    <div className="tasksContainerTopContainer">
+                        <p className="tasksContainerTopContainerText">
+                            Network Management Tasks
+                        </p>
+                    </div>
+                </div>
+
+                {/* Middle Part */}
+                <div className="tasksContainerMiddle">
+                    <p className="tasksContainerMiddleContainer">
+                        <p className="tasksContainerMiddleContainerText">
+                            Select a task to practice network and firewall management skills
+                        </p>
+                    </p>
+                </div>
+
+                {/* Bottom Part */}
+                <div className="tasksContainerBottom">
+                    <div className="tasksContainerBottomContainer">
+                        <div className="tasksContainerBottomContainerTasksGrid">
+                            {tasks.map((task) => (
+                                <TaskCard
+                                    key={task.id}
+                                    task={task}
+                                    onClick={() => handleTaskClick(task.id)}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {/* <h1>Network Management Tasks</h1>
+            <p>Select a task to practice network and firewall management skills</p>
             <div className="tasksGrid">
                 {tasks.map((task) => (
-                    <div
+                    <TaskCard
                         key={task.id}
-                        className={`taskCard ${task.difficulty.toLowerCase()}`}
+                        task={task}
                         onClick={() => handleTaskClick(task.id)}
-                    >
-                        <h3>Task {task.id}</h3>
-                        <p>{task.description}</p>
-                        <p><strong>Difficulty:</strong> {task.difficulty}</p>
-                    </div>
+                    />
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 };

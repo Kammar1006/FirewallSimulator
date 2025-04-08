@@ -1,0 +1,55 @@
+.taskCard {
+    width: 250px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: #f9f9f9;
+    text-align: left;
+}
+
+.taskCard:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.taskCard.easy {
+    background-color: #d4edda;
+}
+
+.taskCard.medium {
+    background-color: #fff3cd;
+}
+
+.taskCard.hard {
+    background-color: #f8d7da;
+}
+
+.taskCard h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+}
+
+.taskCard p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.taskCardContainerSecond {
+    margin-top: 10px;
+    text-align: left;
+}
+
+.taskCardContainerSecondTitle {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.taskCardContainerSecondText {
+    font-size: 14px;
+    color: #555;
+}
