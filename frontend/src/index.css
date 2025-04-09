@@ -8,11 +8,15 @@
 
 body {
   font-family: "Nunito", sans-serif;
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
-  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* hide scrollbar */
 ::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Edge */
+  display: none;
+}
+
+::selection {
+  background-color: #000000;
+  color: #FFFFFF;
 }
