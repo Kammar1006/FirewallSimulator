@@ -8,6 +8,7 @@ const COOKIE_FLAG = "example_cookie";
 const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
+const fs = require("fs");
 
 const app = express();
 app.use(express.static(`${__dirname}/../frontend`));
@@ -23,6 +24,8 @@ const io = socketio(server, {
 
 const { randomBytes } = require("crypto");
 const { Task } = require("./task");
+
+const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, "utf-8"));
 
 let translationTab = [];
 const setCID = (sock) => {
@@ -291,6 +294,19 @@ io.on("connection", (sock) => {
 		}
 
 		sock.emit("console_output", { deviceId, output });
+	});
+
+	sock.on("login", ({ id, lastName }) => {
+		const student = students.find(
+			(student) => student.id === id && student.lastName.toLowerCase() === lastName.toLowerCase()
+		);
+
+		if (student) {
+			translationTab[cid].sid = id;
+			sock.emit("login_success", { id: student.id, name: `${student.firstName} ${student.lastName}` });
+		} else {
+			sock.emit("login_failure", "Invalid ID or Last Name.");
+		}
 	});
 });
 
