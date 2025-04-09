@@ -3,11 +3,10 @@
     flex-direction: column;
     background-color: #F3F4F6;
     width: 100%;
-    height: 100vh; /* Cała wysokość widoku */
+    height: 100vh;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* padding-bottom: 20px; */
     padding-top: 30px;
     padding-bottom: 30px;
 }
@@ -17,7 +16,7 @@
     flex-direction: column;
     width: 90%;
     margin: auto;
-    height: 100%; /* Dopasowanie do rodzica */
+    height: 100%;
     box-sizing: border-box;
 }
 
@@ -92,7 +91,6 @@
     border-radius: 8px;
     border: none;
     outline: none;
-    /* background-color: #1F2937; */
     background-color: #FFFFFF;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
@@ -173,7 +171,7 @@
     padding-left: 20px;
     padding-right: 20px;
 }
-/* Edit time color etc */
+
 .taskDetailsContainerTopThirdContainerText {
     color: #374151;
     font-size: 18px;
@@ -216,19 +214,11 @@
 }
 
 .taskDetailsContainerBottomContainerSvg {
-    /* position: relative; */
     width: 100%;
     height: 100%;
-    /* max-width: 600px; */
-    /* max-height: 400px; */
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     border-radius: 10px;
-    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* margin-left: auto; */
-    /* margin-right: auto; */
 }
 
 .deviceIcon {
@@ -238,20 +228,19 @@
     text-align: center;
     font-size: 24px;
     background-color: #F9F9F9;
-    /* border: 1px solid #ddd; */
-    /* border-radius: 50%; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
     cursor: pointer;
 }
 
 .deviceIcon p {
-    margin: 0;
-    font-size: 12px;
+    font-size: 16px;
     color: #333;
+    margin: 0;
+    text-align: center;
+    font-weight: 600;
 }
 
 .taskDetailsPcIcon {
@@ -267,4 +256,8 @@
 .taskDetailsSwitchIcon {
     width: 50px;
     height: auto;
+}
+
+.taskDetailsContainerBottomContainerSvgText {
+    font-size: 28px;
 }

@@ -5,7 +5,7 @@ import { RulesContext } from "../../context/RulesContext";
 import Console from "../../components/Console/Console";
 import "./taskDetails.css";
 
-import assets from "../../assets/assets"; // Adjust the path as necessary
+import assets from "../../assets/assets";
 
 const TaskDetails = () => {
     const { taskId } = useParams();
@@ -31,7 +31,7 @@ const TaskDetails = () => {
             socket.on("tasks", (data) => {
                 const taskData = {
                     id: taskId,
-                    title: data.titles[taskId - 1] || `Task ${taskId}`, // Poprawne przypisanie tytułu
+                    title: data.titles[taskId - 1] || `Task ${taskId}`,
                     description: data.desc[taskId - 1] || "No description available.",
                     difficulty: ["Easy", "Medium", "Hard"][(taskId - 1) % 3],
                     subtasks: data.subtasks || [],
@@ -89,7 +89,7 @@ const TaskDetails = () => {
                 return (
                     <line
                         key={index}
-                        x1={sourcePos.x + 25} // Adjust for device center
+                        x1={sourcePos.x + 25}
                         y1={sourcePos.y + 25}
                         x2={targetPos.x + 25}
                         y2={targetPos.y + 25}
@@ -207,7 +207,7 @@ const TaskDetails = () => {
                                             }}
                                             onClick={() => openConsole(index)}
                                         >
-                                            <span>{getDeviceIcon(device.name)}</span>
+                                            <p className="taskDetailsContainerBottomContainerSvgText">{getDeviceIcon(device.name)}</p>
                                             <p>{device.name}</p>
                                         </div>
                                     );
