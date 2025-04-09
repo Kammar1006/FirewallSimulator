@@ -73,17 +73,6 @@ const TaskDetails = () => {
         }
     };
 
-    const handleRunTests = () => {
-        if (socket) {
-            socket.emit("run_tests");
-            socket.on("test_results", (results) => {
-                setTestResults(results);
-                const allPassed = results.every((result) => result.passed);
-                setTaskCompleted(allPassed); // Ustaw ukończenie zadania, jeśli wszystkie testy przeszły
-            });
-        }
-    };
-
     const handleSubmit = () => {
         if (taskCompleted && socket) {
             socket.emit("submit_task", { taskId: task.id });
@@ -147,7 +136,7 @@ const TaskDetails = () => {
                                         <div className="taskDetailsContainerTopFirstContainerRightContainer">
                                             <button
                                                 className="taskDetailsContainerTopFirstContainerRightContainerBtnOne"
-                                                onClick={handleRunTests}
+              
                                             >
                                                 <p className="taskDetailsContainerTopFirstContainerRightContainerBtnOneText">
                                                     Run Tests
@@ -258,7 +247,7 @@ const TaskDetails = () => {
                         />
                     ))}
 
-                    {testResults.length > 0 && (
+                    {/* {testResults.length > 0 && (
                         <div className="testResults">
                             <h3>Test Results:</h3>
                             <ul>
@@ -277,9 +266,9 @@ const TaskDetails = () => {
 
                     {taskCompleted && (
                         <div className="taskCompletedMessage">
-                            <p>✅ Task Completed Successfully!</p>
+                            <p>ask Completed Successfully!</p>
                         </div>
-                    )}
+                    )} */}
                 </>
             ) : (
                 <p>Loading task details...</p>

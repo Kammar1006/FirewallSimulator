@@ -1,7 +1,7 @@
 /* Created by Kammar1006 */
 
 const { Firewall } = require("./firewall");
-const { isSameSubnet } = require("./compare");
+// const { isSameSubnet } = require("./compare");
 
 function Interface(inet){
     this.input_rules = new Firewall();
