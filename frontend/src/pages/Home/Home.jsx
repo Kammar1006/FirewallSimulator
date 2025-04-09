@@ -1,134 +1,187 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
+import { FaGamepad } from "react-icons/fa6";
+import { HiComputerDesktop } from "react-icons/hi2";
+import { FaCode } from "react-icons/fa6";
+import { PiTestTubeFill } from "react-icons/pi";
+import { FaBook } from "react-icons/fa";
+import { GiGraduateCap } from "react-icons/gi";
 
 const Home = () => {
   const navigate = useNavigate();
 
-  const handleDeviceClick = (deviceName) => {
-    navigate(`/dashboard?device=${deviceName}`);
-  };
+  // const handleDeviceClick = (deviceName) => {
+  //   navigate(`/dashboard?device=${deviceName}`);
+  // };
 
   return (
     <div className="home">
       <div className="homeContainer">
-        <div className="homeContainerSet">
-          <div className="homeContainerSetOne">
-            <div
-              className="homeContainerSetOneSquare One"
-              onClick={() => handleDeviceClick("PC-A")}
-            >
-              <p className="homeContainerSetOneSquareText">PC-A</p>
-            </div>
-            <div
-              className="homeContainerSetOneSquare Two"
-              onClick={() => handleDeviceClick("PC-B")}
-            >
-              <p className="homeContainerSetOneSquareText">PC-B</p>
-            </div>
-            <div
-              className="homeContainerSetOneSquare Three"
-              onClick={() => handleDeviceClick("PC-C")}
-            >
-              <p className="homeContainerSetOneSquareText">PC-C</p>
-            </div>
-            <div
-              className="homeContainerSetOneSquare Four"
-              onClick={() => handleDeviceClick("PC-D")}
-            >
-              <p className="homeContainerSetOneSquareText">PC-D</p>
-            </div>
-          </div>
 
-          <div className="homeContainerSetTwo">
-            <div className="homeContainerSetTwoLineOne" />
-            <div className="homeContainerSetTwoLineTwo" />
-            <div className="homeContainerSetTwoLineThree" />
-            <div className="homeContainerSetTwoLineFour" />
-          </div>
+        {/* First Part */}
+        <div className="homeContainerFirst">
+          <div className="homeContainerFirstContainer">
 
-          <div className="homeContainerSetThree">
-            <div
-              className="homeContainerSetThreeSwitch One"
-              onClick={() => handleDeviceClick("S1")}
-            >
-              <p className="homeContainerSetThreeSwitchText">S1</p>
+            <div className="homeContainerFirstContainerFirst">
+              <div className="homeContainerFirstContainerFirstContainer">
+                <div className="homeContainerFirstContainerFirstContainerLeft">
+                  <FaGamepad className="homeContainerFirstContainerFirstContainerLeftIcon" /> 
+                </div>
+
+                <div className="homeContainerFirstContainerFirstContainerRight">
+                  <p className="homeContainerFirstContainerFirstContainerRightText">
+                    Grupa 5: Wizualizacja i Konfiguracja ACL i Firewall
+                  </p>
+                </div>
+              </div>
             </div>
-            <div
-              className="homeContainerSetThreeSwitch Two"
-              onClick={() => handleDeviceClick("S2")}
-            >
-              <p className="homeContainerSetThreeSwitchText">S2</p>
+
+            <div className="homeContainerFirstContainerSecond">
+              <div className="homeContainerFirstContainerSecondContainer">
+                <p className="homeContainerFirstContainerSecondContainerText">
+                  Interaktywna aplikacja do nauki i testowania reguł firewalla poprzez wizualizację i symulację.
+                </p>
+              </div>
             </div>
+            
           </div>
+        </div>
 
-          <div className="homeContainerSetFour">
-            <div className="homeContainerSetFourLineOne" />
-            <div className="homeContainerSetFourLineTwo" />
-          </div>
+        {/* Second Part */}
+        <div className="homeContainerSecond">
+          <div className="homeContainerSecondContainer">
 
-          <div className="homeContainerSetFive">
-            <div
-              className="homeContainerSetFiveRounter One"
-              onClick={() => handleDeviceClick("R1")}
-            >
-              <p>R1</p>
+            {/* Element */}
+            <div className="homeContainerSecondContainerElement">
+              <div className="homeContainerSecondContainerElementContainer">
+
+                {/* Top Part */}
+                <div className="homeContainerSecondContainerElementContainerTop">
+                  <div className="homeContainerSecondContainerElementContainerTopContainer">
+                    <HiComputerDesktop className="homeContainerSecondContainerElementContainerTopContainerIcon" />
+                    <p className="homeContainerSecondContainerElementContainerTopContainerText">
+                      Wizualizacja Interaktywna
+                    </p>
+                  </div>
+                </div>
+
+                {/* Bottom Part */}
+                <div className="homeContainerSecondContainerElementContainerBottom">
+                  <p className="homeContainerSecondContainerElementContainerBottomText">
+                    Aplikacja webowa z unikalną wizualizacją w formie gry komputerowej dla lepszego zrozumienia działania firewalla.
+                  </p>
+                </div>
+              </div>
             </div>
-            <div
-              className="homeContainerSetFiveRounter Two"
-              onClick={() => handleDeviceClick("R2")}
-            >
-              <p>R2</p>
+
+            {/* Element */}
+            <div className="homeContainerSecondContainerElement">
+              <div className="homeContainerSecondContainerElementContainer">
+                {/* Top Part */}
+                <div className="homeContainerSecondContainerElementContainerTop">
+                  <div className="homeContainerSecondContainerElementContainerTopContainer">
+                    <FaCode  className="homeContainerSecondContainerElementContainerTopContainerIcon" />
+                    <p className="homeContainerSecondContainerElementContainerTopContainerText">
+                        Edytor Reguł
+                    </p>
+                  </div>
+                </div>
+
+                {/* Bottom Part */}
+                <div className="homeContainerSecondContainerElementContainerBottom">
+                  <p className="homeContainerSecondContainerElementContainerBottomText">
+                    Zaawansowany edytor reguł iptables i ACL z opcją wyboru interfejsu graficznego lub tekstowego.
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="homeContainerSetSix">
-            <div className="homeContainerSetSixLineOne" />
-            <div className="homeContainerSetSixLineTwo" />
-          </div>
+            {/* Element */}
+            <div className="homeContainerSecondContainerElement">
+              <div className="homeContainerSecondContainerElementContainer">
+                {/* Top Part */}
+                <div className="homeContainerSecondContainerElementContainerTop">
+                  <div className="homeContainerSecondContainerElementContainerTopContainer">
+                    <PiTestTubeFill  className="homeContainerSecondContainerElementContainerTopContainerIcon" />
+                    <p className="homeContainerSecondContainerElementContainerTopContainerText">
+                      Środowisko Testowe
+                    </p>
+                  </div>
+                </div>
 
-          <div className="homeContainerSetSeven">
-            <div
-              className="homeContainerSetSevenRouter"
-              onClick={() => handleDeviceClick("R3")}
-            >
-              <p>R3</p>
+                {/* Bottom Part */}
+                <div className="homeContainerSecondContainerElementContainerBottom">
+                  <p className="homeContainerSecondContainerElementContainerBottomText">
+                    Symulator do testowania reguł i wizualizacji efektów na wzorcach pakietów.
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="homeContainerSetEight">
-            <div className="homeContainerSetEightLineOne" />
           </div>
+        </div>
 
-          <div className="homeContainerSetNine">
-            <div
-              className="homeContainerSetNineSwitch"
-              onClick={() => handleDeviceClick("S3")}
-            >
-              <p>S3</p>
+        {/* Third Part */}
+        <div className="homeContainerThird">
+          <div className="homeContainerThirdContainer">
+            {/* Top Part */}
+            <div className="homeContainerThirdContainerTop">
+              <div className="homeContainerThirdContainerTopContainer">
+                <p className="homeContainerThirdContainerTopContainerText">
+                  Rozpocznij Pracę
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="homeContainerSetTen">
-            <div className="homeContainerSetTenLineOne" />
-            <div className="homeContainerSetTenLineTwo" />
-          </div>
+            {/* Bottom Part */}
+            <div className="homeContainerThirdContainerBottom">
+              <div className="homeContainerThirdContainerBottomContainer">
+                
+                {/* Left Part */}
+                <div className="homeContainerThirdContainerBottomContainerLeft">
+                  <div className="homeContainerThirdContainerBottomContainerLeftContainer">
+                    <div className="homeContainerThirdContainerBottomContainerLeftContainerLeft">
+                      <FaBook className="homeContainerThirdContainerBottomContainerLeftContainerLeftIcon" />
+                    </div>
+                    <div className="homeContainerThirdContainerBottomContainerLeftContainerRight">
+                      <div className="homeContainerThirdContainerBottomContainerLeftContainerRightContainer">
+                        <p className="homeContainerThirdContainerBottomContainerLeftContainerRightContainerTextOne">
+                          Dokumentacja
+                        </p>
+                        <p className="homeContainerThirdContainerBottomContainerLeftContainerRightContainerTextTwo">
+                          Szczegółowy przewodnik użytkownika
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-          <div className="homeContainerSetEleven">
-            <div
-              className="homeContainerSetElevenSquare One"
-              onClick={() => handleDeviceClick("PC-E")}
-            >
-              <p>PC-E</p>
-            </div>
-            <div
-              className="homeContainerSetElevenSquare Two"
-              onClick={() => handleDeviceClick("PC-F")}
-            >
-              <p>PC-F</p>
+                {/* Right Part */}
+                <div className="homeContainerThirdContainerBottomContainerLeft">
+                  <div className="homeContainerThirdContainerBottomContainerLeftContainer">
+                    <div className="homeContainerThirdContainerBottomContainerLeftContainerLeft">
+                      <GiGraduateCap className="homeContainerThirdContainerBottomContainerLeftContainerLeftIcon" />
+                    </div>
+                    <div className="homeContainerThirdContainerBottomContainerLeftContainerRight">
+                      <div className="homeContainerThirdContainerBottomContainerLeftContainerRightContainer">
+                        <p className="homeContainerThirdContainerBottomContainerLeftContainerRightContainerTextOne">
+                          Samouczek
+                        </p>
+                        <p className="homeContainerThirdContainerBottomContainerLeftContainerRightContainerTextTwo">
+                          Interkatywny kurs konfiguracji
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
