@@ -118,7 +118,7 @@ function Task() {
                 ];
             } break;
 
-            // Add more cases for tasks 4, 5, and 6 with unique topologies...
+            // for next
         }
     };
 
@@ -145,23 +145,6 @@ function Task() {
         return flag;
     };
 
-    this.runTests = () => {
-        return this.tests.map((test) => {
-            const result = this.network.simulate(
-                test.endpoints[0],
-                test.endpoints[1],
-                test.packet
-            );
-            const passed = result.result.some(
-                (e) => e[0] === test.result[0]
-            );
-            return {
-                test,
-                passed,
-                actual: result.result,
-            };
-        });
-    };
 }
 
 module.exports = { Task };

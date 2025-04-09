@@ -326,7 +326,6 @@ io.on("connection", (sock) => {
 	});
 
 	sock.on("run_tests", () => {
-		const results = translationTab[cid].task.runTests();
 		sock.emit("test_results", results);
 	});
 
@@ -352,7 +351,5 @@ task.set(1);
 task.network.configure(1, 0, "input", "add", 0, { action: "permit", src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80" });
 task.network.configure(1, 0, "input", "add", 0, { action: "deny", src: "any", des: "any", protocol: "any" });
 
-// Uruchom testy
-const results = task.runTests();
-console.log("Test Results:", results);
+
 
