@@ -49,4 +49,17 @@ function compareIP(packetIP, ruleIP) {
     return false;
 }
 
-module.exports = {compareSRC, compareDES, compareProtocol}
+function isSameSubnet(ip1, ip2, subnetMask) {
+    const ip1Parts = ip1.split(".").map(Number);
+    const ip2Parts = ip2.split(".").map(Number);
+    const maskParts = subnetMask.split(".").map(Number);
+
+    for (let i = 0; i < 4; i++) {
+        if ((ip1Parts[i] & maskParts[i]) !== (ip2Parts[i] & maskParts[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+module.exports = { compareSRC, compareDES, compareProtocol, isSameSubnet };

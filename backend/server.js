@@ -264,6 +264,28 @@ io.on("connection", (sock) => {
 				output = "Exiting configuration mode.";
 				break;
 
+			case "en":
+			case "enable":
+				output = "Entering privileged EXEC mode.";
+				break;
+
+			case "conf":
+			case "configure":
+				if (args[1] === "t" || args[1] === "terminal") {
+					output = "Enter configuration commands, one per line. End with CNTL/Z.";
+				} else {
+					output = `Invalid configure syntax. Usage: configure terminal or conf t`;
+				}
+				break;
+
+			case "end":
+				output = "Exiting configuration mode.";
+				break;
+
+			case "exit":
+				output = "Exiting current mode.";
+				break;
+
 			default:
 				output = `Unknown command: ${command}`;
 		}

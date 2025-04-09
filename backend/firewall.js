@@ -61,10 +61,13 @@ function Firewall(){
     }
 
     this.validate = (record) => {
-        /* Function for validate record */
-        const validActions = ["permit", "deny", "accept", "drop"];
+        const validActions = ["permit", "deny"];
         if (!validActions.includes(record.action)) return false;
         if (!record.src || !record.des || !record.protocol) return false;
+        if (record.protocol.includes(":")) {
+            const [proto, port] = record.protocol.split(":");
+            if (!["tcp", "udp", "ip"].includes(proto) || isNaN(parseInt(port, 10))) return false;
+        }
         return true;
     }
 

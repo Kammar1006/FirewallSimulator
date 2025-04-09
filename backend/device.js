@@ -1,6 +1,7 @@
 /* Created by Kammar1006 */
 
 const { Firewall } = require("./firewall");
+const { isSameSubnet } = require("./compare");
 
 function Interface(inet){
     this.input_rules = new Firewall();
@@ -34,6 +35,10 @@ function Device(name, inets){
         }
         return false;
     }
+
+    this.ping = (targetIp) => {
+        return `Reply from ${targetIp}: bytes=32 time<1ms TTL=64`;
+    };
 }
 
 module.exports = {Device}
