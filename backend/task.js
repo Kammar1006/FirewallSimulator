@@ -45,7 +45,7 @@ function Task() {
                     },
                     {
                         endpoints: [0, 4],
-                        packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:443" },
+                        packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "tcp:443" },
                         result: [false, 2],
                     },
                 ];
@@ -143,6 +143,24 @@ function Task() {
             }
         }
         return flag;
+    };
+
+    this.runTests = () => {
+        return this.tests.map((test) => {
+            const result = this.network.simulate(
+                test.endpoints[0],
+                test.endpoints[1],
+                test.packet
+            );
+            const passed = result.result.some(
+                (e) => e[0] === test.result[0]
+            );
+            return {
+                test,
+                passed,
+                actual: result.result,
+            };
+        });
     };
 }
 

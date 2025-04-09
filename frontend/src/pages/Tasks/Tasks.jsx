@@ -7,6 +7,7 @@ import "./tasks.css";
 const Tasks = () => {
     const { socket } = useContext(RulesContext);
     const [tasks, setTasks] = useState([]);
+    const [completedTasks, setCompletedTasks] = useState([]);
 
     const navigate = useNavigate();
 
@@ -21,6 +22,7 @@ const Tasks = () => {
                     difficulty: ["Easy", "Medium", "Hard"][i % 3],
                 }));
                 setTasks(taskList);
+                setCompletedTasks(data.completedTasks || []); // Pobierz ukończone zadania
             });
         }
 
@@ -67,6 +69,7 @@ const Tasks = () => {
                                     key={task.id}
                                     task={task}
                                     onClick={() => handleTaskClick(task.id)}
+                                    completed={completedTasks.includes(task.id)} // Przekaż informację o ukończeniu zadania
                                 />
                             ))}
                         </div>

@@ -261,3 +261,32 @@
 .taskDetailsContainerBottomContainerSvgText {
     font-size: 28px;
 }
+
+.testResults {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+.testResults h3 {
+    margin-bottom: 10px;
+}
+.testResults ul {
+    list-style-type: none;
+    padding: 0;
+}
+.testResults li {
+    margin-bottom: 10px;
+}
+
+.taskCompletedMessage {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}

@@ -7,6 +7,16 @@
     height: 250px;
 }
 
+.taskCard.completed {
+    border: 2px solid #28a745;
+    background-color: #e9f7ef;
+}
+
+.taskCompletedBadge {
+    color: #28a745;
+    font-weight: bold;
+}
+
 .taskCardContainerFirst {
     width: 100%;
 }

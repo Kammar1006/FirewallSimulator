@@ -1,10 +1,10 @@
 import React from "react";
 import "./taskCard.css";
 
-const TaskCard = ({ task, onClick }) => {
+const TaskCard = ({ task, onClick, completed }) => {
     return (
         <div
-            className={`taskCard ${task.difficulty.toLowerCase()}`}
+            className={`taskCard ${task.difficulty.toLowerCase()} ${completed ? "completed" : ""}`}
             onClick={onClick}
         >
             <div className="taskCardContainer">
@@ -48,6 +48,8 @@ const TaskCard = ({ task, onClick }) => {
                         </p>
                     </button>
                 </div>
+
+                {completed && <p className="taskCompletedBadge">✅ Completed</p>}
             </div>
         </div>
     );

@@ -161,19 +161,27 @@ io.on("connection", (sock) => {
 						action: args[1],
 						src: args[2],
 						des: args[3],
-						protocol: args[4],
-						port: args[5],
+						protocol: `${args[4]}:${args[5]}`,
 					};
-					translationTab[cid].task.network.configure(deviceId, 0, "input", "add", -1, rule);
-					output = `Rule added to Device ${deviceId}: ${JSON.stringify(rule)}`;
+					const isValid = ["permit", "deny"].includes(rule.action) && rule.src && rule.des && rule.protocol;
+					if (isValid) {
+						translationTab[cid].task.network.configure(deviceId, 0, "input", "add", -1, rule);
+						output = `Rule added to Device ${deviceId}: ${JSON.stringify(rule)}`;
+					} else {
+						output = `Invalid rule syntax. Usage: add_rule <permit|deny> <src> <des> <protocol> <port>`;
+					}
 				} else {
-					output = `Invalid add_rule syntax. Usage: add_rule <action> <src> <des> <protocol> <port>`;
+					output = `Invalid add_rule syntax. Usage: add_rule <permit|deny> <src> <des> <protocol> <port>`;
 				}
 				break;
 
 			case "list_rules":
 				const rules = translationTab[cid].task.network.configure(deviceId, 0, "input");
-				output = `Rules for Device ${deviceId}:\n${rules.map((rule, index) => `${index + 1}. ${JSON.stringify(rule)}`).join("\n")}`;
+				if (rules.length > 0) {
+					output = `Rules for Device ${deviceId}:\n${rules.map((rule, index) => `${index + 1}. ${JSON.stringify(rule)}`).join("\n")}`;
+				} else {
+					output = `No rules configured for Device ${deviceId}.`;
+				}
 				break;
 
 			case "delete_rule":
@@ -316,20 +324,35 @@ io.on("connection", (sock) => {
 			sock.emit("login_failure", "Invalid ID or Last Name.");
 		}
 	});
+
+	sock.on("run_tests", () => {
+		const results = translationTab[cid].task.runTests();
+		sock.emit("test_results", results);
+	});
+
+	sock.on("submit_task", ({ taskId }) => {
+		if (!translationTab[cid].completedTasks) {
+			translationTab[cid].completedTasks = [];
+		}
+		if (!translationTab[cid].completedTasks.includes(taskId)) {
+			translationTab[cid].completedTasks.push(taskId);
+		}
+		sock.emit("task_submitted", { taskId });
+	});
 });
 
 server.listen(PORT, () => {
 	console.log("Work");
 });
 
+const task = new Task();
+task.set(1);
 
+// Dodaj reguły
+task.network.configure(1, 0, "input", "add", 0, { action: "permit", src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80" });
+task.network.configure(1, 0, "input", "add", 0, { action: "deny", src: "any", des: "any", protocol: "any" });
 
-	task = new Task;
-	task.set(1);
-	task.network.configure(1, 0, "input", "add", 0, {action: "permit", src: "192.168.1.6 0.0.0.252", des: "192.168.3.2 0.0.0.255", protocol: "ip:80"})
-	task.network.configure(1, 0, "input", "add", 0, {action: "deny", src: "any", des: "any", protocol: "any"})
-	let logs = task.network.simulate(0, 4, {src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80"});
-	console.log(logs.path);
-	console.log(logs.result);
-	//console.log(task.check());
+// Uruchom testy
+const results = task.runTests();
+console.log("Test Results:", results);
 

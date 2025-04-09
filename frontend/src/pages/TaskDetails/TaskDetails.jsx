@@ -13,6 +13,8 @@ const TaskDetails = () => {
     const [task, setTask] = useState(null);
     const [openConsoles, setOpenConsoles] = useState([]);
     const [consoleOutput, setConsoleOutput] = useState({});
+    const [testResults, setTestResults] = useState([]);
+    const [taskCompleted, setTaskCompleted] = useState(false);
 
     const predefinedPositions = {
         1: {
@@ -71,6 +73,26 @@ const TaskDetails = () => {
         }
     };
 
+    const handleRunTests = () => {
+        if (socket) {
+            socket.emit("run_tests");
+            socket.on("test_results", (results) => {
+                setTestResults(results);
+                const allPassed = results.every((result) => result.passed);
+                setTaskCompleted(allPassed); // Ustaw ukończenie zadania, jeśli wszystkie testy przeszły
+            });
+        }
+    };
+
+    const handleSubmit = () => {
+        if (taskCompleted && socket) {
+            socket.emit("submit_task", { taskId: task.id });
+            alert("Task submitted successfully!");
+        } else {
+            alert("Complete the task correctly before submitting.");
+        }
+    };
+
     const getDeviceIcon = (name) => {
         if (name.startsWith("PC")) return <img src={assets.pcIcon} alt="" className="taskDetailsPcIcon" />;
         if (name.startsWith("R")) return <img src={assets.routerIcon} alt="" className="taskDetailsRouterIcon" />;
@@ -123,12 +145,19 @@ const TaskDetails = () => {
                                     {/* Right Part */}
                                     <div className="taskDetailsContainerTopFirstContainerRight">
                                         <div className="taskDetailsContainerTopFirstContainerRightContainer">
-                                            <button className="taskDetailsContainerTopFirstContainerRightContainerBtnOne">
+                                            <button
+                                                className="taskDetailsContainerTopFirstContainerRightContainerBtnOne"
+                                                onClick={handleRunTests}
+                                            >
                                                 <p className="taskDetailsContainerTopFirstContainerRightContainerBtnOneText">
                                                     Run Tests
                                                 </p>
                                             </button>
-                                            <button className="taskDetailsContainerTopFirstContainerRightContainerBtn">
+                                            <button
+                                                className={`taskDetailsContainerTopFirstContainerRightContainerBtn ${taskCompleted ? "enabled" : "disabled"}`}
+                                                onClick={handleSubmit}
+                                                disabled={!taskCompleted}
+                                            >
                                                 <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
                                                     Submit
                                                 </p>
@@ -228,6 +257,29 @@ const TaskDetails = () => {
                             output={consoleOutput[deviceId]}
                         />
                     ))}
+
+                    {testResults.length > 0 && (
+                        <div className="testResults">
+                            <h3>Test Results:</h3>
+                            <ul>
+                                {testResults.map((result, index) => (
+                                    <li key={index}>
+                                        Test {index + 1}: {result.passed ? "PASSED" : "FAILED"}
+                                        <br />
+                                        Expected: {JSON.stringify(result.test.result)}
+                                        <br />
+                                        Actual: {JSON.stringify(result.actual)}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {taskCompleted && (
+                        <div className="taskCompletedMessage">
+                            <p>✅ Task Completed Successfully!</p>
+                        </div>
+                    )}
                 </>
             ) : (
                 <p>Loading task details...</p>
