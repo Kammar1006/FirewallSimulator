@@ -4,9 +4,9 @@ import "./console.css";
 
 const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
     const [input, setInput] = useState("");
-    const [history, setHistory] = useState([]); // Command history
-    const [historyIndex, setHistoryIndex] = useState(-1); // Navigation in history
-    const [mode, setMode] = useState(""); // CLI mode (e.g., "", "privileged", "config")
+    const [history, setHistory] = useState([]);
+    const [historyIndex, setHistoryIndex] = useState(-1);
+    const [mode, setMode] = useState("");
     const consoleRef = useRef(null);
     const outputRef = useRef(null);
 
@@ -19,9 +19,9 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
     const handleSendCommand = () => {
         if (input.trim()) {
             const command = input.trim();
-            setHistory((prev) => [...prev, `${getPrompt()} ${command}`]); // Add to history
+            setHistory((prev) => [...prev, `${getPrompt()} ${command}`]);
 
-            // Handle CLI modes
+           
             if (command === "enable" || command === "en") {
                 setMode("privileged");
                 setHistory((prev) => [...prev, "Entering privileged EXEC mode."]);
@@ -49,12 +49,16 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
                 } else {
                     setHistory((prev) => [...prev, "Exiting session."]);
                 }
+            } else if (command === "clear") {
+                setHistory([]);
+                setOutput("");
+                onCommand(deviceId, command);
             } else {
-                onCommand(deviceId, command); // Send command to backend
+                onCommand(deviceId, command);
             }
 
-            setInput(""); // Clear input
-            setHistoryIndex(-1); // Reset history navigation
+            setInput("");
+            setHistoryIndex(-1);
         }
     };
 
@@ -82,10 +86,13 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
     };
 
     useEffect(() => {
-        if (outputRef.current) {
-            outputRef.current.scrollTop = outputRef.current.scrollHeight; // Auto-scroll to bottom
+        if (output === "") {
+            setHistory([]);
         }
-    }, [history, output]); // Trigger on history or output changes
+        if (outputRef.current) {
+            outputRef.current.scrollTop = outputRef.current.scrollHeight;
+        }
+    }, [output]);
 
     return (
         <Draggable handle=".consoleTitleBar" nodeRef={consoleRef}>

@@ -58,8 +58,9 @@ const setTranslationTab = (cid) => {
 			task: new Task(),
 			progress: 0,
 			in_progress: 0,
+			consoleHistory: [],
 		};
-		translationTab[cid].task.set(1); // Initialize the task with ID 1
+		translationTab[cid].task.set(1);
 	}
 };
 
@@ -127,11 +128,11 @@ io.on("connection", (sock) => {
 
 	sock.on("get_tasks", () => {
 		const taskData = {
-			titles: [translationTab[cid].task.title], // Include the title
+			titles: [translationTab[cid].task.title], 
 			desc: translationTab[cid].task.desc || ["No description available."],
 			tests: translationTab[cid].task.tests || [],
 			subtasks: translationTab[cid].task.subtasks || [],
-			topology: translationTab[cid].task.topology || {}, // Include topology
+			topology: translationTab[cid].task.topology || {}, 
 		};
 		sock.emit("tasks", taskData);
 	});
@@ -289,9 +290,16 @@ io.on("connection", (sock) => {
 				output = "Exiting current mode.";
 				break;
 
+			case "clear":
+				translationTab[cid].consoleHistory = [];
+				output = "";
+				break;
+
 			default:
 				output = `Unknown command: ${command}`;
 		}
+
+		translationTab[cid].consoleHistory.push(output);
 
 		sock.emit("console_output", { deviceId, output });
 	});
