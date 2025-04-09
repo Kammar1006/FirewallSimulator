@@ -1,0 +1,107 @@
+.taskCard {
+    position: relative;
+    border: 1px solid #E5E7EB;
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    height: 250px;
+}
+
+.taskCard.completed {
+    border: 2px solid #28a745;
+    background-color: #e9f7ef;
+}
+
+.taskCompletedBadge {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.taskCardContainerFirst {
+    width: 100%;
+}
+
+.taskCardContainerFirstContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.taskCardContainerFirstContainerLeftText {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+}
+
+.taskCardContainerFirstContainerRightDiv {
+    background-color: #F3F4F6;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border-radius: 50px;
+}
+
+.taskCardContainerFirstContainerRightDivText {
+    color: #374151;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.taskCardContainerSecond {
+    margin-top: 15px;
+}
+
+.taskCardContainerSecondText {
+    color: #000000;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.2px;
+}
+
+.taskCardContainerThird {
+    margin-top: 20px;
+}
+
+.taskCardContainerThirdText {
+    color: #4B5563;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    line-height: 26px;
+}
+
+.taskCardContainerFourth {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.taskCardContainerFourthBtn {
+    background-color: #111827;
+    width: 100%;
+    height: 35px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.taskCardContainerFourthBtn:hover {
+    transform: scale(1.02);
+}
+.taskCardContainerFourthBtnText {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.7px;
+    text-align: center;
+    line-height: 35px; 
+}

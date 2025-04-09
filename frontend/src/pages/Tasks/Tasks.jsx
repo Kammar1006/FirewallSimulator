@@ -1,83 +1,81 @@
 import React, { useContext, useState, useEffect } from "react";
 import { RulesContext } from "../../context/RulesContext";
+import { useNavigate } from "react-router-dom";
+import TaskCard from "../../components/TaskCard/TaskCard";
 import "./tasks.css";
 
 const Tasks = () => {
-    const { challenges = [], validateChallenge = () => {}, loading, error } = useContext(RulesContext);
-    const [loadingState, setLoadingState] = useState({});
-    const [loadingAll, setLoadingAll] = useState(false);
+    const { socket } = useContext(RulesContext);
+    const [tasks, setTasks] = useState([]);
+    const [completedTasks, setCompletedTasks] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("Challenges in Tasks component:", challenges);
-    }, [challenges]);
+        if (socket) {
+            socket.emit("get_tasks");
+            socket.on("tasks", (data) => {
+                const taskList = Array.from({ length: 6 }, (_, i) => ({
+                    id: i + 1,
+                    title: data.titles[i] || `Task ${i + 1}`,
+                    description: data.desc[i] || `Task ${i + 1}: No description available.`,
+                    difficulty: ["Easy", "Medium", "Hard"][i % 3],
+                }));
+                setTasks(taskList);
+                setCompletedTasks(data.completedTasks || []); // Pobierz ukończone zadania
+            });
+        }
 
-    const handleCheck = async (challengeId) => {
-        setLoadingState((prev) => ({ ...prev, [challengeId]: true }));
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading
-        validateChallenge(challengeId);
-        setLoadingState((prev) => ({ ...prev, [challengeId]: false }));
+        return () => {
+            if (socket) {
+                socket.off("tasks");
+            }
+        };
+    }, [socket]);
+
+    const handleTaskClick = (taskId) => {
+        navigate(`/task/${taskId}`);
     };
-
-    const handleCheckAll = async () => {
-        setLoadingAll(true);
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading
-        challenges.forEach((challenge) => validateChallenge(challenge.id));
-        setLoadingAll(false);
-    };
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
 
     return (
-        <div className="tasksContainer">
-            {/* Top Part */}
-            <div className="tasksContainerTop">
-                <div className="tasksContainerTopLeft">
-                    <p className="tasksContainerTopLeftText">Tasks</p>
-                </div>
-                <div className="tasksContainerTopRight">
-                    <button
-                        className="tasksContainerTopRightContainerBtn"
-                        onClick={handleCheckAll}
-                        disabled={loadingAll}
-                    >
-                        {loadingAll ? <div className="spinner"></div> : <p>Check All</p>}
-                    </button>
-                </div>
-            </div>
+        <div className="tasks">
 
-            {/* Middle Part */}
-            <div className="tasksContainerMiddle">
-                {challenges.map((challenge) => (
-                    <div
-                        key={challenge.id}
-                        className={`tasksContainerMiddleChallengeContainer ${
-                            challenge.isCorrect === true ? "correct" : "incorrect"
-                        }`}
-                    >
-                        <div className="tasksContainerMiddleChallengeContainerRule">
-                            <p className="tasksContainerMiddleChallengeContainerRuleText">
-                                {challenge.description}
-                            </p>
-                        </div>
-                        <button
-                            className="tasksContainerMiddleChallengeContainerBtn"
-                            onClick={() => handleCheck(challenge.id)}
-                            disabled={loadingState[challenge.id]}
-                        >
-                            {loadingState[challenge.id] ? (
-                                <div className="spinner"></div>
-                            ) : (
-                                "Check"
-                            )}
-                        </button>
+            <div className="tasksContainer">
+
+                {/* Top Part */}
+                <div className="tasksContainerTop">
+                    <div className="tasksContainerTopContainer">
+                        <p className="tasksContainerTopContainerText">
+                            Network Management Tasks
+                        </p>
                     </div>
-                ))}
+                </div>
+
+                {/* Middle Part */}
+                <div className="tasksContainerMiddle">
+                    <p className="tasksContainerMiddleContainer">
+                        <p className="tasksContainerMiddleContainerText">
+                            Select a task to practice network and firewall management skills
+                        </p>
+                    </p>
+                </div>
+
+                {/* Bottom Part */}
+                <div className="tasksContainerBottom">
+                    <div className="tasksContainerBottomContainer">
+                        <div className="tasksContainerBottomContainerTasksGrid">
+                            {tasks.map((task) => (
+                                <TaskCard
+                                    key={task.id}
+                                    task={task}
+                                    onClick={() => handleTaskClick(task.id)}
+                                    completed={completedTasks.includes(task.id)} // Przekaż informację o ukończeniu zadania
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     );

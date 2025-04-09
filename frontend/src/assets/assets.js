@@ -9,6 +9,15 @@ import searchIcon from "./searchIcon.png";
 
 import leftArrow from "./leftArrow.png";
 
+import dotIcon from "./dot.png";
+
+import routerIcon from "./router.png";
+import pcIcon from "./computer.png";
+import switchIcon from "./hub.png";
+
+
+import icon from "./icon.png";
+
 export default {
     flameIcon,
     infoIcon,
@@ -17,4 +26,9 @@ export default {
     close,
     searchIcon,
     leftArrow,
+    dotIcon,
+    routerIcon,
+    pcIcon,
+    switchIcon,
+    icon,
 }

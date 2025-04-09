@@ -1,8 +1,10 @@
 .navbar {
-    background-color: #02C822;
+    height: 70px;
+    flex-shrink: 0;
+    background-color: #FFFFFF;
     padding-left: 30px;
     padding-right: 30px;
-    height: 70px;
+    border-bottom: 2px solid #E5E7EB;
 }
 
 .navbarContainer {
@@ -15,7 +17,7 @@
 }
 
 .navbarContainerLeftIcon {
-    height: 25px;
+    height: 35px;
     width: auto;
 } 
 
@@ -24,14 +26,14 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     cursor: pointer;
     transition: all 0.4s ease-in-out;
     text-decoration: none;
 }
 
 .navbarContainerLeft:hover {
-    transform: scale(1.03);
+    transform: scale(1.015);
 }
 
 .navbarContainerRightContainer {
@@ -50,54 +52,59 @@
     background: none;
     letter-spacing: -0.1px;
     cursor: pointer;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navbarContainerRightContainerButtonOneBtn {
-    border: 1px solid #D3D3D3;
-    background-color: #D3D3D3;
-    border-radius: 1px;
-    width: 100px;
-    height: 38px;
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 0px;
-    color: #030303;
+    background-color: #E5E7EB;
+    color: #1F2937;
+}
+
+.navbarContainerRightContainerButtonOneBtn:hover {
+    background-color: #D1D5DB;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
 .navbarContainerRightContainerButtonTwoBtn {
-    border: 1px solid #00ac48;
-    background-color: #00ac48;
-    border-radius: 1px;
-    width: 100px;
-    height: 38px;
-    color: #030303;
+    background-color: #10B981;
+    color: #FFFFFF;
+}
+
+.navbarContainerRightContainerButtonTwoBtn:hover {
+    background-color: #059669;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
 .navbarContainerRightContainerButtonThreeBtn {
-    border: 1px solid #02C822;
-    background-color: #02C822;
-    border-radius: 1px;
-    width: 100px;
-    height: 38px;
-    color: #fff;
+    background-color: #EF4444;
+    color: #FFFFFF;
+}
+
+.navbarContainerRightContainerButtonThreeBtn:hover {
+    background-color: #DC2626;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.navbarContainerRightContainerButtonTasksBtn {
+    background-color: #3B82F6;
+    color: #FFFFFF;
+}
+
+.navbarContainerRightContainerButtonTasksBtn:hover {
+    background-color: #2563EB;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
 .navbarContainerLeftNameContainerText {
     font-size: 30px;
     font-weight: 400;
-    color: #f5f5f5;
+    color: #000000;
     letter-spacing: -0.1px;
     text-align: start;
     line-height: 34px;
-    /* cursor: pointer; */
-}
-
-.navbarContainerRightContainerButtonTasksBtn {
-    border: 1px solid #D3D3D3;
-    background-color: #D3D3D3;
-    border-radius: 1px;
-    width: 100px;
-    height: 38px;
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 0px;
-    color: #030303;
 }
 
 @media (max-width: 768px) {

@@ -1,0 +1,292 @@
+.taskDetails {
+    display: flex;
+    flex-direction: column;
+    background-color: #F3F4F6;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.taskDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.taskDetailsContainerTop {
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    padding: 20px;
+    flex-shrink: 0; 
+}
+
+.taskDetailsContainerBottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFFF;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    flex-grow: 1;
+    overflow: hidden; 
+}
+
+.taskDetailsContainerBottomContainer {
+    position: relative;
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.taskDetailsContainerTopFirst {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.taskDetailsContainerTopFirstContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+}
+
+.taskDetailsContainerTopFirstContainerLeftText {
+    font-size: 22px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.taskDetailsContainerTopFirstContainerRightContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.taskDetailsContainerTopFirstContainerRightContainerBtnOne {
+    width: 110px;
+    height: 35px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border: 2px solid #D1D5DB;
+    transition: all 0.3s ease-in-out;
+}
+
+.taskDetailsContainerTopFirstContainerRightContainerBtnOne:hover {
+    background-color: #F3F4F6;
+    border: 2px solid #1F2937;
+}
+
+.taskDetailsContainerTopFirstContainerRightContainerBtnOneText {
+    color: #000000;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+.taskDetailsContainerTopFirstContainerRightContainerBtn {
+    width: 110px;
+    height: 35px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background-color: #1F2937;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+}
+
+.taskDetailsContainerTopFirstContainerRightContainerBtn:hover {
+    background-color: #374151;
+}
+
+.taskDetailsContainerTopFirstContainerRightContainerBtnText {
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+.taskDetailsContainerTopElement {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 5px;
+}
+
+.taskDetailsContainerTopElementContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+}
+
+.taskDetailsContainerTopElementContainerFirstContainerDiv {
+    background-color: #E5E7EB;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 50px;
+}
+
+.taskDetailsContainerTopElementContainerFirstContainerDivText {
+    color: #000000;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.taskDetailsContainerTopThird {
+    display: flex;
+    margin-top: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.taskDetailsContainerTopThirdContainerText {
+    color: #374151;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+
+.taskDetailsContainerTopFourth {
+    display: flex;
+    margin-top: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 15px;
+}
+
+.taskDetailsContainerTopFourthContainerSubtask {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.taskDetailsContainerTopFourthContainerSubtaskDotIcon {
+    width: 25px;
+    height: auto;
+}
+
+.taskDetailsContainerTopFourthContainerSubtaskText {
+    color: #374151;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+.taskDetailsContainerTopElementContainerSecondContainerText {
+    color: #4B5563;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.taskDetailsContainerBottomContainerSvg {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.deviceIcon {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    font-size: 24px;
+    background-color: #F9F9F9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.deviceIcon p {
+    font-size: 16px;
+    color: #333;
+    margin: 0;
+    text-align: center;
+    font-weight: 600;
+}
+
+.taskDetailsPcIcon {
+    width: 50px;
+    height: auto;
+}
+
+.taskDetailsRouterIcon {
+    width: 50px;
+    height: auto;
+}
+
+.taskDetailsSwitchIcon {
+    width: 50px;
+    height: auto;
+}
+
+.taskDetailsContainerBottomContainerSvgText {
+    font-size: 28px;
+}
+
+.testResults {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+.testResults h3 {
+    margin-bottom: 10px;
+}
+.testResults ul {
+    list-style-type: none;
+    padding: 0;
+}
+.testResults li {
+    margin-bottom: 10px;
+}
+
+.taskCompletedMessage {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}

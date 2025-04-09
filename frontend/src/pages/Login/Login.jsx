@@ -1,123 +1,134 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import "./login.css";
 import assets from '../../assets/assets';
-import { NavLink } from 'react-router-dom';
+import { FaShieldAlt } from "react-icons/fa";
+import { FaRegIdCard, FaRegUser } from "react-icons/fa6";
+import { MdLogin } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5003");
 
 const Login = () => {
+  const [id, setId] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    socket.emit("login", { id, lastName });
+
+    socket.on("login_success", (data) => {
+      console.log("Login successful:", data);
+      navigate("/tasks");
+    });
+
+    socket.on("login_failure", (message) => {
+      setError(message);
+    });
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        handleLogin();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [id, lastName]);
+
   return (
     <div className="login">
-
-        <div className="loginContainer">
-
-            <div className="loginContainerElement">
-
-                {/* Top Part */}
-                <div className="loginContainerElementTop">
-                    <div className="loginContainerElementTopIcon">
-                        <img src={assets.shieldIcon} alt="" className="loginContainerElementTopIconElement" />
-                    </div>
-
-                    <div className="loginContainerElementTopTextEle">
-                        <p className="loginContainerElementTopTextEleText">
-                            ACL Firewall Manager
-                        </p>
-                    </div>
-                </div>
-
-
-
-
-                {/* Bottom Part */}
-                <div className="loginContainerElementBottom">
-
-                    <div className="loginContainerElementBottomContainer">
-                        {/* Top Part */}
-                        <div className="loginContainerElementBottomContainerTop">
-                            <p className="loginContainerElementBottomContainerTopText">
-                                Login
-                            </p>
-                        </div>
-
-                        {/* Middle Part */}
-                        <div className="loginContainerElementBottomContainerMiddle">
-                            {/* Username Element */}
-                            <div className="loginContainerElementBottomContainerMiddleUsername">
-                                <div className="loginContainerElementBottomContainerMiddleUsernameContainer">
-                                    <p className="loginContainerElementBottomContainerMiddleUsernameContainerText">
-                                        Username
-                                    </p>
-
-                                    <input type="text" placeholder="Enter your username" className="loginContainerElementBottomContainerMiddleUsernameContainerInput" />
-                                </div>
-                            </div>
-
-                            {/* Password Element */}
-                            <div className="loginContainerElementBottomContainerMiddlePassword">
-                                <div className="loginContainerElementBottomContainerMiddlePasswordContainer">
-                                    <p className="loginContainerElementBottomContainerMiddlePasswordContainerText">
-                                        Password
-                                    </p>
-
-                                    <input type="password" placeholder="Enter your password" className="loginContainerElementBottomContainerMiddlePasswordContainerInput" />
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-                        {/* Bottom Part */}
-                        <div className="loginContainerElementBottomContainerBottom">
-                            <div className="loginContainerElementBottomContainerBottomContainer">
-                                
-                                <div className="loginContainerElementBottomContainerBottomContainerRemember">
-                                    <input type="checkbox" className="loginContainerElementBottomContainerBottomContainerRememberInput" />
-                                    <p className="loginContainerElementBottomContainerBottomContainerRememberText">
-                                        Remember me
-                                    </p>
-                                </div>
-
-                                
-                                <NavLink to="/" className="loginContainerElementBottomContainerBottomContainerLogin">
-                                        <div className="loginContainerElementBottomContainerBottomContainerLoginBtn">
-                                            <p className="loginContainerElementBottomContainerBottomContainerLoginText">
-                                                Login
-                                            </p>
-                                        </div>
-                                    </NavLink>
-
-                                <div className="loginContainerElementBottomContainerBottomContainerForgot">
-                                    <NavLink to="/" className="loginContainerElementBottomContainerBottomContainerForgotNav">
-                                        <p className="loginContainerElementBottomContainerBottomContainerForgotNavText">
-                                            Forgot Password?
-                                        </p>
-                                    </NavLink>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+      <div className="loginContainer">
+        <div className="loginContainerElement">
+          <div className="loginContainerElementContainer">
+            {/* First Part */}
+            <div className="loginContainerElementContainerFirst">
+              <div className="loginContainerElementContainerFirstContainer">
+                <FaShieldAlt className="loginContainerElementContainerFirstContainerIcon" />
+                <p className="loginContainerElementContainerFirstContainerTextOne">
+                  Network Firewall Simulator
+                </p>
+                <p className="loginContainerElementContainerFirstContainerTextTwo">
+                  Student Authentication
+                </p>
+              </div>
             </div>
 
-
-            {/* Bottom Info Container */}
-            <div className="loginContainerBottomPart">
-                <div className="loginContainerBottomPartContainer">
-                    <NavLink to="/" className="loginContainerBottomPartContainerText">Contact Support</NavLink>
-                    <div className="loginContainerBottomPartContainerHrDivElement" />
-                    <NavLink to="/"  className="loginContainerBottomPartContainerText">Privacy Policy</NavLink>
-                    <div className="loginContainerBottomPartContainerHrDivElement" />
-                    <NavLink to="/"  className="loginContainerBottomPartContainerText">Terms of Service</NavLink>
+            {/* Second Part */}
+            <div className="loginContainerElementContainerSecond">
+              <div className="loginContainerElementContainerSecondConainer">
+                <div className="loginContainerElementContainerSecondConainerFirst">
+                  <p className="loginContainerElementContainerSecondConainerFirstText">
+                    Student ID Number
+                  </p>
+                  <div className="loginContainerElementContainerSecondConainerFirstDiv">
+                    <div className="inputWithIcon">
+                      <FaRegIdCard className='inputIcon' />
+                      <input
+                        type="text"
+                        className="loginContainerElementContainerSecondConainerFirstDivInput"
+                        placeholder='Enter your student ID'
+                        value={id}
+                        onChange={(e) => setId(e.target.value)}
+                      />
+                    </div>
+                  </div>
                 </div>
+                <div className="loginContainerElementContainerSecondConainerSecond">
+                  <p className="loginContainerElementContainerSecondConainerSecondText">
+                    Last Name
+                  </p>
+                  <div className="loginContainerElementContainerSecondConainerSecondDiv">
+                    <div className="inputWithIcon">
+                      <FaRegUser className="inputIcon" />
+                      <input
+                        type="text"
+                        className="loginContainerElementContainerSecondConainerSecondTextInput"
+                        placeholder='Enter your last name'
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
+            {/* Third Part */}
+            <div className="loginContainerElementContainerThird">
+              <button
+                className="loginContainerElementContainerThirdContainerBtn"
+                onClick={handleLogin}
+              >
+                <MdLogin className="loginContainerElementContainerThirdContainerBtnInput" />
+                <p className="loginContainerElementContainerThirdContainerBtnText">
+                  Login to Simulator
+                </p>
+              </button>
+              {error && <p className="loginError">{error}</p>}
+            </div>
+
+            {/* Fourth Part */}
+            <div className="loginContainerElementContainerFourth">
+              <div className="loginContainerElementContainerFourthContainer">
+                <p className="loginContainerElementContainerFourthContainerText">
+                  Network & Firewall Management Simulator
+                </p>
+                <p className="loginContainerElementContainerFourthContainerTextTwo">
+                  Academic Year 2025
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-        
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
