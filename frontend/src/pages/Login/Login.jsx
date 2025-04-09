@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./login.css";
 import assets from '../../assets/assets';
 import { FaShieldAlt } from "react-icons/fa";
@@ -27,6 +27,19 @@ const Login = () => {
       setError(message);
     });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        handleLogin();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [id, lastName]);
 
   return (
     <div className="login">
