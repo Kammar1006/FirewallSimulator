@@ -159,6 +159,7 @@ io.on("connection", (sock) => {
 						let int = Number(args[1])
 						if(!(0 <= int && int < device.interfaces.length)){
 							output = `Invalid interface number. Out of range.`;
+							break;
 						}
 						else{
 							output = `Configuring interface ${args[1]}`;
@@ -169,9 +170,32 @@ io.on("connection", (sock) => {
 						output = `Invalid interface syntax. Usage: interface <name>`;
 					}
 				}break;
+				case "packet": case "send_packet":{
+					if (args.length === 4) {
+						let des_id = Number(args[1])
+						let protocol = args[2]
+						let port = args[3]
+
+						if(!(0 <= des_id && des_id < network.devices.length)){
+							output = `Invalid des device ind`;
+							break;
+						}
+						
+						result = (network.simulate(deviceId, des_id, {src: network.devices[deviceId].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port}));
+
+						console.log(result.result[0].filter((e) => e[0] === true || e[0] === "permit").length, result.result[0].length);
+						console.log(result.result[1].filter((e) => e[0] === true || e[0] === "permit").length, result.result[1].length);
+
+						output = JSON.stringify(result)
+
+					} else {
+						output = `Invalid interface syntax. Usage: send_packet <des_device_id> <tcp|udp|icmp|ip> <?port>`;
+					}
+				}break;
 				case "help": {
 					output = "Command Lists:";
 					output += "\ninterface <number>"
+					output += "\nsend_packet <des_device_id> <tcp|udp|icmp|ip> <?port>"
 				}break;
 			}
 		}

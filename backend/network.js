@@ -41,7 +41,7 @@ function Network(){
 
         this.path = reFinder(this.connections, [first_id], last_id);
 
-        let path = [[...this.path], [...this.path.reverse()]]
+        let path = [[...this.path], [...this.path].reverse()]
 
         console.log(path)
 
