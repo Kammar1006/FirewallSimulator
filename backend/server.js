@@ -24,6 +24,7 @@ const io = socketio(server, {
 
 const { randomBytes } = require("crypto");
 const { Task } = require("./task");
+const { request } = require("https");
 
 const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, "utf-8"));
 
@@ -183,10 +184,12 @@ io.on("connection", (sock) => {
 						
 						result = (network.simulate(deviceId, des_id, {src: network.devices[deviceId].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port}));
 
+						req = result.result[0].filter((e) => e[0] === true || e[0] === "permit").length == result.result[0].length
+						res = result.result[1].filter((e) => e[0] === true || e[0] === "permit").length == result.result[1].length
 						console.log(result.result[0].filter((e) => e[0] === true || e[0] === "permit").length, result.result[0].length);
 						console.log(result.result[1].filter((e) => e[0] === true || e[0] === "permit").length, result.result[1].length);
 
-						output = JSON.stringify(result)
+						output = "Result: "+(req && res)+"\n"+JSON.stringify(result)
 
 					} else {
 						output = `Invalid interface syntax. Usage: send_packet <des_device_id> <tcp|udp|icmp|ip> <?port>`;
