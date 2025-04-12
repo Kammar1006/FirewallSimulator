@@ -197,7 +197,7 @@ io.on("connection", (sock) => {
 
 						const isValid = ["permit", "deny"].includes(rule.action) && rule.src && rule.des && rule.protocol;
 						if (isValid) {
-							translationTab[cid].task.network.configure(deviceId, int, "input", "add", -1, rule);
+							translationTab[cid].task.network.configure(deviceId, int, rule.type, "add", -1, rule);
 							output = `Rule added to Device ${deviceId} and Int ${int}: ${JSON.stringify(rule)}`;
 						} else {
 							output = `Invalid rule syntax. Usage: add_rule <input|output> <permit|deny> <src> <des> <protocol> <port>`;
@@ -207,16 +207,34 @@ io.on("connection", (sock) => {
 					}
 				}break;
 				case "list_rules":{
-					const rules = translationTab[cid].task.network.configure(deviceId, int, "input");
-					if (rules.length > 0) {
-						output = `Rules for Device ${deviceId} and Int ${int}:\n${rules.map((rule, index) => `${index + 1}. ${JSON.stringify(rule)}`).join("\n")}`;
+					const rules1 = translationTab[cid].task.network.configure(deviceId, int, "input");
+					const rules2 = translationTab[cid].task.network.configure(deviceId, int, "output");
+					if (rules1.length + rules2.length > 0) {
+						output = `Rules for Device ${deviceId} and Int ${int}:`;
+						output += `\n "INPUT rules:"`;
+						output += `\n${rules1.map((rule, index) => `${index + 1}. ${JSON.stringify(rule)}`).join("\n")}`;
+						output += `\n "OUTPUT rules:"`;
+						output += `\n${rules2.map((rule, index) => `${index + 1}. ${JSON.stringify(rule)}`).join("\n")}`;
 					} else {
 						output = `No rules configured for Device ${deviceId} and Int ${int}.`;
 					}
 				}break;
 				case "delete_rule":{
-					if (args.length === 2) {
-						const ruleIndex = parseInt(args[1], 10) - 1;
+					if (args.length === 3) {
+						const ruleIndex = parseInt(args[2], 10) - 1;
+
+						let type = args[1];
+						if(type == "o" || type == "out" || type == "output"){
+							type = "output";
+						}
+						else if(type == "i" || type == "in" || type == "input"){
+							type = "input";
+						}
+						else{
+							output = `Invalid rule type. Must choose between input and output.`;
+							break;
+						}
+
 						const rulesBefore = translationTab[cid].task.network.configure(deviceId, int, "input");
 						if (ruleIndex >= 0 && ruleIndex < rulesBefore.length) {
 							translationTab[cid].task.network.configure(deviceId, int, "input", "remove", ruleIndex, "");
@@ -225,7 +243,7 @@ io.on("connection", (sock) => {
 							output = `Invalid rule index. Use "list_rules" to see available rules.`;
 						}
 					} else {
-						output = `Invalid delete_rule syntax. Usage: delete_rule <rule_index>`;
+						output = `Invalid delete_rule syntax. Usage: delete_rule <input|output> <rule_index>`;
 					}
 				}break;
 				case "exit":{
