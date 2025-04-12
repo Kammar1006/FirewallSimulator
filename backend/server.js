@@ -144,7 +144,97 @@ io.on("connection", (sock) => {
 		const args = command.split(" ");
 		const cmd = args[0].toLowerCase();
 
-		switch (cmd) {
+		let network = translationTab[cid].task.network;
+
+		if(!(0 <= Number(deviceId) && Number(deviceId) < network.devices.length)) return;
+
+		let device = network.devices[deviceId];
+
+		let mode = device.configuration_mode;
+
+		if(mode == "main"){
+			switch (cmd) {
+				case "interface": case "int":{
+					if (args.length === 2) {
+						let int = Number(args[1])
+						if(!(0 <= int && int < device.interfaces.length)){
+							output = `Invalid interface number. Out of range.`;
+						}
+						else{
+							output = `Configuring interface ${args[1]}`;
+							device.configuration_mode = "int";
+							device.configuration_submode = int;
+						}
+					} else {
+						output = `Invalid interface syntax. Usage: interface <name>`;
+					}
+				}break;
+			}
+		}
+		else if(mode == "int"){
+			let int = Number(device.configuration_submode);
+			switch (cmd) {
+				case "add_rule":{
+					if (args.length === 7) {
+						const rule = {
+							type: args[1],
+							action: args[2],
+							src: args[3],
+							des: args[4],
+							protocol: `${args[5]}:${args[6]}`,
+						};
+
+						if(rule.type == "o" || rule.type == "out" || rule.type == "output"){
+							rule.type = "output";
+						}
+						else if(rule.type == "i" || rule.type == "in" || rule.type == "input"){
+							rule.type = "input";
+						}
+						else{
+							output = `Invalid rule syntax. Usage: add_rule <input|output> <permit|deny> <src> <des> <protocol> <port>`;
+							break;
+						}
+
+						const isValid = ["permit", "deny"].includes(rule.action) && rule.src && rule.des && rule.protocol;
+						if (isValid) {
+							translationTab[cid].task.network.configure(deviceId, int, "input", "add", -1, rule);
+							output = `Rule added to Device ${deviceId} and Int ${int}: ${JSON.stringify(rule)}`;
+						} else {
+							output = `Invalid rule syntax. Usage: add_rule <input|output> <permit|deny> <src> <des> <protocol> <port>`;
+						}
+					} else {
+						output = `Invalid add_rule syntax. Usage: add_rule <input|output> <permit|deny> <src> <des> <protocol> <port>`;
+					}
+				}break;
+				case "list_rules":{
+					const rules = translationTab[cid].task.network.configure(deviceId, int, "input");
+					if (rules.length > 0) {
+						output = `Rules for Device ${deviceId} and Int ${int}:\n${rules.map((rule, index) => `${index + 1}. ${JSON.stringify(rule)}`).join("\n")}`;
+					} else {
+						output = `No rules configured for Device ${deviceId} and Int ${int}.`;
+					}
+				}break;
+				case "delete_rule":{
+					if (args.length === 2) {
+						const ruleIndex = parseInt(args[1], 10) - 1;
+						const rulesBefore = translationTab[cid].task.network.configure(deviceId, int, "input");
+						if (ruleIndex >= 0 && ruleIndex < rulesBefore.length) {
+							translationTab[cid].task.network.configure(deviceId, int, "input", "remove", ruleIndex, "");
+							output = `Rule ${ruleIndex + 1} deleted from Device ${deviceId} and Int ${int}.`;
+						} else {
+							output = `Invalid rule index. Use "list_rules" to see available rules.`;
+						}
+					} else {
+						output = `Invalid delete_rule syntax. Usage: delete_rule <rule_index>`;
+					}
+				}break;
+				case "exit":{
+					output = "Exiting configuration mode.";
+					device.configuration_mode = "main";
+				}break;
+			}
+		}
+			/*
 			case "show":
 				if (args[1] === "ip" && args[2] === "interface") {
 					output = `Device ${deviceId} - IP Interfaces:\n- Interface 1: 192.168.1.1\n- Interface 2: 10.0.0.1`;
@@ -154,51 +244,11 @@ io.on("connection", (sock) => {
 					output = `Unknown show command: ${command}`;
 				}
 				break;
+			*/
 
-			case "add_rule":
-				if (args.length === 6) {
-					const rule = {
-						action: args[1],
-						src: args[2],
-						des: args[3],
-						protocol: `${args[4]}:${args[5]}`,
-					};
-					const isValid = ["permit", "deny"].includes(rule.action) && rule.src && rule.des && rule.protocol;
-					if (isValid) {
-						translationTab[cid].task.network.configure(deviceId, 0, "input", "add", -1, rule);
-						output = `Rule added to Device ${deviceId}: ${JSON.stringify(rule)}`;
-					} else {
-						output = `Invalid rule syntax. Usage: add_rule <permit|deny> <src> <des> <protocol> <port>`;
-					}
-				} else {
-					output = `Invalid add_rule syntax. Usage: add_rule <permit|deny> <src> <des> <protocol> <port>`;
-				}
-				break;
+			
 
-			case "list_rules":
-				const rules = translationTab[cid].task.network.configure(deviceId, 0, "input");
-				if (rules.length > 0) {
-					output = `Rules for Device ${deviceId}:\n${rules.map((rule, index) => `${index + 1}. ${JSON.stringify(rule)}`).join("\n")}`;
-				} else {
-					output = `No rules configured for Device ${deviceId}.`;
-				}
-				break;
-
-			case "delete_rule":
-				if (args.length === 2) {
-					const ruleIndex = parseInt(args[1], 10) - 1;
-					const rulesBefore = translationTab[cid].task.network.configure(deviceId, 0, "input");
-					if (ruleIndex >= 0 && ruleIndex < rulesBefore.length) {
-						translationTab[cid].task.network.configure(deviceId, 0, "input", "remove", ruleIndex, "");
-						output = `Rule ${ruleIndex + 1} deleted from Device ${deviceId}.`;
-					} else {
-						output = `Invalid rule index. Use "list_rules" to see available rules.`;
-					}
-				} else {
-					output = `Invalid delete_rule syntax. Usage: delete_rule <rule_index>`;
-				}
-				break;
-
+			/*
 			case "ping":
 				if (args.length === 2) {
 					const targetIp = args[1];
@@ -207,6 +257,7 @@ io.on("connection", (sock) => {
 					output = `Invalid ping syntax. Usage: ping <target_ip>`;
 				}
 				break;
+			
 
 			case "run_tests":
 				const task = translationTab[cid].task;
@@ -256,14 +307,6 @@ io.on("connection", (sock) => {
 				}
 				break;
 
-			case "interface":
-				if (args.length === 2) {
-					output = `Configuring interface ${args[1]}`;
-				} else {
-					output = `Invalid interface syntax. Usage: interface <name>`;
-				}
-				break;
-
 			case "ip":
 				if (args[1] === "address" && args.length === 4) {
 					output = `IP address ${args[2]} with subnet mask ${args[3]} configured.`;
@@ -271,10 +314,7 @@ io.on("connection", (sock) => {
 					output = `Invalid IP syntax. Usage: ip address <ip> <subnet>`;
 				}
 				break;
-
-			case "exit":
-				output = "Exiting configuration mode.";
-				break;
+			
 
 			case "en":
 			case "enable":
@@ -305,7 +345,8 @@ io.on("connection", (sock) => {
 
 			default:
 				output = `Unknown command: ${command}`;
-		}
+
+			*/
 
 		translationTab[cid].consoleHistory.push(output);
 
@@ -350,6 +391,3 @@ task.set(1);
 // Dodaj reguły
 task.network.configure(1, 0, "input", "add", 0, { action: "permit", src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80" });
 task.network.configure(1, 0, "input", "add", 0, { action: "deny", src: "any", des: "any", protocol: "any" });
-
-
-
