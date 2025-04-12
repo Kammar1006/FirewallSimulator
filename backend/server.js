@@ -169,6 +169,10 @@ io.on("connection", (sock) => {
 						output = `Invalid interface syntax. Usage: interface <name>`;
 					}
 				}break;
+				case "help": {
+					output = "Command Lists:";
+					output += "\ninterface <number>"
+				}break;
 			}
 		}
 		else if(mode == "int"){
@@ -249,6 +253,13 @@ io.on("connection", (sock) => {
 				case "exit":{
 					output = "Exiting configuration mode.";
 					device.configuration_mode = "main";
+				}break;
+				case "help": {
+					output = "Command Lists:";
+					output += "\nexit"
+					output += "\nadd_rule <input|output> <permit|deny> <src> <des> <protocol> <port>"
+					output += "\nlist_rules"
+					output += "\ndelete_rule <input|output> <rule_index>"
 				}break;
 			}
 		}

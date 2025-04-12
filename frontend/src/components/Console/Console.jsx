@@ -23,7 +23,7 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
 
             if(command == "clear"){
                 setHistory([]);
-                setOutput("");
+                //setOutput("");
             }
             onCommand(deviceId, command);
 
