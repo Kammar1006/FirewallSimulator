@@ -16,6 +16,9 @@ function Device(name, inets){
         this.interfaces.push(new Interface(element))
     });
 
+    this.configuration_mode = "main";
+    this.configuration_submode = 0;
+
     this.packet_in = (packet, inet) => {
         result = this.interfaces[inet].input_rules.simulate(packet);
         return result
@@ -35,10 +38,6 @@ function Device(name, inets){
         }
         return false;
     }
-
-    this.ping = (targetIp) => {
-        return `Reply from ${targetIp}: bytes=32 time<1ms TTL=64`;
-    };
 }
 
 module.exports = {Device}

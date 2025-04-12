@@ -41,12 +41,12 @@ function Task() {
                     {
                         endpoints: [0, 4],
                         packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80" },
-                        result: [true, 6],
+                        result: [[true, 6], [true, 6]],
                     },
                     {
                         endpoints: [0, 4],
                         packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "tcp:443" },
-                        result: [false, 2],
+                        result: [[false, 2], [false, 0]],
                     },
                 ];
                 this.difficulty = "Easy";
@@ -132,13 +132,25 @@ function Task() {
                 test.packet
             );
 
-            if (test.result[0] === true || test.result[0] === "permit") {
-                if (result.result.filter((e) => e[0] === true || e[0] === "permit").length !== test.result[1]) {
+            if (test.result[0][0] === true || test.result[0][0] === "permit") {
+                if (result.result[0].filter((e) => e[0] === true || e[0] === "permit").length !== test.result[0][1]) {
                     flag = false;
                 }
             } else {
-                if (result.result.filter((e, i) => (e[0] === true || e[0] === "permit") && i < test.result[1]).length !== test.result[1] - 1) {
+                if (result.result[0].filter((e, i) => (e[0] === true || e[0] === "permit") && i < test.result[0][1]).length !== test.result[0][1] - 1) {
                     flag = false;
+                }
+            }
+
+            if(test.result[0][0] === true && flag){
+                if (test.result[1][0] === true || test.result[1][0] === "permit") {
+                    if (result.result[1].filter((e) => e[0] === true || e[0] === "permit").length !== test.result[1][1]) {
+                        flag = false;
+                    }
+                } else {
+                    if (result.result[1].filter((e, i) => (e[0] === true || e[0] === "permit") && i < test.result[1][1]).length !== test.result[1][1] - 1) {
+                        flag = false;
+                    }
                 }
             }
         }

@@ -21,7 +21,15 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
             const command = input.trim();
             setHistory((prev) => [...prev, `${getPrompt()} ${command}`]);
 
-           
+            if(command == "clear"){
+                setHistory([]);
+                //setOutput("");
+            }
+            onCommand(deviceId, command);
+
+            setInput("");
+            setHistoryIndex(-1);
+            /*
             if (command === "enable" || command === "en") {
                 setMode("privileged");
                 setHistory((prev) => [...prev, "Entering privileged EXEC mode."]);
@@ -55,10 +63,7 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
                 onCommand(deviceId, command);
             } else {
                 onCommand(deviceId, command);
-            }
-
-            setInput("");
-            setHistoryIndex(-1);
+            }*/
         }
     };
 
