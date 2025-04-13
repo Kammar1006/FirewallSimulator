@@ -153,7 +153,10 @@ io.on("connection", (sock) => {
 
 		let mode = device.configuration_mode;
 
-		if(mode == "main"){
+		if(device.configurability == 0){
+			output = `Device is unconfigurable.`;
+		}
+		else if(mode == "main"){
 			switch (cmd) {
 				case "interface": case "int":{
 					if (args.length === 2) {

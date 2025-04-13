@@ -13,7 +13,7 @@ function Task() {
             case 1: {
                 const devices = [
                     new Device("PC_1", ["192.168.1.2"]),
-                    new Device("R_1", ["192.168.1.1", "10.1.1.1"]),
+                    new Device("R_1", ["192.168.1.1", "10.1.1.1"], 0),
                     new Device("R_2", ["10.1.1.2", "192.168.2.1", "192.168.3.1"]),
                     new Device("PC_2", ["192.168.2.2"]),
                     new Device("PC_3", ["192.168.3.2"]),
