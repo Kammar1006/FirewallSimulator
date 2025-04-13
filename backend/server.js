@@ -137,6 +137,14 @@ io.on("connection", (sock) => {
 		sock.emit("tasks", taskData);
 	});
 
+	sock.on("send_packet", (src_id, des_id, protocol, port) => {
+		let network = translationTab[cid].task.network;
+		if(!(0 <= Number(src_id) && Number(src_id) < network.devices.length)) return;
+		if(!(0 <= Number(des_id) && Number(des_id) < network.devices.length)) return;
+		let res = network.simulate(src_id, des_id, {src: network.devices[src_id].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port});
+		sock.emit("packet_response", JSON.stringify(res));
+	});
+
 	sock.on("console_command", ({ deviceId, command }) => {
 		console.log(`Received command "${command}" for device ${deviceId}`);
 		let output = "";
