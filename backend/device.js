@@ -9,7 +9,7 @@ function Interface(inet){
     this.inet = inet || "127.0.0.1";
 }
 
-function Device(name, inets, configurability = 1){
+function Device(name, inets, configurability = 1, routability = 1){
     this.name = name;
     this.interfaces = [];
     inets.forEach(element => {
@@ -17,6 +17,7 @@ function Device(name, inets, configurability = 1){
     });
 
     this.configurability = configurability;
+    this.routability = routability;
 
     this.configuration_mode = "main";
     this.configuration_submode = 0;
