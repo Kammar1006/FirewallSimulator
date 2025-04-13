@@ -153,13 +153,10 @@ io.on("connection", (sock) => {
 
 		let mode = device.configuration_mode;
 
-		if(device.configurability == 0){
-			output = `Device is unconfigurable.`;
-		}
-		else if(mode == "main"){
+		if(mode == "main"){
 			switch (cmd) {
 				case "interface": case "int":{
-					if (args.length === 2) {
+					if (args.length === 2 && device.configurability == 0) {
 						let int = Number(args[1])
 						if(!(0 <= int && int < device.interfaces.length)){
 							output = `Invalid interface number. Out of range.`;
@@ -170,7 +167,7 @@ io.on("connection", (sock) => {
 							device.configuration_mode = "int";
 							device.configuration_submode = int;
 						}
-					} else {
+					} else if(device.configurability == 0){
 						output = `Invalid interface syntax. Usage: interface <name>`;
 					}
 				}break;
@@ -293,6 +290,10 @@ io.on("connection", (sock) => {
 				}break;
 			}
 		}
+		if(device.configurability == 0){
+			output += `\nDevice is unconfigurable.`;
+		}
+
 			/*
 			case "show":
 				if (args[1] === "ip" && args[2] === "interface") {
