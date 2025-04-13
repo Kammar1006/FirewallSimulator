@@ -24,7 +24,6 @@ const io = socketio(server, {
 
 const { randomBytes } = require("crypto");
 const { Task } = require("./task");
-const { request } = require("https");
 
 const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, "utf-8"));
 
@@ -138,6 +137,14 @@ io.on("connection", (sock) => {
 		sock.emit("tasks", taskData);
 	});
 
+	sock.on("send_packet", (src_id, des_id, protocol, port) => {
+		let network = translationTab[cid].task.network;
+		if(!(0 <= Number(src_id) && Number(src_id) < network.devices.length)) return;
+		if(!(0 <= Number(des_id) && Number(des_id) < network.devices.length)) return;
+		let res = network.simulate(src_id, des_id, {src: network.devices[src_id].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port});
+		sock.emit("packet_response", JSON.stringify(res));
+	});
+
 	sock.on("console_command", ({ deviceId, command }) => {
 		console.log(`Received command "${command}" for device ${deviceId}`);
 		let output = "";
@@ -156,7 +163,7 @@ io.on("connection", (sock) => {
 		if(mode == "main"){
 			switch (cmd) {
 				case "interface": case "int":{
-					if (args.length === 2) {
+					if (args.length === 2 && device.configurability == 1) {
 						let int = Number(args[1])
 						if(!(0 <= int && int < device.interfaces.length)){
 							output = `Invalid interface number. Out of range.`;
@@ -167,12 +174,13 @@ io.on("connection", (sock) => {
 							device.configuration_mode = "int";
 							device.configuration_submode = int;
 						}
-					} else {
+					} else if(device.configurability == 1){
 						output = `Invalid interface syntax. Usage: interface <name>`;
 					}
 				}break;
 				case "packet": case "send_packet":{
-					if (args.length === 4) {
+					//console.log(device)
+					if (args.length === 4 && device.routability == 1) {
 						let des_id = Number(args[1])
 						let protocol = args[2]
 						let port = args[3]
@@ -191,14 +199,14 @@ io.on("connection", (sock) => {
 
 						output = "Result: "+(req && res)+"\n"+JSON.stringify(result)
 
-					} else {
+					} else if(device.routability == 1) {
 						output = `Invalid interface syntax. Usage: send_packet <des_device_id> <tcp|udp|icmp|ip> <?port>`;
 					}
 				}break;
 				case "help": {
 					output = "Command Lists:";
-					output += "\ninterface <number>"
-					output += "\nsend_packet <des_device_id> <tcp|udp|icmp|ip> <?port>"
+					if(device.configurability) output += "\ninterface <number>"
+					if(device.routability) output += "\nsend_packet <des_device_id> <tcp|udp|icmp|ip> <?port>"
 				}break;
 			}
 		}
@@ -290,6 +298,10 @@ io.on("connection", (sock) => {
 				}break;
 			}
 		}
+		if(device.configurability == 0){
+			output += `\nDevice is unconfigurable.`;
+		}
+
 			/*
 			case "show":
 				if (args[1] === "ip" && args[2] === "interface") {
