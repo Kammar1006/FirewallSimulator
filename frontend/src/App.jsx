@@ -7,16 +7,8 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Tasks from './pages/Tasks/Tasks';
 import Navbar from './components/Navbar/Navbar';
 import TaskDetails from './pages/TaskDetails/TaskDetails';
-
-import AlertsAndNotifications from './pages/Alerts and Notifications/AlertsAndNotifications';
-import InboundRules from './pages/Inbound Rules/InboundRules';
-import NetworkSettings from './pages/Network Settings/NetworkSettings';
-import OutboundRules from './pages/Outbound Rules/OutboundRules';
-import SecurityPolicies from './pages/Security Policies/SecurityPolicies';
-import TrafficMonitoring from './pages/Traffic Monitoring/TrafficMonitoring';
 import Login from './pages/Login/Login';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
-import NotFound from "./pages/NotFound/NotFound";
 
 const App = () => {
   return (
@@ -29,16 +21,9 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/alertsAndNotifications" element={<AlertsAndNotifications />} />
-              <Route path="/inboundRules" element={<InboundRules />} />
-              <Route path="/networkSettings" element={<NetworkSettings />} />
-              <Route path="/outboundRules" element={<OutboundRules />} />
-              <Route path="/securityPolicies" element={<SecurityPolicies />} />
-              <Route path="/trafficMonitoring" element={<TrafficMonitoring />} />
               <Route path="/login" element={<Login />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/task/:taskId" element={<TaskDetails />} />
-              <Route path="/404" element={<NotFound />} />
             </Routes>
         </div>
 

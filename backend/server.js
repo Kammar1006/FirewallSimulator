@@ -128,13 +128,40 @@ io.on("connection", (sock) => {
 
 	sock.on("get_tasks", () => {
 		const taskData = {
-			titles: [translationTab[cid].task.title], 
-			desc: translationTab[cid].task.desc || ["No description available."],
-			tests: translationTab[cid].task.tests || [],
-			subtasks: translationTab[cid].task.subtasks || [],
-			topology: translationTab[cid].task.topology || {}, 
+			titles: Array.from({ length: 6 }, (_, i) => {
+				const task = new Task();
+				task.set(i + 1);
+				return task.title;
+			}),
+			desc: Array.from({ length: 6 }, (_, i) => {
+				const task = new Task();
+				task.set(i + 1);
+				return task.desc[0];
+			}),
+			difficulty: Array.from({ length: 6 }, (_, i) => {
+				const task = new Task();
+				task.set(i + 1);
+				return task.difficulty;
+			}),
+			completedTasks: translationTab[cid]?.completedTasks || [],
 		};
 		sock.emit("tasks", taskData);
+	});
+
+	sock.on("get_task", (taskId) => {
+		const task = new Task();
+		task.set(taskId);
+	
+		const taskData = {
+			id: taskId,
+			title: task.title,
+			description: task.desc[0],
+			difficulty: task.difficulty,
+			subtasks: task.subtasks,
+			topology: task.topology,
+		};
+	
+		sock.emit("task", taskData);
 	});
 
 	sock.on("send_packet", (src_id, des_id, protocol, port) => {

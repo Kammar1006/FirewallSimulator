@@ -15,14 +15,14 @@ const Tasks = () => {
         if (socket) {
             socket.emit("get_tasks");
             socket.on("tasks", (data) => {
-                const taskList = Array.from({ length: 6 }, (_, i) => ({
+                const taskList = data.titles.map((title, i) => ({
                     id: i + 1,
-                    title: data.titles[i] || `Task ${i + 1}`,
+                    title: title || `Task ${i + 1}`,
                     description: data.desc[i] || `Task ${i + 1}: No description available.`,
-                    difficulty: ["Easy", "Medium", "Hard"][i % 3],
+                    difficulty: data.difficulty[i] || "Unknown",
                 }));
                 setTasks(taskList);
-                setCompletedTasks(data.completedTasks || []); // Pobierz ukończone zadania
+                setCompletedTasks(data.completedTasks || []);
             });
         }
 
@@ -53,11 +53,11 @@ const Tasks = () => {
 
                 {/* Middle Part */}
                 <div className="tasksContainerMiddle">
-                    <p className="tasksContainerMiddleContainer">
+                    <div className="tasksContainerMiddleContainer">
                         <p className="tasksContainerMiddleContainerText">
                             Select a task to practice network and firewall management skills
                         </p>
-                    </p>
+                    </div>
                 </div>
 
                 {/* Bottom Part */}
@@ -69,7 +69,7 @@ const Tasks = () => {
                                     key={task.id}
                                     task={task}
                                     onClick={() => handleTaskClick(task.id)}
-                                    completed={completedTasks.includes(task.id)} // Przekaż informację o ukończeniu zadania
+                                    completed={completedTasks.includes(task.id)}
                                 />
                             ))}
                         </div>

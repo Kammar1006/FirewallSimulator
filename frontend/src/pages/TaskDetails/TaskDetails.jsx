@@ -29,24 +29,15 @@ const TaskDetails = () => {
 
     useEffect(() => {
         if (socket) {
-            socket.emit("get_tasks");
-            socket.on("tasks", (data) => {
-                const taskData = {
-                    id: taskId,
-                    title: data.titles[taskId - 1] || `Task ${taskId}`,
-                    description: data.desc[taskId - 1] || "No description available.",
-                    difficulty: ["Easy", "Medium", "Hard"][(taskId - 1) % 3],
-                    subtasks: data.subtasks || [],
-                    topology: data.topology || {},
-                };
-
-                setTask(taskData);
+            socket.emit("get_task", parseInt(taskId, 10));
+            socket.on("task", (data) => {
+                setTask(data);
             });
         }
 
         return () => {
             if (socket) {
-                socket.off("tasks");
+                socket.off("task");
             }
         };
     }, [socket, taskId]);
@@ -90,7 +81,7 @@ const TaskDetails = () => {
     };
 
     const renderConnections = () => {
-        if (!task || !task.topology) return null;
+        if (!task || !task.topology || !task.topology.connections) return null;
 
         return task.topology.connections.map((conn, index) => {
             const sourcePos = predefinedPositions[taskId]?.[conn.source];
@@ -115,7 +106,7 @@ const TaskDetails = () => {
 
     return (
         <div className="taskDetails">
-            {task ? (
+            {task && task.topology && task.topology.devices ? ( 
                 <>
                     <div className="taskDetailsContainer">
 

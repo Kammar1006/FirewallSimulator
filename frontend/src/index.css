@@ -11,11 +11,10 @@ body {
   font-family: "Nunito", sans-serif;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  /* Usuń domyślny kursor */
 }
 
 body, a, button, input, textarea {
-  cursor: none; /* Ukryj domyślny kursor */
+  cursor: none;
 }
 
 ::-webkit-scrollbar {

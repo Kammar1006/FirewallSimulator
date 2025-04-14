@@ -49,7 +49,7 @@ function Task() {
                         result: [[false, 2], [false, 0]],
                     },
                 ];
-                this.difficulty = "Easy";
+                this.difficulty = "Hard";
                 this.subtasks = [
                     { id: 1, title: "Allow traffic on port 80", description: "Ensure traffic from PC_1 to PC_3 on port 80 is allowed." },
                     { id: 2, title: "Block all other traffic", description: "Block all other traffic not explicitly allowed." },
@@ -78,11 +78,25 @@ function Task() {
                 };
 
                 this.title = "Intermediate Firewall Rules";
-                this.desc = ["Task 2: Configure the firewall to allow traffic from PC_A to PC_B."];
-                this.tests = [];
+                this.desc = [
+                    "Configure the firewall to allow traffic from PC_A to PC_B on port 22.",
+                    "Block all other traffic.",
+                ];
+                this.tests = [
+                    {
+                        endpoints: [0, 3],
+                        packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "tcp:22" },
+                        result: [[true, 6], [true, 6]],
+                    },
+                    {
+                        endpoints: [0, 3],
+                        packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "udp:53" },
+                        result: [[false, 2], [false, 0]],
+                    },
+                ];
                 this.difficulty = "Medium";
                 this.subtasks = [
-                    { id: 1, title: "Allow traffic from PC_A to PC_B", description: "Ensure traffic from PC_A to PC_B is allowed." },
+                    { id: 1, title: "Allow traffic on port 22", description: "Ensure traffic from PC_A to PC_B on port 22 is allowed." },
                     { id: 2, title: "Block all other traffic", description: "Block all other traffic not explicitly allowed." },
                 ];
             } break;
@@ -115,6 +129,93 @@ function Task() {
                 this.subtasks = [
                     { id: 1, title: "Allow traffic from PC_X to PC_Y", description: "Ensure traffic from PC_X to PC_Y is allowed." },
                     { id: 2, title: "Block all other traffic", description: "Block all other traffic not explicitly allowed." },
+                ];
+            } break;
+
+            case 4: {
+                const devices = [
+                    new Device("PC_4", ["192.168.4.2"]),
+                    new Device("R_4", ["192.168.4.1", "10.0.0.1"]),
+                    new Device("PC_5", ["10.0.0.2"]),
+                ];
+                const connections = [[1], [0, 2], [1]];
+
+                this.network.set(devices, connections);
+                this.topology = {
+                    devices: devices.map((device, index) => ({
+                        id: index,
+                        name: device.name,
+                        interfaces: device.interfaces.map((iface) => iface.inet),
+                    })),
+                    connections: connections.flatMap((conn, index) =>
+                        conn.map((target) => ({ source: index, target }))
+                    ),
+                };
+
+                this.title = "Basic Routing Configuration";
+                this.desc = ["Task 4: Configure routing to allow traffic from PC_4 to PC_5."];
+                this.tests = [];
+                this.difficulty = "Easy";
+                this.subtasks = [
+                    { id: 1, title: "Enable routing", description: "Ensure traffic from PC_4 to PC_5 is routed correctly." },
+                ];
+            } break;
+
+            case 5: {
+                const devices = [
+                    new Device("PC_6", ["192.168.6.2"]),
+                    new Device("R_6", ["192.168.6.1", "172.16.0.1"]),
+                    new Device("PC_7", ["172.16.0.2"]),
+                ];
+                const connections = [[1], [0, 2], [1]];
+
+                this.network.set(devices, connections);
+                this.topology = {
+                    devices: devices.map((device, index) => ({
+                        id: index,
+                        name: device.name,
+                        interfaces: device.interfaces.map((iface) => iface.inet),
+                    })),
+                    connections: connections.flatMap((conn, index) =>
+                        conn.map((target) => ({ source: index, target }))
+                    ),
+                };
+
+                this.title = "Intermediate Routing Configuration";
+                this.desc = ["Task 5: Configure routing to allow traffic from PC_6 to PC_7."];
+                this.tests = [];
+                this.difficulty = "Medium";
+                this.subtasks = [
+                    { id: 1, title: "Enable routing", description: "Ensure traffic from PC_6 to PC_7 is routed correctly." },
+                ];
+            } break;
+
+            case 6: {
+                const devices = [
+                    new Device("PC_8", ["192.168.8.2"]),
+                    new Device("R_8", ["192.168.8.1", "10.10.10.1"]),
+                    new Device("PC_9", ["10.10.10.2"]),
+                ];
+                const connections = [[1], [0, 2], [1]];
+
+                this.network.set(devices, connections);
+                this.topology = {
+                    devices: devices.map((device, index) => ({
+                        id: index,
+                        name: device.name,
+                        interfaces: device.interfaces.map((iface) => iface.inet),
+                    })),
+                    connections: connections.flatMap((conn, index) =>
+                        conn.map((target) => ({ source: index, target }))
+                    ),
+                };
+
+                this.title = "Advanced Routing Configuration";
+                this.desc = ["Task 6: Configure routing to allow traffic from PC_8 to PC_9."];
+                this.tests = [];
+                this.difficulty = "Hard";
+                this.subtasks = [
+                    { id: 1, title: "Enable routing", description: "Ensure traffic from PC_8 to PC_9 is routed correctly." },
                 ];
             } break;
 
