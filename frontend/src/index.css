@@ -5,7 +5,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  cursor: none; /* Ensure no default cursor is displayed globally */
+  cursor: none;
 }
 
 body {
@@ -15,7 +15,7 @@ body {
 }
 
 body, a, button, input, textarea {
-  cursor: none; /* Reinforce the rule for interactive elements */
+  cursor: none;
 }
 
 ::-webkit-scrollbar {
