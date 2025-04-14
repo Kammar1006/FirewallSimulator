@@ -179,17 +179,17 @@
 }
 
 .loginContainerElementContainerFourthContainerText {
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 500;
     color: #4B5563;
     letter-spacing: 0.4px;
 }
 
 .loginContainerElementContainerFourthContainerTextTwo {
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 500;
     color: #4B5563;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.4px;
 }
 
 .loginError {

@@ -1,9 +1,11 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import { BrowserRouter } from 'react-router-dom'
-import RulesContextProvider from './context/RulesContext.jsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.jsx';
+import { BrowserRouter } from 'react-router-dom';
+import RulesContextProvider from './context/RulesContext.jsx';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from 'react';
 
 const CustomCursor = () => {
@@ -32,9 +34,10 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RulesContextProvider>
       <BrowserRouter>
+        <ToastContainer />
         <CustomCursor />
         <App />
       </BrowserRouter>
     </RulesContextProvider>
   </StrictMode>,
-)
+);

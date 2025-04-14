@@ -6,6 +6,7 @@ import { FaRegIdCard, FaRegUser } from "react-icons/fa6";
 import { MdLogin } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
+import { toast } from 'react-toastify';
 
 const socket = io("http://localhost:5003");
 
@@ -19,12 +20,13 @@ const Login = () => {
     socket.emit("login", { id, lastName });
 
     socket.on("login_success", (data) => {
-      console.log("Login successful:", data);
+      toast.success("Login successful!");
       navigate("/tasks");
     });
 
     socket.on("login_failure", (message) => {
       setError(message);
+      toast.error("Login failed. Please try again.");
     });
   };
 
@@ -116,10 +118,10 @@ const Login = () => {
             {/* Fourth Part */}
             <div className="loginContainerElementContainerFourth">
               <div className="loginContainerElementContainerFourthContainer">
-                <p className="loginContainerElementContainerFourthContainerText">
+                <p className="loginContainerElementContainerFourthContainerText inter">
                   Network & Firewall Management Simulator
                 </p>
-                <p className="loginContainerElementContainerFourthContainerTextTwo">
+                <p className="loginContainerElementContainerFourthContainerTextTwo inter">
                   Academic Year 2025
                 </p>
               </div>
