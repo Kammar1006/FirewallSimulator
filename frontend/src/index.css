@@ -10,6 +10,11 @@ body {
   font-family: "Nunito", sans-serif;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  /* Usuń domyślny kursor */
+}
+
+body, a, button, input, textarea {
+  cursor: none; /* Ukryj domyślny kursor */
 }
 
 ::-webkit-scrollbar {
@@ -20,3 +25,15 @@ body {
   background-color: #000000;
   color: #FFFFFF;
 }
+
+.custom-cursor {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  background: url('./assets/cursor.svg') no-repeat center center;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -22%);
+}
+

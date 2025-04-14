@@ -55,7 +55,7 @@
 .cardContainerTitleInfoIcon {
     height: 30px;
     width: auto;
-    cursor: pointer;
+    /* cursor: pointer; */
     transition: all 0.2s ease-in-out;
 }
 
@@ -79,7 +79,7 @@
     color: #030303;
     font-size: 18px;
     letter-spacing: -0.1px;
-    cursor: pointer;
+    /* cursor: pointer; */
     border-radius: 2px;
     box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 0px;
     text-decoration: none;

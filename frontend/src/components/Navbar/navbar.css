@@ -27,7 +27,7 @@
     flex-direction: row;
     align-items: center;
     gap: 20px;
-    cursor: pointer;
+    /* cursor: pointer; */
     transition: all 0.4s ease-in-out;
     text-decoration: none;
 }
@@ -51,7 +51,7 @@
     outline: none;
     background: none;
     letter-spacing: -0.1px;
-    cursor: pointer;
+    /* cursor: pointer; */
     border-radius: 8px;
     padding: 10px 20px;
     transition: all 0.3s ease-in-out;

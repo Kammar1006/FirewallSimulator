@@ -92,7 +92,7 @@
     border: none;
     outline: none;
     background-color: #FFFFFF;
-    cursor: pointer;
+    /* cursor: pointer; */
     transition: all 0.3s ease-in-out;
     border: 2px solid #D1D5DB;
     transition: all 0.3s ease-in-out;
@@ -117,7 +117,7 @@
     border: none;
     outline: none;
     background-color: #1F2937;
-    cursor: pointer;
+    /* cursor: pointer; */
     transition: all 0.3s ease-in-out;
 
 }
@@ -232,7 +232,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .deviceIcon p {

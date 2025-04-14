@@ -137,7 +137,7 @@
     border: none;
     outline: none;
     border-radius: 7px;
-    cursor: pointer;
+    /* cursor: pointer; */
     transition: all 0.3s ease-in-out;
     text-decoration: none;
 }
