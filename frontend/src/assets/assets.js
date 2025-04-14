@@ -18,6 +18,8 @@ import switchIcon from "./hub.png";
 
 import icon from "./icon.png";
 
+import dragIcon from "./move.svg";
+
 export default {
     flameIcon,
     infoIcon,

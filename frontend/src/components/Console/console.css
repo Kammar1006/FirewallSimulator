@@ -16,7 +16,7 @@
 .consoleTitleBar {
     background-color: #222;
     padding: 8px;
-    cursor: move;
+    cursor: none; /* Ensure no default cursor appears on the title bar */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -29,8 +29,8 @@
     background: none;
     border: none;
     color: #fff;
-    /* cursor: pointer; */
     font-size: 14px;
+    cursor: none; /* Ensure no default cursor appears on the close button */
 }
 
 .consoleTitleBar .closeButton:hover {
@@ -84,4 +84,5 @@
     border-radius: 4px;
     padding: 8px;
     font-family: "Courier New", monospace;
+    cursor: none; /* Ensure no default cursor appears on the input field */
 }

@@ -5,6 +5,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  cursor: none; /* Ensure no default cursor is displayed globally */
 }
 
 body {
@@ -14,7 +15,7 @@ body {
 }
 
 body, a, button, input, textarea {
-  cursor: none;
+  cursor: none; /* Reinforce the rule for interactive elements */
 }
 
 ::-webkit-scrollbar {
@@ -34,7 +35,11 @@ body, a, button, input, textarea {
   background-size: contain;
   pointer-events: none;
   z-index: 9999;
-  transform: translate(-50%, -22%);
+  transform: translate(-20%, -22%);
+}
+
+.custom-cursor.dragging {
+  background: url('./assets/move.svg') no-repeat center center;
 }
 
 .inter {

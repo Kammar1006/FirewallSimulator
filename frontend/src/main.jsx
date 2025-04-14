@@ -19,10 +19,17 @@ const CustomCursor = () => {
       cursor.style.top = `${e.clientY}px`;
     };
 
+    const addDraggingClass = () => cursor.classList.add('dragging');
+    const removeDraggingClass = () => cursor.classList.remove('dragging');
+
     document.addEventListener('mousemove', moveCursor);
+    document.addEventListener('dragstart', addDraggingClass);
+    document.addEventListener('dragend', removeDraggingClass);
 
     return () => {
       document.removeEventListener('mousemove', moveCursor);
+      document.removeEventListener('dragstart', addDraggingClass);
+      document.removeEventListener('dragend', removeDraggingClass);
       document.body.removeChild(cursor);
     };
   }, []);
