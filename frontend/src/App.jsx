@@ -9,6 +9,7 @@ import Navbar from './components/Navbar/Navbar';
 import TaskDetails from './pages/TaskDetails/TaskDetails';
 import Login from './pages/Login/Login';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import Test from './pages/test/Test';
 
 const App = () => {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/task/:taskId" element={<TaskDetails />} />
+            <Route path="/test" element={<Test />} />
           </Routes>
         </div>
       </div>
