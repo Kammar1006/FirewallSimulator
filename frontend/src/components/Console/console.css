@@ -79,10 +79,15 @@
 .consolePrompt input {
     flex: 1;
     background-color: #000;
-    color: #fff;
+    color: #0f0;
     border: 1px solid #555;
     border-radius: 4px;
     padding: 8px;
     font-family: "Courier New", monospace;
     cursor: none;
+}
+
+.consolePrompt input:focus {
+
+    color: #0f0;
 }
