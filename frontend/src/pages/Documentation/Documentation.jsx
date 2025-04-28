@@ -9,13 +9,6 @@ const Documentation = () => {
         title="Documentation"
         className="documentationIframe"
       ></iframe>
-      {/* <a
-        href="/documentation.pdf"
-        download="documentation.pdf"
-        className="downloadButton"
-      >
-        Download PDF
-      </a> */}
     </div>
   );
 };

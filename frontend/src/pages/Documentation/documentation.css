@@ -6,9 +6,8 @@
     align-items: center;
     justify-content: center;
     background-color: #F3F4F6;
-    /* padding-top: 10px; */
     box-sizing: border-box;
-    cursor: default; /* Set default cursor */
+    cursor: default;
 }
 
 .documentationIframe {
@@ -16,19 +15,3 @@
     height: 100%;
     border: none;
 }
-
-/* .downloadButton {
-    padding: 10px 20px;
-    background-color: #111827;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: 500;
-    transition: all 0.3s ease-in-out;
-    cursor: pointer;
-}
-
-.downloadButton:hover {
-    background-color: #374151;
-} */
