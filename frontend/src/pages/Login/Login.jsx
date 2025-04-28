@@ -14,14 +14,18 @@ const Login = () => {
   const [id, setId] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
+  const [idFocused, setIdFocused] = useState(false);
+  const [lastNameFocused, setLastNameFocused] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = () => {
     socket.emit("login", { id, lastName });
 
     socket.on("login_success", (data) => {
+      const token = btoa(`${data.id}:${data.name}`); // Encode token
+      localStorage.setItem("authToken", token); // Store token in localStorage
       toast.success("Login successful!");
-      navigate("/tasks");
+      navigate(`/?token=${token}`);
     });
 
     socket.on("login_failure", (message) => {
@@ -70,13 +74,21 @@ const Login = () => {
                   </p>
                   <div className="loginContainerElementContainerSecondConainerFirstDiv">
                     <div className="inputWithIcon">
-                      <FaRegIdCard className='inputIcon' />
+                      <FaRegIdCard
+                        className="inputIcon"
+                        style={{
+                          color: idFocused ? "#000" : "#888",
+                          transition: "all 0.2s ease-in-out",
+                        }}
+                      />
                       <input
                         type="text"
                         className="loginContainerElementContainerSecondConainerFirstDivInput"
                         placeholder='Enter your student ID'
                         value={id}
                         onChange={(e) => setId(e.target.value)}
+                        onFocus={() => setIdFocused(true)}
+                        onBlur={() => setIdFocused(false)}
                       />
                     </div>
                   </div>
@@ -87,13 +99,21 @@ const Login = () => {
                   </p>
                   <div className="loginContainerElementContainerSecondConainerSecondDiv">
                     <div className="inputWithIcon">
-                      <FaRegUser className="inputIcon" />
+                      <FaRegUser
+                        className="inputIcon"
+                        style={{
+                          color: lastNameFocused ? "#000" : "#888",
+                          transition: "all 0.3s ease-in-out",
+                        }}
+                      />
                       <input
                         type="text"
                         className="loginContainerElementContainerSecondConainerSecondTextInput"
                         placeholder='Enter your last name'
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
+                        onFocus={() => setLastNameFocused(true)}
+                        onBlur={() => setLastNameFocused(false)}
                       />
                     </div>
                   </div>

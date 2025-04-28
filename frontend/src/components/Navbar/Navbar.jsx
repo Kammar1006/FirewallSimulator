@@ -2,10 +2,12 @@ import React from 'react';
 import "./navbar.css";
 
 import assets from '../../assets/assets';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const token = new URLSearchParams(location.search).get("token");
 
   return (
     <div className="navbar">
@@ -31,14 +33,21 @@ const Navbar = () => {
                             <button className="navbarContainerRightContainerButtonTwoBtn">Settings</button>
                         </div>
 
-                        <NavLink to="/tasks" className="navbarContainerRightContainerButtonTasks">
+                        <NavLink to={`/tasks?token=${token}`} className="navbarContainerRightContainerButtonTasks">
                             <button className="navbarContainerRightContainerButtonTasksBtn">Tasks</button>
                         </NavLink>
 
-                        <NavLink to="/login" className="navbarContainerRightContainerButtonThree">
-                            <button className="navbarContainerRightContainerButtonThreeBtn glow-on-hover">
-                                <span>Logout</span>
-                            </button>
+                        <NavLink
+                          to={`/login`}
+                          className="navbarContainerRightContainerButtonThree"
+                          onClick={() => {
+                            localStorage.removeItem("authToken");
+                            navigate("/login");
+                          }}
+                        >
+                          <button className="navbarContainerRightContainerButtonThreeBtn glow-on-hover">
+                            <span>Logout</span>
+                          </button>
                         </NavLink>
                     </div>
                 </div>
