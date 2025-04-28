@@ -8,8 +8,9 @@ import Tasks from './pages/Tasks/Tasks';
 import Navbar from './components/Navbar/Navbar';
 import TaskDetails from './pages/TaskDetails/TaskDetails';
 import Login from './pages/Login/Login';
+import Documentation from './pages/Documentation/Documentation';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
-import Test from './pages/test/Test';
+// import Test from './pages/test/Test';
 
 const App = () => {
   const navigate = useNavigate();
@@ -28,14 +29,15 @@ const App = () => {
     <ErrorBoundary>
       <div className="App">
         <div className="appContainer">
-          {location.pathname !== "/login" && <Navbar />}
+          {location.pathname !== "/login" && location.pathname !== "/documentation" && <Navbar />}
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/task/:taskId" element={<TaskDetails />} />
-            <Route path="/test" element={<Test />} />
+            <Route path="/documentation" element={<Documentation />} />
+            {/* <Route path="/test" element={<Test />} /> */}
           </Routes>
         </div>
       </div>

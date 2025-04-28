@@ -11,9 +11,9 @@ import { GiGraduateCap } from "react-icons/gi";
 const Home = () => {
   const navigate = useNavigate();
 
-  // const handleDeviceClick = (deviceName) => {
-  //   navigate(`/dashboard?device=${deviceName}`);
-  // };
+  const handleDocumentationClick = () => {
+    window.open("/documentation", "_blank"); // Open in a new tab
+  };
 
   return (
     <div className="home">
@@ -139,7 +139,11 @@ const Home = () => {
               <div className="homeContainerThirdContainerBottomContainer">
                 
                 {/* Left Part */}
-                <div className="homeContainerThirdContainerBottomContainerLeft">
+                <div
+                  className="homeContainerThirdContainerBottomContainerLeft"
+                  onClick={handleDocumentationClick}
+                  style={{ cursor: "pointer" }}
+                >
                   <div className="homeContainerThirdContainerBottomContainerLeftContainer">
                     <div className="homeContainerThirdContainerBottomContainerLeftContainerLeft">
                       <FaBook className="homeContainerThirdContainerBottomContainerLeftContainerLeftIcon" />
