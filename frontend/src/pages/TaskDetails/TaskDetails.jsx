@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { RulesContext } from "../../context/RulesContext";
 import Console from "../../components/Console/Console";
 import "./taskDetails.css";
+import { GrFormNext } from "react-icons/gr";
 
 import assets from "../../assets/assets";
+import { GrFormPrevious } from "react-icons/gr";
 
 const TaskDetails = () => {
     const { taskId } = useParams();
+    const navigate = useNavigate();
     const { socket } = useContext(RulesContext);
     const [task, setTask] = useState(null);
     const [openConsoles, setOpenConsoles] = useState([]);
     const [consoleOutput, setConsoleOutput] = useState({});
     const [testResults, setTestResults] = useState([]);
     const [taskCompleted, setTaskCompleted] = useState(false);
+    const [hoveredDevice, setHoveredDevice] = useState(null); // Track hovered device
 
     const predefinedPositions = {
         1: {
@@ -77,7 +81,7 @@ const TaskDetails = () => {
         if (name.startsWith("PC")) return <img src={assets.pcIcon} alt="" className="taskDetailsPcIcon" />;
         if (name.startsWith("R")) return <img src={assets.routerIcon} alt="" className="taskDetailsRouterIcon" />;
         if (name.startsWith("S")) return <img src={assets.switchIcon} alt="" className="taskDetailsSwitchIcon" />;
-        return "❓"
+        return ""
     };
 
     const renderConnections = () => {
@@ -108,7 +112,34 @@ const TaskDetails = () => {
         <div className="taskDetails">
             {task && task.topology && task.topology.devices ? ( 
                 <>
+                {/* Navigation Buttons */}
+                <div className="taskDetailsNavigation">
+
+                            <div
+                                className="taskDetailsBackButton"
+                                onClick={() => navigate("/tasks")}
+                            >
+                                <GrFormPrevious className="taskDetailsBackButtonIcon" />
+                                <p className="taskDetailsBackButtonText">
+                                    Back to Tasks
+                                </p>
+                            </div>
+                            
+                            <div
+                                className="taskDetailsNextButton"
+                                onClick={() => navigate(`/task/${parseInt(taskId, 10) + 1}`)}
+                            >
+                                {/* <GrFormNext /> */}
+                                <p className="taskDetailsNextButtonText">
+                                    Next Task
+                                </p>
+                                <GrFormNext className="taskDetailsNextButtonIcon" />
+                            </div>
+                        </div>
+
                     <div className="taskDetailsContainer">
+
+                        
 
                         {/* Top Part */}
                         <div className="taskDetailsContainerTop">
@@ -214,6 +245,15 @@ const TaskDetails = () => {
                                                 left: position?.x || 0,
                                                 top: position?.y || 0,
                                             }}
+                                            onMouseEnter={(e) =>
+                                                setHoveredDevice({
+                                                    name: device.name,
+                                                    interfaces: device.interfaces,
+                                                    x: e.clientX + 10,
+                                                    y: e.clientY + 10,
+                                                })
+                                            }
+                                            onMouseLeave={() => setHoveredDevice(null)}
                                             onClick={() => openConsole(index)}
                                         >
                                             <p className="taskDetailsContainerBottomContainerSvgText">{getDeviceIcon(device.name)}</p>
@@ -225,6 +265,22 @@ const TaskDetails = () => {
                         </div>
 
                     </div>
+
+                    {/* Tooltip */}
+                    {hoveredDevice && (
+                        <div
+                            className="deviceTooltip"
+                            style={{
+                                left: `${hoveredDevice.x}px`,
+                                top: `${hoveredDevice.y}px`,
+                            }}
+                        >
+                            <p><strong>{hoveredDevice.name}</strong></p>
+                            {hoveredDevice.interfaces.map((ip, index) => (
+                                <p key={index}>IP: {ip || "N/A"}</p>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Render all open consoles */}
                     {openConsoles.map((deviceId) => (
@@ -243,7 +299,7 @@ const TaskDetails = () => {
                             <h3>Test Results:</h3>
                             <ul>
                                 {testResults.map((result, index) => (
-                                    <li key={index}>
+                                    <li key={index}></li>
                                         Test {index + 1}: {result.passed ? "PASSED" : "FAILED"}
                                         <br />
                                         Expected: {JSON.stringify(result.test.result)}
