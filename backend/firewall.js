@@ -6,8 +6,22 @@ function Firewall(){
     this.list = []
     
     this.add = (data) => {
-        if(this.validate(data))
-            this.list.push(data);
+        if (this.validate(data)) {
+            // Sprawdź, czy reguła już istnieje
+            const exists = this.list.some(
+                (rule) =>
+                    rule.type === data.type &&
+                    rule.action === data.action &&
+                    rule.src === data.src &&
+                    rule.des === data.des &&
+                    rule.protocol === data.protocol
+            );
+            if (!exists) {
+                this.list.push(data);
+            } else {
+                console.log("Rule already exists:", data); // Debugging log
+            }
+        }
     }
 
     this.edit = (id, data) => {

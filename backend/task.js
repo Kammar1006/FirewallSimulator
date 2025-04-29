@@ -227,12 +227,14 @@ function Task() {
         let flag = true;
 
         for (const test of this.tests) {
+            // Symulacja pakietu w sieci
             let result = this.network.simulate(
-                test.endpoints[0],
-                test.endpoints[1],
-                test.packet
+                test.endpoints[0], // Identyfikator urządzenia źródłowego
+                test.endpoints[1], // Identyfikator urządzenia docelowego
+                test.packet        // Szczegóły pakietu
             );
 
+            // Walidacja kierunku żądania
             if (test.result[0][0] === true || test.result[0][0] === "permit") {
                 if (result.result[0].filter((e) => e[0] === true || e[0] === "permit").length !== test.result[0][1]) {
                     flag = false;
@@ -243,7 +245,8 @@ function Task() {
                 }
             }
 
-            if(test.result[0][0] === true && flag){
+            // Walidacja kierunku odpowiedzi
+            if (test.result[0][0] === true && flag) {
                 if (test.result[1][0] === true || test.result[1][0] === "permit") {
                     if (result.result[1].filter((e) => e[0] === true || e[0] === "permit").length !== test.result[1][1]) {
                         flag = false;
@@ -255,7 +258,7 @@ function Task() {
                 }
             }
         }
-        return flag;
+        return flag; // Zwraca true, jeśli wszystkie testy przejdą, w przeciwnym razie false
     };
 
 }
