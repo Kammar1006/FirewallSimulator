@@ -28,6 +28,7 @@ const Login = () => {
       setLoading(false); // Hide loading spinner
       const token = btoa(encodeURIComponent(`${data.id}:${data.name}`)); // Encode token
       localStorage.setItem("authToken", token); // Store token in localStorage
+      localStorage.setItem("studentId", id); // Store student ID in localStorage
       toast.success("Login successful!");
       navigate(`/?token=${token}`);
     });

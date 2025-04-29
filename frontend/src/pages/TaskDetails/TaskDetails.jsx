@@ -18,7 +18,7 @@ const TaskDetails = () => {
     const [consoleOutput, setConsoleOutput] = useState({});
     const [testResults, setTestResults] = useState([]);
     const [taskCompleted, setTaskCompleted] = useState(false);
-    const [hoveredDevice, setHoveredDevice] = useState(null); // Track hovered device
+    const [hoveredDevice, setHoveredDevice] = useState(null);
 
     const predefinedPositions = {
         1: {
