@@ -454,7 +454,7 @@ io.on("connection", (sock) => {
 		);
 
 		if (student) {
-			const token = Buffer.from(`${student.id}:${student.lastName}`).toString("base64");
+			const token = Buffer.from(encodeURIComponent(`${student.id}:${student.lastName}`)).toString("base64");
 			translationTab[cid].sid = id;
 			sock.emit("login_success", { id: student.id, name: `${student.firstName} ${student.lastName}`, token });
 		} else {

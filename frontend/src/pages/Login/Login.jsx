@@ -26,7 +26,7 @@ const Login = () => {
 
     socket.on("login_success", (data) => {
       setLoading(false); // Hide loading spinner
-      const token = btoa(`${data.id}:${data.name}`); // Encode token
+      const token = btoa(encodeURIComponent(`${data.id}:${data.name}`)); // Encode token
       localStorage.setItem("authToken", token); // Store token in localStorage
       toast.success("Login successful!");
       navigate(`/?token=${token}`);
