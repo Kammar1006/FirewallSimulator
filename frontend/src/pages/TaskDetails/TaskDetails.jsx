@@ -1,50 +1,116 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { RulesContext } from "../../context/RulesContext";
 import Console from "../../components/Console/Console";
 import "./taskDetails.css";
-import { GrFormNext } from "react-icons/gr";
 
 import assets from "../../assets/assets";
-import { GrFormPrevious } from "react-icons/gr";
 
 const TaskDetails = () => {
     const { taskId } = useParams();
-    const navigate = useNavigate();
     const { socket } = useContext(RulesContext);
     const [task, setTask] = useState(null);
     const [openConsoles, setOpenConsoles] = useState([]);
     const [consoleOutput, setConsoleOutput] = useState({});
     const [testResults, setTestResults] = useState([]);
     const [taskCompleted, setTaskCompleted] = useState(false);
-    const [hoveredDevice, setHoveredDevice] = useState(null);
+    const [devicePositions, setDevicePositions] = useState({});
 
     const predefinedPositions = {
         1: {
             0: { x: 200, y: 100 },  // PC_1
-            1: { x: 400, y: 100 }, // R_1
-            2: { x: 650, y: 100 }, // R_2
-            3: { x: 650, y: 250 }, // PC_2
-            4: { x: 900, y: 100 }, // PC_3
+            1: { x: 400, y: 100 }, // S_1
+            2: { x: 600, y: 100 }, // R_1
+            3: { x: 800, y: 100 }, // PC_2
+            4: { x: 1000, y: 100 }, // PC_3
         },
-        // Add predefined positions for other tasks here...
+        2: {
+            0: { x: 200, y: 100 },  // PC_A
+            1: { x: 400, y: 100 }, // R_A
+            2: { x: 600, y: 100 }, // R_B
+            3: { x: 800, y: 100 }, // PC_B
+            4: { x: 1000, y: 100 }, // PC_C
+            5: { x: 600, y: 300 }, // S_1
+        },
+        3: {
+            0: { x: 200, y: 100 },  // PC_X
+            1: { x: 400, y: 100 }, // R_X
+            2: { x: 600, y: 100 }, // R_Y
+            3: { x: 800, y: 100 }, // PC_Y
+            4: { x: 1000, y: 100 }, // PC_Z
+            5: { x: 600, y: 300 }, // S_2
+            6: { x: 800, y: 300 }, // R_Z
+            7: { x: 1000, y: 300 }, // PC_W
+        },
+        4: {
+            0: { x: 200, y: 100 },  // PC_1
+            1: { x: 400, y: 100 }, // R_1
+            2: { x: 600, y: 100 }, // R_2
+            3: { x: 800, y: 100 }, // PC_2
+            4: { x: 1000, y: 100 }, // PC_3
+            5: { x: 600, y: 300 }, // S_1
+        },
+        5: {
+            0: { x: 200, y: 100 },  // PC_A
+            1: { x: 400, y: 100 }, // R_A
+            2: { x: 600, y: 100 }, // R_B
+            3: { x: 800, y: 100 }, // PC_B
+            4: { x: 1000, y: 100 }, // PC_C
+            5: { x: 600, y: 300 }, // S_2
+            6: { x: 800, y: 300 }, // PC_D
+        },
+        6: {
+            0: { x: 200, y: 100 },  // PC_X
+            1: { x: 400, y: 100 }, // R_X
+            2: { x: 600, y: 100 }, // R_Y
+            3: { x: 800, y: 100 }, // PC_Y
+            4: { x: 1000, y: 100 }, // PC_Z
+            5: { x: 600, y: 300 }, // S_3
+            6: { x: 800, y: 300 }, // PC_W
+            7: { x: 1000, y: 300 }, // PC_V
+        },
     };
 
     useEffect(() => {
         if (socket) {
-            socket.emit("get_task", parseInt(taskId, 10));
-            socket.on("task", (data) => {
-                setTask(data);
+            socket.emit("get_tasks");
+            socket.on("tasks", (data) => {
+                const taskData = data.find((task) => task.id === parseInt(taskId, 10));
+                if (taskData) {
+                    setTask({
+                        id: taskData.id,
+                        title: taskData.title || `Task ${taskId}`,
+                        description: taskData.desc?.join(" ") || "No description available.",
+                        difficulty: taskData.difficulty || "Unknown",
+                        subtasks: taskData.subtasks || [],
+                        topology: taskData.topology || { devices: [], connections: [] },
+                    });
+                } else {
+                    console.error(`Task with ID ${taskId} not found.`);
+                }
             });
         }
 
         return () => {
             if (socket) {
-                socket.off("task");
+                socket.off("tasks");
             }
         };
     }, [socket, taskId]);
+
+    useEffect(() => {
+        if (task && task.topology && task.topology.devices) {
+            const positions = {};
+            task.topology.devices.forEach((device, index) => {
+                const position = predefinedPositions[taskId]?.[index];
+                if (position) {
+                    positions[index] = position;
+                }
+            });
+            setDevicePositions(positions);
+        }
+    }, [taskId, task]);
 
     const openConsole = (deviceId) => {
         if (!openConsoles.includes(deviceId)) {
@@ -68,6 +134,22 @@ const TaskDetails = () => {
         }
     };
 
+    const handleRunTests = () => {
+        if (socket) {
+            socket.emit("check_task_completion");
+            socket.once("task_completion_status", ({ isCompleted }) => {
+                setTaskCompleted(isCompleted);
+                setTestResults([
+                    {
+                        id: 1,
+                        description: "All tests passed successfully.",
+                        status: isCompleted ? "PASSED" : "FAILED",
+                    },
+                ]);
+            });
+        }
+    };
+
     const handleSubmit = () => {
         if (taskCompleted && socket) {
             socket.emit("submit_task", { taskId: task.id });
@@ -81,7 +163,7 @@ const TaskDetails = () => {
         if (name.startsWith("PC")) return <img src={assets.pcIcon} alt="" className="taskDetailsPcIcon" />;
         if (name.startsWith("R")) return <img src={assets.routerIcon} alt="" className="taskDetailsRouterIcon" />;
         if (name.startsWith("S")) return <img src={assets.switchIcon} alt="" className="taskDetailsSwitchIcon" />;
-        return ""
+        return "❓"
     };
 
     const renderConnections = () => {
@@ -108,218 +190,150 @@ const TaskDetails = () => {
         });
     };
 
+    if (!task) {
+        return <div className="taskDetails">Loading...</div>;
+    }
+
     return (
         <div className="taskDetails">
-            {task && task.topology && task.topology.devices ? ( 
-                <>
-                {/* Navigation Buttons */}
-                <div className="taskDetailsNavigation">
-
-                            <div
-                                className="taskDetailsBackButton"
-                                onClick={() => navigate("/tasks")}
-                            >
-                                <GrFormPrevious className="taskDetailsBackButtonIcon" />
-                                <p className="taskDetailsBackButtonText">
-                                    Back to Tasks
+            <div className="taskDetailsContainer">
+                {/* Top Part */}
+                <div className="taskDetailsContainerTop">
+                    {/* First Element */}
+                    <div className="taskDetailsContainerTopFirst">
+                        <div className="taskDetailsContainerTopFirstContainer">
+                            {/* Left Part */}
+                            <div className="taskDetailsContainerTopFirstContainerLeft">
+                                <p className="taskDetailsContainerTopFirstContainerLeftText">
+                                    Task #{task.id}: {task.title}
                                 </p>
                             </div>
-                            
-                            <div
-                                className="taskDetailsNextButton"
-                                onClick={() => navigate(`/task/${parseInt(taskId, 10) + 1}`)}
-                            >
-                                {/* <GrFormNext /> */}
-                                <p className="taskDetailsNextButtonText">
-                                    Next Task
-                                </p>
-                                <GrFormNext className="taskDetailsNextButtonIcon" />
+
+                            {/* Right Part */}
+                            <div className="taskDetailsContainerTopFirstContainerRight">
+                                <div className="taskDetailsContainerTopFirstContainerRightContainer">
+                                    <button
+                                        className="taskDetailsContainerTopFirstContainerRightContainerBtnOne"
+                                        onClick={handleRunTests}
+                                    >
+                                        <p className="taskDetailsContainerTopFirstContainerRightContainerBtnOneText">
+                                            Run Tests
+                                        </p>
+                                    </button>
+                                    <button
+                                        className={`taskDetailsContainerTopFirstContainerRightContainerBtn ${taskCompleted ? "enabled" : "disabled"}`}
+                                        onClick={handleSubmit}
+                                        disabled={!taskCompleted}
+                                    >
+                                        <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
+                                            Submit
+                                        </p>
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                    <div className="taskDetailsContainer">
-
-                        
-
-                        {/* Top Part */}
-                        <div className="taskDetailsContainerTop">
-                            {/* First Element */}
-                            <div className="taskDetailsContainerTopFirst">
-                                <div className="taskDetailsContainerTopFirstContainer">
-                                    {/* Left Part */}
-                                    <div className="taskDetailsContainerTopFirstContainerLeft">
-                                        <p className="taskDetailsContainerTopFirstContainerLeftText">
-                                            Task #{task.id}: {task.title}
+                    {/* Second Element */}
+                    <div className="taskDetailsContainerTopElement">
+                        <div className="taskDetailsContainerTopElementContainer">
+                            {/* First Part */}
+                            <div className="taskDetailsContainerTopElementContainerFirst">
+                                <div className="taskDetailsContainerTopElementContainerFirstContainer">
+                                    <div className="taskDetailsContainerTopElementContainerFirstContainerDiv">
+                                        <p className="taskDetailsContainerTopElementContainerFirstContainerDivText">
+                                            Difficulty: {task.difficulty}
                                         </p>
                                     </div>
-
-                                    {/* Right Part */}
-                                    <div className="taskDetailsContainerTopFirstContainerRight">
-                                        <div className="taskDetailsContainerTopFirstContainerRightContainer">
-                                            <button
-                                                className="taskDetailsContainerTopFirstContainerRightContainerBtnOne"
-              
-                                            >
-                                                <p className="taskDetailsContainerTopFirstContainerRightContainerBtnOneText">
-                                                    Run Tests
-                                                </p>
-                                            </button>
-                                            <button
-                                                className={`taskDetailsContainerTopFirstContainerRightContainerBtn ${taskCompleted ? "enabled" : "disabled"}`}
-                                                onClick={handleSubmit}
-                                                disabled={!taskCompleted}
-                                            >
-                                                <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
-                                                    Submit
-                                                </p>
-                                            </button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
-                            {/* Second Element */}
-                            <div className="taskDetailsContainerTopElement">
-                                <div className="taskDetailsContainerTopElementContainer">
-                                    {/* First Part */}
-                                    <div className="taskDetailsContainerTopElementContainerFirst">
-                                        <div className="taskDetailsContainerTopElementContainerFirstContainer">
-                                            <div className="taskDetailsContainerTopElementContainerFirstContainerDiv">
-                                                <p className="taskDetailsContainerTopElementContainerFirstContainerDivText">
-                                                    Difficulty: {task.difficulty}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Second Part */}
-                                    <div className="taskDetailsContainerTopElementContainerSecond">
-                                        <div className="taskDetailsContainerTopElementContainerSecondContainer">
-                                            <p className="taskDetailsContainerTopElementContainerSecondContainerText">
-                                                Time: 45 minutes
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Third Element */}
-                            <div className="taskDetailsContainerTopThird">
-                                <div className="taskDetailsContainerTopThirdContainer">
-                                    <p className="taskDetailsContainerTopThirdContainerText">
-                                        Configure the firewall rules for a secure network environment following the given requirements:
+                            {/* Second Part */}
+                            <div className="taskDetailsContainerTopElementContainerSecond">
+                                <div className="taskDetailsContainerTopElementContainerSecondContainer">
+                                    <p className="taskDetailsContainerTopElementContainerSecondContainerText">
+                                        Time: 45 minutes
                                     </p>
                                 </div>
                             </div>
-
-                            {/* Fourth Element */}
-                            <div className="taskDetailsContainerTopFourth">
-                                <div className="taskDetailsContainerTopFourthContainer">
-                                    {
-                                        task.subtasks.map((subtask) => (
-                                            <div key={subtask.id} className="taskDetailsContainerTopFourthContainerSubtask">
-                                                <img src={assets.dotIcon} alt="" className="taskDetailsContainerTopFourthContainerSubtaskDotIcon" />
-                                                <p className="taskDetailsContainerTopFourthContainerSubtaskText">
-                                                    {subtask.description}
-                                                </p>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
                         </div>
-
-                        {/* Bottom Part */}
-                        <div className="taskDetailsContainerBottom">
-                            <div className="taskDetailsContainerBottomContainer">
-                                <svg className="taskDetailsContainerBottomContainerSvg">
-                                    {renderConnections()}
-                                </svg>
-                                {task.topology.devices.map((device, index) => {
-                                    const position = predefinedPositions[taskId]?.[index];
-                                    return (
-                                        <div
-                                            key={index}
-                                            className="deviceIcon"
-                                            style={{
-                                                left: position?.x || 0,
-                                                top: position?.y || 0,
-                                            }}
-                                            onMouseEnter={(e) =>
-                                                setHoveredDevice({
-                                                    name: device.name,
-                                                    interfaces: device.interfaces,
-                                                    x: e.clientX + 10,
-                                                    y: e.clientY + 10,
-                                                })
-                                            }
-                                            onMouseLeave={() => setHoveredDevice(null)}
-                                            onClick={() => openConsole(index)}
-                                        >
-                                            <p className="taskDetailsContainerBottomContainerSvgText">{getDeviceIcon(device.name)}</p>
-                                            <p>{device.name}</p>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
                     </div>
 
-                    {/* Tooltip */}
-                    {hoveredDevice && (
-                        <div
-                            className="deviceTooltip"
-                            style={{
-                                left: `${hoveredDevice.x}px`,
-                                top: `${hoveredDevice.y}px`,
-                            }}
-                        >
-                            <p><strong>{hoveredDevice.name}</strong></p>
-                            {hoveredDevice.interfaces.map((ip, index) => (
-                                <p key={index}>IP: {ip || "N/A"}</p>
+                    {/* Third Element */}
+                    <div className="taskDetailsContainerTopThird">
+                        <div className="taskDetailsContainerTopThirdContainer">
+                            <p className="taskDetailsContainerTopThirdContainerText">
+                                Configure the firewall rules for a secure network environment following the given requirements:
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Fourth Element */}
+                    <div className="taskDetailsContainerTopFourth">
+                        <div className="taskDetailsContainerTopFourthContainer">
+                            {task.subtasks && task.subtasks.map((subtask) => (
+                                <div key={subtask.id} className="taskDetailsContainerTopFourthContainerSubtask">
+                                    <img src={assets.dotIcon} alt="" className="taskDetailsContainerTopFourthContainerSubtaskDotIcon" />
+                                    <p className="taskDetailsContainerTopFourthContainerSubtaskText">
+                                        {subtask.description}
+                                    </p>
+                                </div>
                             ))}
                         </div>
-                    )}
+                    </div>
+                </div>
 
-                    {/* Render all open consoles */}
-                    {openConsoles.map((deviceId) => (
-                        <Console
-                            key={deviceId}
-                            deviceName={task.topology.devices[deviceId].name}
-                            deviceId={deviceId}
-                            onClose={() => closeConsole(deviceId)}
-                            onCommand={handleConsoleCommand}
-                            output={consoleOutput[deviceId]}
-                        />
-                    ))}
+                {/* Bottom Part */}
+                <div className="taskDetailsContainerBottom">
+                    <div className="taskDetailsContainerBottomContainer">
+                        <svg className="taskDetailsContainerBottomContainerSvg">
+                            {renderConnections()}
+                        </svg>
+                        {task.topology && task.topology.devices && task.topology.devices.map((device, index) => {
+                            const position = predefinedPositions[taskId]?.[index];
+                            return (
+                                <div
+                                    key={index}
+                                    className="deviceIcon"
+                                    style={{
+                                        left: position?.x || 0,
+                                        top: position?.y || 0,
+                                    }}
+                                    onClick={() => openConsole(index)}
+                                >
+                                    {getDeviceIcon(device.name)}
+                                    <p>{device.name}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
 
-                    {/* {testResults.length > 0 && (
-                        <div className="testResults">
-                            <h3>Test Results:</h3>
-                            <ul>
-                                {testResults.map((result, index) => (
-                                    <li key={index}></li>
-                                        Test {index + 1}: {result.passed ? "PASSED" : "FAILED"}
-                                        <br />
-                                        Expected: {JSON.stringify(result.test.result)}
-                                        <br />
-                                        Actual: {JSON.stringify(result.actual)}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
+                {/* Test Results */}
+                {testResults.length > 0 && (
+                    <div className="testResults">
+                        <h3>Test Results</h3>
+                        {testResults.map((result) => (
+                            <div key={result.id} className={`testResult ${result.status.toLowerCase()}`}>
+                                <p>{result.description}</p>
+                                <p className="status">{result.status}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
 
-                    {taskCompleted && (
-                        <div className="taskCompletedMessage">
-                            <p>ask Completed Successfully!</p>
-                        </div>
-                    )} */}
-                </>
-            ) : (
-                <p>Loading task details...</p>
-            )}
+            {/* Render all open consoles */}
+            {task.topology && task.topology.devices && openConsoles.map((deviceId) => (
+                <Console
+                    key={deviceId}
+                    deviceName={task.topology.devices[deviceId].name}
+                    deviceId={deviceId}
+                    onClose={() => closeConsole(deviceId)}
+                    onCommand={handleConsoleCommand}
+                    output={consoleOutput[deviceId]}
+                />
+            ))}
         </div>
     );
 };

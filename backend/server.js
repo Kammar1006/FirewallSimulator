@@ -127,41 +127,20 @@ io.on("connection", (sock) => {
 	});
 
 	sock.on("get_tasks", () => {
-		const taskData = {
-			titles: Array.from({ length: 6 }, (_, i) => {
-				const task = new Task();
-				task.set(i + 1);
-				return task.title;
-			}),
-			desc: Array.from({ length: 6 }, (_, i) => {
-				const task = new Task();
-				task.set(i + 1);
-				return task.desc[0];
-			}),
-			difficulty: Array.from({ length: 6 }, (_, i) => {
-				const task = new Task();
-				task.set(i + 1);
-				return task.difficulty;
-			}),
-			completedTasks: translationTab[cid]?.completedTasks || [],
-		};
-		sock.emit("tasks", taskData);
-	});
-
-	sock.on("get_task", (taskId) => {
-		const task = new Task();
-		task.set(taskId);
-	
-		const taskData = {
-			id: taskId,
-			title: task.title,
-			description: task.desc[0],
-			difficulty: task.difficulty,
-			subtasks: task.subtasks,
-			topology: task.topology,
-		};
-	
-		sock.emit("task", taskData);
+		const tasks = [];
+		for (let i = 1; i <= 6; i++) { // Adjusted range to include all six tasks
+			const task = new Task();
+			task.set(i);
+			tasks.push({
+				id: i,
+				title: task.title,
+				desc: task.desc,
+				difficulty: task.difficulty,
+				subtasks: task.subtasks,
+				topology: task.topology,
+			});
+		}
+		sock.emit("tasks", tasks);
 	});
 
 	sock.on("send_packet", (src_id, des_id, protocol, port) => {
@@ -241,13 +220,13 @@ io.on("connection", (sock) => {
 			let int = Number(device.configuration_submode);
 			switch (cmd) {
 				case "add_rule":{
-					if (args.length === 7) {
+					if (args.length >= 5) {
 						const rule = {
 							type: args[1],
 							action: args[2],
 							src: args[3],
 							des: args[4],
-							protocol: `${args[5]}:${args[6]}`,
+							protocol: args[5] ? args[5] : "any", // Default to "any" if not specified
 						};
 
 						if(rule.type == "o" || rule.type == "out" || rule.type == "output"){
@@ -263,6 +242,16 @@ io.on("connection", (sock) => {
 
 						const isValid = ["permit", "deny"].includes(rule.action) && rule.src && rule.des && rule.protocol;
 						if (isValid) {
+							// Fix: Format protocol with colon if port is provided
+							if (args.length >= 6 && args[6]) {
+								rule.protocol = `${rule.protocol}:${args[6]}`;
+							}
+							
+							// Special handling for "any" protocol
+							if (rule.protocol === "any" && args.length >= 6 && args[6] === "any") {
+								rule.protocol = "any:any";
+							}
+							
 							translationTab[cid].task.network.configure(deviceId, int, rule.type, "add", -1, rule);
 							output = `Rule added to Device ${deviceId} and Int ${int}: ${JSON.stringify(rule)}`;
 						} else {
@@ -454,9 +443,8 @@ io.on("connection", (sock) => {
 		);
 
 		if (student) {
-			const token = Buffer.from(encodeURIComponent(`${student.id}:${student.lastName}`)).toString("base64");
 			translationTab[cid].sid = id;
-			sock.emit("login_success", { id: student.id, name: `${student.firstName} ${student.lastName}`, token });
+			sock.emit("login_success", { id: student.id, name: `${student.firstName} ${student.lastName}` });
 		} else {
 			sock.emit("login_failure", "Invalid ID or Last Name.");
 		}
@@ -474,6 +462,12 @@ io.on("connection", (sock) => {
 			translationTab[cid].completedTasks.push(taskId);
 		}
 		sock.emit("task_submitted", { taskId });
+	});
+
+	sock.on("check_task_completion", () => {
+		const task = translationTab[cid].task;
+		const isCompleted = task.check(); // Sprawdź poprawność zadania
+		sock.emit("task_completion_status", { taskId: task.id, isCompleted });
 	});
 });
 

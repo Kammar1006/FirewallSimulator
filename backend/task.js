@@ -35,24 +35,35 @@ function Task() {
                 this.title = "Basic Firewall Configuration";
                 this.desc = [
                     "Configure the firewall to allow traffic from PC_1 to PC_3 on port 80.",
-                    // "Task 2: Block all other traffic.",
+                    "Block all other traffic.",
                 ];
                 this.tests = [
                     {
+                        name: "Test 1: TCP/80 from PC_1 to PC_3",
                         endpoints: [0, 4],
-                        packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80" },
-                        result: [[true, 6], [true, 6]],
+                        packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "tcp:80" },
+                        expected: true,
+                        description: "Should allow TCP traffic on port 80"
                     },
                     {
+                        name: "Test 2: TCP/443 from PC_1 to PC_3",
                         endpoints: [0, 4],
                         packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "tcp:443" },
-                        result: [[false, 2], [false, 0]],
+                        expected: false,
+                        description: "Should block TCP traffic on port 443"
                     },
+                    {
+                        name: "Test 3: UDP/80 from PC_1 to PC_3",
+                        endpoints: [0, 4],
+                        packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80" },
+                        expected: false,
+                        description: "Should block UDP traffic"
+                    }
                 ];
-                this.difficulty = "Hard";
+                this.difficulty = "Easy";
                 this.subtasks = [
-                    { id: 1, title: "Allow traffic on port 80", description: "Ensure traffic from PC_1 to PC_3 on port 80 is allowed." },
-                    { id: 2, title: "Block all other traffic", description: "Block all other traffic not explicitly allowed." },
+                    { id: 1, title: "Allow TCP/80", description: "Configure firewall to allow TCP traffic on port 80 from PC_1 to PC_3" },
+                    { id: 2, title: "Block other traffic", description: "Ensure all other traffic is blocked" }
                 ];
             } break;
 
@@ -62,8 +73,17 @@ function Task() {
                     new Device("R_A", ["10.0.0.1", "172.16.0.1"]),
                     new Device("R_B", ["172.16.0.2", "192.168.1.1"]),
                     new Device("PC_B", ["192.168.1.2"]),
+                    new Device("PC_C", ["192.168.1.3"]),
+                    new Device("S_1", ["", ""], 0, 0), // Switch
                 ];
-                const connections = [[1], [0, 2], [1, 3], [2]];
+                const connections = [
+                    [1],       // PC_A -> R_A
+                    [0, 2, 5], // R_A -> PC_A, R_B, S_1
+                    [1, 3, 4], // R_B -> R_A, PC_B, PC_C
+                    [2],       // PC_B -> R_B
+                    [2],       // PC_C -> R_B
+                    [1],       // S_1 -> R_A
+                ];
 
                 this.network.set(devices, connections);
                 this.topology = {
@@ -79,25 +99,38 @@ function Task() {
 
                 this.title = "Intermediate Firewall Rules";
                 this.desc = [
-                    "Configure the firewall to allow traffic from PC_A to PC_B on port 22.",
-                    "Block all other traffic.",
+                    "Configure the firewall to allow traffic from PC_A to PC_B.",
+                    "Ensure traffic from PC_A to PC_C is blocked.",
+                    "Allow traffic between PC_B and PC_C."
                 ];
                 this.tests = [
                     {
+                        name: "Test 1: Allow traffic from PC_A to PC_B",
                         endpoints: [0, 3],
-                        packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "tcp:22" },
-                        result: [[true, 6], [true, 6]],
+                        packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "tcp:80" },
+                        expected: true,
+                        description: "Should allow traffic from PC_A to PC_B on port 80"
                     },
                     {
-                        endpoints: [0, 3],
-                        packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "udp:53" },
-                        result: [[false, 2], [false, 0]],
+                        name: "Test 2: Block traffic from PC_A to PC_C",
+                        endpoints: [0, 4],
+                        packet: { src: "10.0.0.2", des: "192.168.1.3", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Should block traffic from PC_A to PC_C"
                     },
+                    {
+                        name: "Test 3: Allow traffic between PC_B and PC_C",
+                        endpoints: [3, 4],
+                        packet: { src: "192.168.1.2", des: "192.168.1.3", protocol: "udp:53" },
+                        expected: true,
+                        description: "Should allow traffic between PC_B and PC_C"
+                    }
                 ];
                 this.difficulty = "Medium";
                 this.subtasks = [
-                    { id: 1, title: "Allow traffic on port 22", description: "Ensure traffic from PC_A to PC_B on port 22 is allowed." },
-                    { id: 2, title: "Block all other traffic", description: "Block all other traffic not explicitly allowed." },
+                    { id: 1, title: "Allow traffic from PC_A to PC_B", description: "Ensure traffic from PC_A to PC_B is allowed." },
+                    { id: 2, title: "Block traffic from PC_A to PC_C", description: "Ensure traffic from PC_A to PC_C is blocked." },
+                    { id: 3, title: "Allow traffic between PC_B and PC_C", description: "Ensure traffic between PC_B and PC_C is allowed." },
                 ];
             } break;
 
@@ -107,8 +140,21 @@ function Task() {
                     new Device("R_X", ["192.168.100.1", "10.10.10.1"]),
                     new Device("R_Y", ["10.10.10.2", "172.16.10.1"]),
                     new Device("PC_Y", ["172.16.10.2"]),
+                    new Device("S_2", ["", ""], 0, 0), // Switch
+                    new Device("PC_Z", ["172.16.10.3"]),
+                    new Device("R_Z", ["172.16.10.4", "192.168.200.1"]),
+                    new Device("PC_W", ["192.168.200.2"]),
                 ];
-                const connections = [[1], [0, 2], [1, 3], [2]];
+                const connections = [
+                    [1],       // PC_X -> R_X
+                    [0, 2, 4], // R_X -> PC_X, R_Y, S_2
+                    [1, 3, 6], // R_Y -> R_X, PC_Y, R_Z
+                    [2],       // PC_Y -> R_Y
+                    [1],       // S_2 -> R_X
+                    [2],       // PC_Z -> R_Y
+                    [2, 7],    // R_Z -> R_Y, PC_W
+                    [6],       // PC_W -> R_Z
+                ];
 
                 this.network.set(devices, connections);
                 this.topology = {
@@ -117,28 +163,65 @@ function Task() {
                         name: device.name,
                         interfaces: device.interfaces.map((iface) => iface.inet),
                     })),
-                    connections: connections.map((conn, index) =>
+                    connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
                     ),
                 };
 
                 this.title = "Advanced Network Security";
-                this.desc = ["Task 3: Configure the firewall to allow traffic from PC_X to PC_Y."];
-                this.tests = [];
+                this.desc = [
+                    "Configure the firewall to allow traffic from PC_X to PC_Y.",
+                    "Block traffic from PC_X to PC_W.",
+                    "Allow traffic between PC_Y and PC_Z."
+                ];
+                this.tests = [
+                    {
+                        name: "Test 1: Allow traffic from PC_X to PC_Y",
+                        endpoints: [0, 3],
+                        packet: { src: "192.168.100.2", des: "172.16.10.2", protocol: "tcp:22" },
+                        expected: true,
+                        description: "Should allow traffic from PC_X to PC_Y on port 22"
+                    },
+                    {
+                        name: "Test 2: Block traffic from PC_X to PC_W",
+                        endpoints: [0, 7],
+                        packet: { src: "192.168.100.2", des: "192.168.200.2", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Should block traffic from PC_X to PC_W"
+                    },
+                    {
+                        name: "Test 3: Allow traffic between PC_Y and PC_Z",
+                        endpoints: [3, 5],
+                        packet: { src: "172.16.10.2", des: "172.16.10.3", protocol: "udp:53" },
+                        expected: true,
+                        description: "Should allow traffic between PC_Y and PC_Z"
+                    }
+                ];
                 this.difficulty = "Hard";
                 this.subtasks = [
                     { id: 1, title: "Allow traffic from PC_X to PC_Y", description: "Ensure traffic from PC_X to PC_Y is allowed." },
-                    { id: 2, title: "Block all other traffic", description: "Block all other traffic not explicitly allowed." },
+                    { id: 2, title: "Block traffic from PC_X to PC_W", description: "Ensure traffic from PC_X to PC_W is blocked." },
+                    { id: 3, title: "Allow traffic between PC_Y and PC_Z", description: "Ensure traffic between PC_Y and PC_Z is allowed." },
                 ];
             } break;
 
             case 4: {
                 const devices = [
-                    new Device("PC_4", ["192.168.4.2"]),
-                    new Device("R_4", ["192.168.4.1", "10.0.0.1"]),
-                    new Device("PC_5", ["10.0.0.2"]),
+                    new Device("PC_1", ["192.168.10.2"]),
+                    new Device("R_1", ["192.168.10.1", "10.0.0.1"]),
+                    new Device("R_2", ["10.0.0.2", "172.16.0.1"]),
+                    new Device("PC_2", ["172.16.0.2"]),
+                    new Device("PC_3", ["172.16.0.3"]),
+                    new Device("S_1", ["", ""], 0, 0), // Switch
                 ];
-                const connections = [[1], [0, 2], [1]];
+                const connections = [
+                    [1],       // PC_1 -> R_1
+                    [0, 2, 5], // R_1 -> PC_1, R_2, S_1
+                    [1, 3, 4], // R_2 -> R_1, PC_2, PC_3
+                    [2],       // PC_2 -> R_2
+                    [2],       // PC_3 -> R_2
+                    [1],       // S_1 -> R_1
+                ];
 
                 this.network.set(devices, connections);
                 this.topology = {
@@ -152,22 +235,62 @@ function Task() {
                     ),
                 };
 
-                this.title = "Basic Routing Configuration";
-                this.desc = ["Task 4: Configure routing to allow traffic from PC_4 to PC_5."];
-                this.tests = [];
-                this.difficulty = "Easy";
+                this.title = "Advanced Firewall Configuration";
+                this.desc = [
+                    "Allow traffic from PC_1 to PC_2 on port 22.",
+                    "Block traffic from PC_1 to PC_3.",
+                    "Allow traffic between PC_2 and PC_3."
+                ];
+                this.tests = [
+                    {
+                        name: "Test 1: Allow traffic from PC_1 to PC_2",
+                        endpoints: [0, 3],
+                        packet: { src: "192.168.10.2", des: "172.16.0.2", protocol: "tcp:22" },
+                        expected: true,
+                        description: "Should allow traffic from PC_1 to PC_2 on port 22"
+                    },
+                    {
+                        name: "Test 2: Block traffic from PC_1 to PC_3",
+                        endpoints: [0, 4],
+                        packet: { src: "192.168.10.2", des: "172.16.0.3", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Should block traffic from PC_1 to PC_3"
+                    },
+                    {
+                        name: "Test 3: Allow traffic between PC_2 and PC_3",
+                        endpoints: [3, 4],
+                        packet: { src: "172.16.0.2", des: "172.16.0.3", protocol: "udp:53" },
+                        expected: true,
+                        description: "Should allow traffic between PC_2 and PC_3"
+                    }
+                ];
+                this.difficulty = "Medium";
                 this.subtasks = [
-                    { id: 1, title: "Enable routing", description: "Ensure traffic from PC_4 to PC_5 is routed correctly." },
+                    { id: 1, title: "Allow traffic from PC_1 to PC_2", description: "Ensure traffic from PC_1 to PC_2 is allowed." },
+                    { id: 2, title: "Block traffic from PC_1 to PC_3", description: "Ensure traffic from PC_1 to PC_3 is blocked." },
+                    { id: 3, title: "Allow traffic between PC_2 and PC_3", description: "Ensure traffic between PC_2 and PC_3 is allowed." },
                 ];
             } break;
 
             case 5: {
                 const devices = [
-                    new Device("PC_6", ["192.168.6.2"]),
-                    new Device("R_6", ["192.168.6.1", "172.16.0.1"]),
-                    new Device("PC_7", ["172.16.0.2"]),
+                    new Device("PC_A", ["192.168.50.2"]),
+                    new Device("R_A", ["192.168.50.1", "10.50.0.1"]),
+                    new Device("R_B", ["10.50.0.2", "172.50.0.1"]),
+                    new Device("PC_B", ["172.50.0.2"]),
+                    new Device("PC_C", ["172.50.0.3"]),
+                    new Device("S_2", ["", ""], 0, 0), // Switch
+                    new Device("PC_D", ["172.50.0.4"]),
                 ];
-                const connections = [[1], [0, 2], [1]];
+                const connections = [
+                    [1],       // PC_A -> R_A
+                    [0, 2, 5], // R_A -> PC_A, R_B, S_2
+                    [1, 3, 4, 6], // R_B -> R_A, PC_B, PC_C, PC_D
+                    [2],       // PC_B -> R_B
+                    [2],       // PC_C -> R_B
+                    [1],       // S_2 -> R_A
+                    [2],       // PC_D -> R_B
+                ];
 
                 this.network.set(devices, connections);
                 this.topology = {
@@ -181,22 +304,64 @@ function Task() {
                     ),
                 };
 
-                this.title = "Intermediate Routing Configuration";
-                this.desc = ["Task 5: Configure routing to allow traffic from PC_6 to PC_7."];
-                this.tests = [];
-                this.difficulty = "Medium";
+                this.title = "Complex Firewall Rules";
+                this.desc = [
+                    "Allow traffic from PC_A to PC_B on port 443.",
+                    "Block traffic from PC_A to PC_C.",
+                    "Allow traffic between PC_B and PC_D."
+                ];
+                this.tests = [
+                    {
+                        name: "Test 1: Allow traffic from PC_A to PC_B",
+                        endpoints: [0, 3],
+                        packet: { src: "192.168.50.2", des: "172.50.0.2", protocol: "tcp:443" },
+                        expected: true,
+                        description: "Should allow traffic from PC_A to PC_B on port 443"
+                    },
+                    {
+                        name: "Test 2: Block traffic from PC_A to PC_C",
+                        endpoints: [0, 4],
+                        packet: { src: "192.168.50.2", des: "172.50.0.3", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Should block traffic from PC_A to PC_C"
+                    },
+                    {
+                        name: "Test 3: Allow traffic between PC_B and PC_D",
+                        endpoints: [3, 6],
+                        packet: { src: "172.50.0.2", des: "172.50.0.4", protocol: "udp:53" },
+                        expected: true,
+                        description: "Should allow traffic between PC_B and PC_D"
+                    }
+                ];
+                this.difficulty = "Hard";
                 this.subtasks = [
-                    { id: 1, title: "Enable routing", description: "Ensure traffic from PC_6 to PC_7 is routed correctly." },
+                    { id: 1, title: "Allow traffic from PC_A to PC_B", description: "Ensure traffic from PC_A to PC_B is allowed." },
+                    { id: 2, title: "Block traffic from PC_A to PC_C", description: "Ensure traffic from PC_A to PC_C is blocked." },
+                    { id: 3, title: "Allow traffic between PC_B and PC_D", description: "Ensure traffic between PC_B and PC_D is allowed." },
                 ];
             } break;
 
             case 6: {
                 const devices = [
-                    new Device("PC_8", ["192.168.8.2"]),
-                    new Device("R_8", ["192.168.8.1", "10.10.10.1"]),
-                    new Device("PC_9", ["10.10.10.2"]),
+                    new Device("PC_X", ["192.168.100.2"]),
+                    new Device("R_X", ["192.168.100.1", "10.100.0.1"]),
+                    new Device("R_Y", ["10.100.0.2", "172.100.0.1"]),
+                    new Device("PC_Y", ["172.100.0.2"]),
+                    new Device("PC_Z", ["172.100.0.3"]),
+                    new Device("S_3", ["", ""], 0, 0), // Switch
+                    new Device("PC_W", ["172.100.0.4"]),
+                    new Device("PC_V", ["172.100.0.5"]),
                 ];
-                const connections = [[1], [0, 2], [1]];
+                const connections = [
+                    [1],       // PC_X -> R_X
+                    [0, 2, 5], // R_X -> PC_X, R_Y, S_3
+                    [1, 3, 4, 6, 7], // R_Y -> R_X, PC_Y, PC_Z, PC_W, PC_V
+                    [2],       // PC_Y -> R_Y
+                    [2],       // PC_Z -> R_Y
+                    [1],       // S_3 -> R_X
+                    [2],       // PC_W -> R_Y
+                    [2],       // PC_V -> R_Y
+                ];
 
                 this.network.set(devices, connections);
                 this.topology = {
@@ -210,12 +375,40 @@ function Task() {
                     ),
                 };
 
-                this.title = "Advanced Routing Configuration";
-                this.desc = ["Task 6: Configure routing to allow traffic from PC_8 to PC_9."];
-                this.tests = [];
-                this.difficulty = "Hard";
+                this.title = "Enterprise Firewall Rules";
+                this.desc = [
+                    "Allow traffic from PC_X to PC_Y on port 22.",
+                    "Block traffic from PC_X to PC_Z.",
+                    "Allow traffic between PC_W and PC_V."
+                ];
+                this.tests = [
+                    {
+                        name: "Test 1: Allow traffic from PC_X to PC_Y",
+                        endpoints: [0, 3],
+                        packet: { src: "192.168.100.2", des: "172.100.0.2", protocol: "tcp:22" },
+                        expected: true,
+                        description: "Should allow traffic from PC_X to PC_Y on port 22"
+                    },
+                    {
+                        name: "Test 2: Block traffic from PC_X to PC_Z",
+                        endpoints: [0, 4],
+                        packet: { src: "192.168.100.2", des: "172.100.0.3", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Should block traffic from PC_X to PC_Z"
+                    },
+                    {
+                        name: "Test 3: Allow traffic between PC_W and PC_V",
+                        endpoints: [6, 7],
+                        packet: { src: "172.100.0.4", des: "172.100.0.5", protocol: "udp:53" },
+                        expected: true,
+                        description: "Should allow traffic between PC_W and PC_V"
+                    }
+                ];
+                this.difficulty = "Very Hard";
                 this.subtasks = [
-                    { id: 1, title: "Enable routing", description: "Ensure traffic from PC_8 to PC_9 is routed correctly." },
+                    { id: 1, title: "Allow traffic from PC_X to PC_Y", description: "Ensure traffic from PC_X to PC_Y is allowed." },
+                    { id: 2, title: "Block traffic from PC_X to PC_Z", description: "Ensure traffic from PC_X to PC_Z is blocked." },
+                    { id: 3, title: "Allow traffic between PC_W and PC_V", description: "Ensure traffic between PC_W and PC_V is allowed." },
                 ];
             } break;
 
@@ -224,41 +417,61 @@ function Task() {
     };
 
     this.check = () => {
-        let flag = true;
+        console.log("\nRunning tests for Task", this.id);
+        let allTestsPassed = true;
+        let testResults = [];
 
         for (const test of this.tests) {
-            // Symulacja pakietu w sieci
-            let result = this.network.simulate(
-                test.endpoints[0], // Identyfikator urządzenia źródłowego
-                test.endpoints[1], // Identyfikator urządzenia docelowego
-                test.packet        // Szczegóły pakietu
+            console.log(`\nExecuting: ${test.name}`);
+            console.log(`Description: ${test.description}`);
+            
+            const result = this.network.simulate(
+                test.endpoints[0],
+                test.endpoints[1],
+                test.packet
             );
 
-            // Walidacja kierunku żądania
-            if (test.result[0][0] === true || test.result[0][0] === "permit") {
-                if (result.result[0].filter((e) => e[0] === true || e[0] === "permit").length !== test.result[0][1]) {
-                    flag = false;
-                }
-            } else {
-                if (result.result[0].filter((e, i) => (e[0] === true || e[0] === "permit") && i < test.result[0][1]).length !== test.result[0][1] - 1) {
-                    flag = false;
-                }
+            if (!result) {
+                console.log("❌ Test failed: No valid path found");
+                allTestsPassed = false;
+                testResults.push({
+                    name: test.name,
+                    passed: false,
+                    error: "No valid path found"
+                });
+                continue;
             }
 
-            // Walidacja kierunku odpowiedzi
-            if (test.result[0][0] === true && flag) {
-                if (test.result[1][0] === true || test.result[1][0] === "permit") {
-                    if (result.result[1].filter((e) => e[0] === true || e[0] === "permit").length !== test.result[1][1]) {
-                        flag = false;
-                    }
-                } else {
-                    if (result.result[1].filter((e, i) => (e[0] === true || e[0] === "permit") && i < test.result[1][1]).length !== test.result[1][1] - 1) {
-                        flag = false;
-                    }
-                }
+            // Check if the packet was handled as expected
+            const packetPermitted = result.result[0].every(r => r[0] === true);
+            const testPassed = packetPermitted === test.expected;
+
+            if (testPassed) {
+                console.log(`✅ Test passed: ${test.description}`);
+            } else {
+                console.log(`❌ Test failed: Packet was ${packetPermitted ? 'permitted' : 'blocked'}, expected ${test.expected ? 'permit' : 'block'}`);
+                allTestsPassed = false;
             }
+
+            testResults.push({
+                name: test.name,
+                passed: testPassed,
+                expected: test.expected,
+                actual: packetPermitted
+            });
         }
-        return flag; // Zwraca true, jeśli wszystkie testy przejdą, w przeciwnym razie false
+
+        console.log("\nTest Summary:");
+        testResults.forEach(result => {
+            console.log(`${result.passed ? '✅' : '❌'} ${result.name}`);
+            if (!result.passed) {
+                console.log(`   Expected: ${result.expected ? 'permit' : 'block'}`);
+                console.log(`   Actual: ${result.actual ? 'permit' : 'block'}`);
+            }
+        });
+
+        console.log(`\nOverall Result: ${allTestsPassed ? '✅ ALL TESTS PASSED' : '❌ SOME TESTS FAILED'}`);
+        return allTestsPassed;
     };
 
 }

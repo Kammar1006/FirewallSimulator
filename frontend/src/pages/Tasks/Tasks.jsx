@@ -15,14 +15,14 @@ const Tasks = () => {
         if (socket) {
             socket.emit("get_tasks");
             socket.on("tasks", (data) => {
-                const taskList = data.titles.map((title, i) => ({
-                    id: i + 1,
-                    title: title || `Task ${i + 1}`,
-                    description: data.desc[i] || `Task ${i + 1}: No description available.`,
-                    difficulty: data.difficulty[i] || "Unknown",
+                const taskList = data.map((task) => ({
+                    id: task.id,
+                    title: task.title || `Task ${task.id}`,
+                    description: task.desc.join(" ") || "No description available.",
+                    difficulty: task.difficulty || "Unknown",
                 }));
                 setTasks(taskList);
-                setCompletedTasks(data.completedTasks || []);
+                setCompletedTasks(data.filter((task) => task.completed).map((task) => task.id)); // Handle completed tasks if provided
             });
         }
 
@@ -39,9 +39,7 @@ const Tasks = () => {
 
     return (
         <div className="tasks">
-
             <div className="tasksContainer">
-
                 {/* Top Part */}
                 <div className="tasksContainerTop">
                     <div className="tasksContainerTopContainer">
@@ -75,7 +73,6 @@ const Tasks = () => {
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     );
