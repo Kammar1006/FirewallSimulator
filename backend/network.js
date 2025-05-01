@@ -50,10 +50,12 @@ function Network(){
             // If not first device, check input rules
             if (i > 0) {
                 let prev = forward_path[i - 1];
-                let inResult = this.devices[current].packet_in(
-                    packet,
-                    this.connections[current].indexOf(prev)
-                );
+                let inInterface = this.connections[current].indexOf(prev);
+                if (inInterface === -1 || !this.devices[current].interfaces[inInterface]) {
+                    forward_success = false;
+                    break;
+                }
+                let inResult = this.devices[current].packet_in(packet, inInterface);
                 result[0].push(inResult);
                 if (!inResult[0]) {
                     forward_success = false;
@@ -62,10 +64,12 @@ function Network(){
             }
 
             // Check output rules
-            let outResult = this.devices[current].packet_out(
-                packet,
-                this.connections[current].indexOf(next)
-            );
+            let outInterface = this.connections[current].indexOf(next);
+            if (outInterface === -1 || !this.devices[current].interfaces[outInterface]) {
+                forward_success = false;
+                break;
+            }
+            let outResult = this.devices[current].packet_out(packet, outInterface);
             result[0].push(outResult);
             if (!outResult[0]) {
                 forward_success = false;
@@ -77,12 +81,14 @@ function Network(){
         if (forward_success) {
             let final = forward_path[forward_path.length - 1];
             let prev = forward_path[forward_path.length - 2];
-            let inResult = this.devices[final].packet_in(
-                packet,
-                this.connections[final].indexOf(prev)
-            );
-            result[0].push(inResult);
-            forward_success = inResult[0];
+            let inInterface = this.connections[final].indexOf(prev);
+            if (inInterface === -1 || !this.devices[final].interfaces[inInterface]) {
+                forward_success = false;
+            } else {
+                let inResult = this.devices[final].packet_in(packet, inInterface);
+                result[0].push(inResult);
+                forward_success = inResult[0];
+            }
         }
 
         // Only simulate return path if forward path succeeded
@@ -95,37 +101,35 @@ function Network(){
                 // If not first device, check input rules
                 if (i > 0) {
                     let prev = return_path[i - 1];
-                    let inResult = this.devices[current].packet_in(
-                        packet,
-                        this.connections[current].indexOf(prev)
-                    );
+                    let inInterface = this.connections[current].indexOf(prev);
+                    if (inInterface === -1 || !this.devices[current].interfaces[inInterface]) {
+                        forward_success = false;
+                        break;
+                    }
+                    let inResult = this.devices[current].packet_in(packet, inInterface);
                     result[1].push(inResult);
-                    if (!inResult[0]) break;
+                    if (!inResult[0]) {
+                        forward_success = false;
+                        break;
+                    }
                 }
 
                 // Check output rules
-                let outResult = this.devices[current].packet_out(
-                    packet,
-                    this.connections[current].indexOf(next)
-                );
+                let outInterface = this.connections[current].indexOf(next);
+                if (outInterface === -1 || !this.devices[current].interfaces[outInterface]) {
+                    forward_success = false;
+                    break;
+                }
+                let outResult = this.devices[current].packet_out(packet, outInterface);
                 result[1].push(outResult);
-                if (!outResult[0]) break;
+                if (!outResult[0]) {
+                    forward_success = false;
+                    break;
+                }
             }
-
-            // Check input rules on final device of return path
-            let final = return_path[return_path.length - 1];
-            let prev = return_path[return_path.length - 2];
-            let inResult = this.devices[final].packet_in(
-                packet,
-                this.connections[final].indexOf(prev)
-            );
-            result[1].push(inResult);
         }
 
-        return {
-            path: this.path,
-            result: result
-        };
+        return { result, success: forward_success };
     }
 
     this.configure = (device_id, inet, type, action, id, data) => {

@@ -83,6 +83,13 @@ io.on("connection", (sock) => {
 	if (translationTab[cid].sid)
 		sock.emit("set_sid", true, translationTab[cid].sid);
 
+	sock.on("switch_task", (taskId) => {
+		if (translationTab[cid]) {
+			translationTab[cid].task.set(taskId);
+			console.log(`Switched to task ${taskId} for user ${cid}`);
+		}
+	});
+
 	sock.on("set_sid", (sid) => {
 		console.log(sid);
 		if (sid > 270000 && sid < 280000) {

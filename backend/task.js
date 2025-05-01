@@ -2,11 +2,23 @@
 
 const { Device } = require("./device");
 const { Network } = require("./network");
+const { Interface } = require("./interface");
 
 function Task() {
     this.network = new Network();
 
+    this.clearRules = () => {
+        // Clear all firewall rules for all devices
+        for (let device of this.network.devices) {
+            if (device.firewall) {
+                device.firewall.list = [];
+            }
+        }
+    };
+
     this.set = (nr) => {
+        // Clear existing rules before setting new task
+        this.clearRules();
         this.id = nr;
 
         switch (nr) {
@@ -74,7 +86,7 @@ function Task() {
                     new Device("R_B", ["172.16.0.2", "192.168.1.1"]),
                     new Device("PC_B", ["192.168.1.2"]),
                     new Device("PC_C", ["192.168.1.3"]),
-                    new Device("S_1", ["", ""], 0, 0), // Switch
+                    new Device("S_1", ["", ""], 0, 0),
                 ];
                 const connections = [
                     [1],       // PC_A -> R_A
@@ -473,7 +485,6 @@ function Task() {
         console.log(`\nOverall Result: ${allTestsPassed ? '✅ ALL TESTS PASSED' : '❌ SOME TESTS FAILED'}`);
         return allTestsPassed;
     };
-
 }
 
 module.exports = { Task };

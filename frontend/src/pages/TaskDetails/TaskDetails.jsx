@@ -86,6 +86,7 @@ const TaskDetails = () => {
                         subtasks: taskData.subtasks || [],
                         topology: taskData.topology || { devices: [], connections: [] },
                     });
+                    socket.emit("switch_task", parseInt(taskId, 10));
                 } else {
                     console.error(`Task with ID ${taskId} not found.`);
                 }
