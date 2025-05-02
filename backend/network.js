@@ -41,6 +41,7 @@ function Network(){
 
         let result = [[], []];
         let forward_success = true;
+        let blockingDevice = null; // Track the blocking device
 
         // Simulate forward path
         for (let i = 0; i < forward_path.length - 1; i++) {
@@ -53,12 +54,14 @@ function Network(){
                 let inInterface = this.connections[current].indexOf(prev);
                 if (inInterface === -1 || !this.devices[current].interfaces[inInterface]) {
                     forward_success = false;
+                    blockingDevice = current;
                     break;
                 }
                 let inResult = this.devices[current].packet_in(packet, inInterface);
                 result[0].push(inResult);
                 if (!inResult[0]) {
                     forward_success = false;
+                    blockingDevice = current;
                     break;
                 }
             }
@@ -67,12 +70,14 @@ function Network(){
             let outInterface = this.connections[current].indexOf(next);
             if (outInterface === -1 || !this.devices[current].interfaces[outInterface]) {
                 forward_success = false;
+                blockingDevice = current;
                 break;
             }
             let outResult = this.devices[current].packet_out(packet, outInterface);
             result[0].push(outResult);
             if (!outResult[0]) {
                 forward_success = false;
+                blockingDevice = current;
                 break;
             }
         }
@@ -84,10 +89,14 @@ function Network(){
             let inInterface = this.connections[final].indexOf(prev);
             if (inInterface === -1 || !this.devices[final].interfaces[inInterface]) {
                 forward_success = false;
+                blockingDevice = final;
             } else {
                 let inResult = this.devices[final].packet_in(packet, inInterface);
                 result[0].push(inResult);
-                forward_success = inResult[0];
+                if (!inResult[0]) {
+                    forward_success = false;
+                    blockingDevice = final;
+                }
             }
         }
 
@@ -104,12 +113,14 @@ function Network(){
                     let inInterface = this.connections[current].indexOf(prev);
                     if (inInterface === -1 || !this.devices[current].interfaces[inInterface]) {
                         forward_success = false;
+                        blockingDevice = current;
                         break;
                     }
                     let inResult = this.devices[current].packet_in(packet, inInterface);
                     result[1].push(inResult);
                     if (!inResult[0]) {
                         forward_success = false;
+                        blockingDevice = current;
                         break;
                     }
                 }
@@ -118,18 +129,20 @@ function Network(){
                 let outInterface = this.connections[current].indexOf(next);
                 if (outInterface === -1 || !this.devices[current].interfaces[outInterface]) {
                     forward_success = false;
+                    blockingDevice = current;
                     break;
                 }
                 let outResult = this.devices[current].packet_out(packet, outInterface);
                 result[1].push(outResult);
                 if (!outResult[0]) {
                     forward_success = false;
+                    blockingDevice = current;
                     break;
                 }
             }
         }
 
-        return { result, success: forward_success };
+        return { result, success: forward_success, blockingDevice };
     }
 
     this.configure = (device_id, inet, type, action, id, data) => {

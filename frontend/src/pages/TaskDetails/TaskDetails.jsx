@@ -22,9 +22,9 @@ const TaskDetails = () => {
         1: {
             0: { x: 200, y: 100 },  // PC_1
             1: { x: 400, y: 100 }, // S_1
-            2: { x: 600, y: 100 }, // R_1
-            3: { x: 800, y: 100 }, // PC_2
-            4: { x: 1000, y: 100 }, // PC_3
+            2: { x: 650, y: 100 }, // R_1
+            3: { x: 650, y: 250 }, // PC_2
+            4: { x: 900, y: 100 }, // PC_3
         },
         2: {
             0: { x: 200, y: 100 },  // PC_A
@@ -142,37 +142,53 @@ const TaskDetails = () => {
                     const sourcePosition = devicePositions[deviceId];
                     const targetPosition = devicePositions[targetDeviceId];
 
-                    // Set initial position of the packet at the source device
-                    setPacketAnimation({
-                        x: sourcePosition.x,
-                        y: sourcePosition.y - 10, // Position above the source device
+                    // Emit the packet simulation request
+                    socket.emit("send_packet", deviceId, targetDeviceId, args[2], args[3]);
+                    socket.once("packet_response", (response) => {
+                        const { success, blockingDevice } = JSON.parse(response);
+
+                        // Determine the final position of the packet
+                        const finalPosition = success
+                            ? targetPosition
+                            : devicePositions[blockingDevice];
+
+                        // Set initial position of the packet at the source device
+                        setPacketAnimation({
+                            x: sourcePosition.x,
+                            y: sourcePosition.y - 10, // Position above the source device
+                        });
+
+                        // Animate the packet to the final position
+                        const speed = 200; // Speed in pixels per second
+                        const distance = Math.sqrt(
+                            Math.pow(finalPosition.x - sourcePosition.x, 2) +
+                            Math.pow(finalPosition.y - sourcePosition.y, 2)
+                        );
+                        const animationDuration = distance / speed * 1000; // Duration in milliseconds
+                        const startTime = performance.now();
+
+                        const animatePacket = (currentTime) => {
+                            const elapsedTime = currentTime - startTime;
+                            const progress = Math.min(elapsedTime / animationDuration, 1); // Clamp progress to [0, 1]
+
+                            // Calculate the current position based on progress
+                            const currentX = sourcePosition.x + (finalPosition.x - sourcePosition.x) * progress;
+                            const currentY = sourcePosition.y - 10 + (finalPosition.y - sourcePosition.y) * progress;
+
+                            setPacketAnimation({ x: currentX, y: currentY });
+
+                            if (progress < 1) {
+                                requestAnimationFrame(animatePacket); // Continue animation
+                            } else {
+                                // Remove the packet icon after the animation completes
+                                setTimeout(() => {
+                                    setPacketAnimation(null);
+                                }, 500); // Delay before removing the icon
+                            }
+                        };
+
+                        requestAnimationFrame(animatePacket); // Start the animation
                     });
-
-                    // Animate the packet to the target device
-                    const animationDuration = 2000; // 2 seconds
-                    const startTime = performance.now();
-
-                    const animatePacket = (currentTime) => {
-                        const elapsedTime = currentTime - startTime;
-                        const progress = Math.min(elapsedTime / animationDuration, 1); // Clamp progress to [0, 1]
-
-                        // Calculate the current position based on progress
-                        const currentX = sourcePosition.x + (targetPosition.x - sourcePosition.x) * progress;
-                        const currentY = sourcePosition.y - 10 + (targetPosition.y - sourcePosition.y) * progress;
-
-                        setPacketAnimation({ x: currentX, y: currentY });
-
-                        if (progress < 1) {
-                            requestAnimationFrame(animatePacket); // Continue animation
-                        } else {
-                            // Remove the packet icon after the animation completes
-                            setTimeout(() => {
-                                setPacketAnimation(null);
-                            }, 500); // Delay before removing the icon
-                        }
-                    };
-
-                    requestAnimationFrame(animatePacket); // Start the animation
                 }
             }
         }
