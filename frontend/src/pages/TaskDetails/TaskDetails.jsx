@@ -9,6 +9,8 @@ import assets from "../../assets/assets";
 import { IoMdMail } from "react-icons/io";
 import { RiMailCloseFill } from "react-icons/ri";
 import { MdMarkEmailRead } from "react-icons/md";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TaskDetails = () => {
     const { taskId } = useParams();
@@ -269,10 +271,26 @@ const TaskDetails = () => {
 
     const handleSubmit = () => {
         if (taskCompleted && socket) {
-            socket.emit("submit_task", { taskId: task.id });
-            alert("Task submitted successfully!");
+            const studentId = localStorage.getItem("studentId"); // Retrieve studentId from localStorage
+            socket.emit("submit_task", { taskId: task.id, studentId });
+            socket.once("task_submitted", ({ taskId, success }) => {
+                if (success) {
+                    toast.success(`Task ${taskId} submitted successfully!`, {
+                        position: "top-right",
+                        autoClose: 3000,
+                    });
+                } else {
+                    toast.error("Failed to submit the task. Please try again.", {
+                        position: "top-right",
+                        autoClose: 3000,
+                    });
+                }
+            });
         } else {
-            alert("Complete the task correctly before submitting.");
+            toast.warn("Complete the task correctly before submitting.", {
+                position: "top-right",
+                autoClose: 3000,
+            });
         }
     };
 
@@ -324,6 +342,7 @@ const TaskDetails = () => {
 
     return (
         <div className="taskDetails">
+            <ToastContainer />
             <div className="taskDetailsContainer">
                 {/* Top Part */}
                 <div className="taskDetailsContainerTop">
@@ -352,6 +371,10 @@ const TaskDetails = () => {
                                         className={`taskDetailsContainerTopFirstContainerRightContainerBtn ${taskCompleted ? "enabled" : "disabled"}`}
                                         onClick={handleSubmit}
                                         disabled={!taskCompleted}
+                                        style={{
+                                            filter: taskCompleted ? "none" : "blur(2px)",
+                                            cursor: taskCompleted ? "pointer" : "not-allowed",
+                                        }}
                                     >
                                         <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
                                             Submit

@@ -461,6 +461,26 @@ io.on("connection", (sock) => {
 		sock.emit("test_results", results);
 	});
 
+	sock.on("submit_task", ({ taskId, studentId }) => {
+		const student = students.find((student) => student.id === studentId);
+		if (student) {
+			if (!student.progress) {
+				student.progress = [0, 0, 0, 0, 0, 0];
+			}
+			student.progress[taskId - 1] = 1; // Mark the task as completed
+			fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2)); // Save progress to file
+			sock.emit("task_submitted", { taskId, success: true });
+		} else {
+			sock.emit("task_submitted", { taskId, success: false });
+		}
+	});
+
+	sock.on("check_task_completion", () => {
+		const task = translationTab[cid].task;
+		const isCompleted = task.check(); // Check if the task is completed
+		sock.emit("task_completion_status", { taskId: task.id, isCompleted });
+	});
+
 	sock.on("submit_task", ({ taskId }) => {
 		if (!translationTab[cid].completedTasks) {
 			translationTab[cid].completedTasks = [];
