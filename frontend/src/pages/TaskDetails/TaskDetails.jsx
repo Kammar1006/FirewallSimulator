@@ -20,6 +20,7 @@ const TaskDetails = () => {
     const [taskCompleted, setTaskCompleted] = useState(false);
     const [devicePositions, setDevicePositions] = useState({});
     const [packetAnimation, setPacketAnimation] = useState(null); // Track packet animation
+    const [hoveredDevice, setHoveredDevice] = useState(null); // Track hovered device
 
     const predefinedPositions = {
         1: {
@@ -190,7 +191,7 @@ const TaskDetails = () => {
                                             setPacketAnimation({
                                                 x: nextX,
                                                 y: sourcePosition.y - 10,
-                                                icon: isBlocked ? <RiMailCloseFill style={{ width: "36px", height: "36px" }} /> : <MdMarkEmailRead style={{ width: "36px", height: "36px" }} />,
+                                                icon: isBlocked ? <RiMailCloseFill style={{ width: "36px", height: "36px" }} /> : <MdMarkEmailRead style={{ width: "36px", height: "36px", color: "#13F100" }} />,
                                             });
                                             setTimeout(() => {
                                                 if (!isBlocked && pauseIndex < devicesOnPath.length) {
@@ -274,6 +275,17 @@ const TaskDetails = () => {
         if (name.startsWith("R")) return <img src={assets.routerIcon} alt="" className="taskDetailsRouterIcon" />;
         if (name.startsWith("S")) return <img src={assets.switchIcon} alt="" className="taskDetailsSwitchIcon" />;
         return "❓"
+    };
+
+    const getDeviceTooltip = (device, index) => {
+        return (
+            <div className="deviceTooltip">
+                <p><strong>Device #{index}</strong></p>
+                {device.interfaces.map((iface, ifaceIndex) => (
+                    <p key={ifaceIndex}>int{ifaceIndex}: {iface || "(no address)"}</p> // Display "(no address)" for empty strings
+                ))}
+            </div>
+        );
     };
 
     const renderConnections = () => {
@@ -409,6 +421,8 @@ const TaskDetails = () => {
                                         left: position?.x || 0,
                                         top: position?.y || 0,
                                     }}
+                                    onMouseEnter={() => setHoveredDevice({ device, index })}
+                                    onMouseLeave={() => setHoveredDevice(null)}
                                     onClick={() => openConsole(index)}
                                 >
                                     {getDeviceIcon(device.name)}
@@ -419,32 +433,39 @@ const TaskDetails = () => {
 
                         {/* Render packet animation */}
                         {packetAnimation && (
-                            <>
-                                {packetAnimation.icon ? (
-                                    <div
-                                        style={{
-                                            position: "absolute",
-                                            left: packetAnimation.x,
-                                            top: packetAnimation.y,
-                                            width: "36px",
-                                            height: "36px",
-                                        }}
-                                    >
-                                        {packetAnimation.icon}
-                                    </div>
-                                ) : (
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    left: packetAnimation.x,
+                                    top: packetAnimation.y,
+                                    width: "36px",
+                                    height: "36px",
+                                }}
+                            >
+                                {packetAnimation.icon || (
                                     <IoMdMail
                                         className="packetIcon"
                                         style={{
-                                            position: "absolute",
-                                            left: packetAnimation.x,
-                                            top: packetAnimation.y,
                                             width: "36px",
                                             height: "36px",
                                         }}
                                     />
                                 )}
-                            </>
+                            </div>
+                        )}
+
+                        {/* Render tooltip */}
+                        {hoveredDevice && (
+                            <div
+                                className="deviceTooltip"
+                                style={{
+                                    position: "absolute",
+                                    left: predefinedPositions[taskId]?.[hoveredDevice.index]?.x + 50 || 0,
+                                    top: predefinedPositions[taskId]?.[hoveredDevice.index]?.y || 0,
+                                }}
+                            >
+                                {getDeviceTooltip(hoveredDevice.device, hoveredDevice.index)}
+                            </div>
                         )}
                     </div>
                 </div>

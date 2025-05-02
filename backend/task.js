@@ -25,7 +25,7 @@ function Task() {
             case 1: {
                 const devices = [
                     new Device("PC_1", ["192.168.1.2"]),
-                    new Device("S_1", ["", ""], 0, 0),
+                    new Device("S_1", ["", ""], 0, 0), // Use empty strings for interfaces without IPs
                     new Device("R_1", ["192.168.1.1", "192.168.2.1", "192.168.3.1"]),
                     new Device("PC_2", ["192.168.2.2"]),
                     new Device("PC_3", ["192.168.3.2"]),
@@ -37,7 +37,7 @@ function Task() {
                     devices: devices.map((device, index) => ({
                         id: index,
                         name: device.name,
-                        interfaces: device.interfaces.map((iface) => iface.inet),
+                        interfaces: device.interfaces.map((iface) => iface.inet || ""), // Ensure empty strings for missing IPs
                     })),
                     connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
@@ -102,7 +102,7 @@ function Task() {
                     devices: devices.map((device, index) => ({
                         id: index,
                         name: device.name,
-                        interfaces: device.interfaces.map((iface) => iface.inet),
+                        interfaces: device.interfaces.map((iface) => iface.inet || ""), // Ensure empty strings for missing IPs
                     })),
                     connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
@@ -173,7 +173,7 @@ function Task() {
                     devices: devices.map((device, index) => ({
                         id: index,
                         name: device.name,
-                        interfaces: device.interfaces.map((iface) => iface.inet),
+                        interfaces: device.interfaces.map((iface) => iface.inet || ""), // Ensure empty strings for missing IPs
                     })),
                     connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
@@ -240,7 +240,7 @@ function Task() {
                     devices: devices.map((device, index) => ({
                         id: index,
                         name: device.name,
-                        interfaces: device.interfaces.map((iface) => iface.inet),
+                        interfaces: device.interfaces.map((iface) => iface.inet || ""), // Ensure empty strings for missing IPs
                     })),
                     connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
@@ -309,7 +309,7 @@ function Task() {
                     devices: devices.map((device, index) => ({
                         id: index,
                         name: device.name,
-                        interfaces: device.interfaces.map((iface) => iface.inet),
+                        interfaces: device.interfaces.map((iface) => iface.inet || ""), // Ensure empty strings for missing IPs
                     })),
                     connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
@@ -380,7 +380,7 @@ function Task() {
                     devices: devices.map((device, index) => ({
                         id: index,
                         name: device.name,
-                        interfaces: device.interfaces.map((iface) => iface.inet),
+                        interfaces: device.interfaces.map((iface) => iface.inet || ""), // Ensure empty strings for missing IPs
                     })),
                     connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
