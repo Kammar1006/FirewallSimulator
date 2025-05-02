@@ -20,6 +20,8 @@ import icon from "./icon.png";
 
 import dragIcon from "./move.svg";
 
+import packetIcon from "./packet.png";
+
 export default {
     flameIcon,
     infoIcon,
@@ -33,4 +35,5 @@ export default {
     pcIcon,
     switchIcon,
     icon,
+    packetIcon,
 }

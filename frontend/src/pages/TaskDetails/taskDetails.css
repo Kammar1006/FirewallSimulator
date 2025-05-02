@@ -341,3 +341,17 @@
     font-size: 14px;
     white-space: nowrap;
 }
+
+.packetIcon {
+    z-index: 10;
+    animation: scalePulse 0.5s infinite alternate; /* Add a pulsing effect */
+}
+
+@keyframes scalePulse {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.2);
+    }
+}

@@ -16,6 +16,7 @@ const TaskDetails = () => {
     const [testResults, setTestResults] = useState([]);
     const [taskCompleted, setTaskCompleted] = useState(false);
     const [devicePositions, setDevicePositions] = useState({});
+    const [packetAnimation, setPacketAnimation] = useState(null); // Track packet animation
 
     const predefinedPositions = {
         1: {
@@ -132,6 +133,48 @@ const TaskDetails = () => {
                     [deviceId]: (prevState[deviceId] || "") + `\n> ${command}\n${data.output}`,
                 }));
             });
+
+            // Handle send_packet command
+            const args = command.split(" ");
+            if (args[0].toLowerCase() === "send_packet" && args.length === 4) {
+                const targetDeviceId = parseInt(args[1], 10); // Target device ID
+                if (!isNaN(targetDeviceId) && devicePositions[deviceId] && devicePositions[targetDeviceId]) {
+                    const sourcePosition = devicePositions[deviceId];
+                    const targetPosition = devicePositions[targetDeviceId];
+
+                    // Set initial position of the packet at the source device
+                    setPacketAnimation({
+                        x: sourcePosition.x,
+                        y: sourcePosition.y - 10, // Position above the source device
+                    });
+
+                    // Animate the packet to the target device
+                    const animationDuration = 2000; // 2 seconds
+                    const startTime = performance.now();
+
+                    const animatePacket = (currentTime) => {
+                        const elapsedTime = currentTime - startTime;
+                        const progress = Math.min(elapsedTime / animationDuration, 1); // Clamp progress to [0, 1]
+
+                        // Calculate the current position based on progress
+                        const currentX = sourcePosition.x + (targetPosition.x - sourcePosition.x) * progress;
+                        const currentY = sourcePosition.y - 10 + (targetPosition.y - sourcePosition.y) * progress;
+
+                        setPacketAnimation({ x: currentX, y: currentY });
+
+                        if (progress < 1) {
+                            requestAnimationFrame(animatePacket); // Continue animation
+                        } else {
+                            // Remove the packet icon after the animation completes
+                            setTimeout(() => {
+                                setPacketAnimation(null);
+                            }, 500); // Delay before removing the icon
+                        }
+                    };
+
+                    requestAnimationFrame(animatePacket); // Start the animation
+                }
+            }
         }
     };
 
@@ -307,6 +350,22 @@ const TaskDetails = () => {
                                 </div>
                             );
                         })}
+                        {/* Render packet animation */}
+                        {packetAnimation && (
+                            <img
+                                src={assets.packetIcon}
+                                alt="Packet"
+                                className="packetIcon"
+                                style={{
+                                    position: "absolute",
+                                    left: packetAnimation.x,
+                                    top: packetAnimation.y,
+                                    width: "30px",
+                                    height: "30px",
+                                    transition: "transform 0.2s ease-in-out", // Smooth scaling effect
+                                }}
+                            />
+                        )}
                     </div>
                 </div>
 
