@@ -147,47 +147,87 @@ const TaskDetails = () => {
                     socket.once("packet_response", (response) => {
                         const { success, blockingDevice } = JSON.parse(response);
 
-                        // Determine the final position of the packet
                         const finalPosition = success
                             ? targetPosition
                             : devicePositions[blockingDevice];
 
-                        // Set initial position of the packet at the source device
                         setPacketAnimation({
                             x: sourcePosition.x,
-                            y: sourcePosition.y - 10, // Position above the source device
+                            y: sourcePosition.y - 10,
                         });
 
-                        // Animate the packet to the final position
-                        const speed = 200; // Speed in pixels per second
-                        const distance = Math.sqrt(
-                            Math.pow(finalPosition.x - sourcePosition.x, 2) +
-                            Math.pow(finalPosition.y - sourcePosition.y, 2)
-                        );
-                        const animationDuration = distance / speed * 1000; // Duration in milliseconds
-                        const startTime = performance.now();
+                        setTimeout(() => {
+                            const speed = 50; // Speed in pixels per second
+                            const devicesOnPath = Object.entries(devicePositions)
+                                .filter(([, pos]) => pos.y === sourcePosition.y && pos.x > sourcePosition.x && pos.x <= finalPosition.x)
+                                .sort(([, a], [, b]) => a.x - b.x); // Sort devices by x-coordinate
 
-                        const animatePacket = (currentTime) => {
-                            const elapsedTime = currentTime - startTime;
-                            const progress = Math.min(elapsedTime / animationDuration, 1); // Clamp progress to [0, 1]
+                            let pauseIndex = 0;
+                            let lastX = sourcePosition.x; // Track the last X position
 
-                            // Calculate the current position based on progress
-                            const currentX = sourcePosition.x + (finalPosition.x - sourcePosition.x) * progress;
-                            const currentY = sourcePosition.y - 10 + (finalPosition.y - sourcePosition.y) * progress;
+                            const animateToNext = (currentX, nextX, startTime) => {
+                                const distance = Math.abs(nextX - currentX);
+                                const duration = (distance / speed) * 1000; // Duration in milliseconds
+                                const elapsedTime = performance.now() - startTime;
+                                const progress = Math.min(elapsedTime / duration, 1);
 
-                            setPacketAnimation({ x: currentX, y: currentY });
+                                const newX = currentX + (nextX - currentX) * progress;
+                                setPacketAnimation({ x: newX, y: sourcePosition.y - 10 });
 
-                            if (progress < 1) {
-                                requestAnimationFrame(animatePacket); // Continue animation
+                                if (progress < 1) {
+                                    requestAnimationFrame(() => animateToNext(currentX, nextX, startTime));
+                                } else {
+                                    lastX = nextX; // Update lastX to the next position
+                                    if (pauseIndex < devicesOnPath.length) {
+                                        const [, devicePos] = devicesOnPath[pauseIndex];
+                                        if (Math.abs(nextX - devicePos.x) < 5) {
+                                            pauseIndex++;
+                                            setTimeout(() => {
+                                                if (pauseIndex < devicesOnPath.length) {
+                                                    const [, nextDevicePos] = devicesOnPath[pauseIndex];
+                                                    requestAnimationFrame(() => animateToNext(nextX, nextDevicePos.x, performance.now()));
+                                                } else {
+                                                    requestAnimationFrame(() => animateToNext(nextX, finalPosition.x, performance.now()));
+                                                }
+                                            }, 1000); // Pause for 1 second
+                                            return;
+                                        }
+                                    } else if (nextX !== finalPosition.x) {
+                                        requestAnimationFrame(() => animateToNext(nextX, finalPosition.x, performance.now()));
+                                    } else {
+                                        // Vertical movement to the final position
+                                        const verticalDistance = Math.abs(finalPosition.y - sourcePosition.y);
+                                        const verticalDuration = (verticalDistance / speed) * 1000;
+                                        const verticalStartTime = performance.now();
+
+                                        const animateVertical = (currentTime) => {
+                                            const verticalElapsedTime = currentTime - verticalStartTime;
+                                            const verticalProgress = Math.min(verticalElapsedTime / verticalDuration, 1);
+
+                                            const newY = sourcePosition.y + (finalPosition.y - sourcePosition.y) * verticalProgress;
+                                            setPacketAnimation({ x: finalPosition.x, y: newY - 10 });
+
+                                            if (verticalProgress < 1) {
+                                                requestAnimationFrame(animateVertical);
+                                            } else {
+                                                setTimeout(() => {
+                                                    setPacketAnimation(null);
+                                                }, 500);
+                                            }
+                                        };
+
+                                        requestAnimationFrame(animateVertical);
+                                    }
+                                }
+                            };
+
+                            if (devicesOnPath.length > 0) {
+                                const [, firstDevicePos] = devicesOnPath[0];
+                                requestAnimationFrame(() => animateToNext(lastX, firstDevicePos.x, performance.now()));
                             } else {
-                                // Remove the packet icon after the animation completes
-                                setTimeout(() => {
-                                    setPacketAnimation(null);
-                                }, 500); // Delay before removing the icon
+                                requestAnimationFrame(() => animateToNext(lastX, finalPosition.x, performance.now()));
                             }
-                        };
-
-                        requestAnimationFrame(animatePacket); // Start the animation
+                        }, 1500);
                     });
                 }
             }
