@@ -19,8 +19,8 @@ const TaskDetails = () => {
     const [testResults, setTestResults] = useState([]);
     const [taskCompleted, setTaskCompleted] = useState(false);
     const [devicePositions, setDevicePositions] = useState({});
-    const [packetAnimation, setPacketAnimation] = useState(null); // Track packet animation
-    const [hoveredDevice, setHoveredDevice] = useState(null); // Track hovered device
+    const [packetAnimation, setPacketAnimation] = useState(null);
+    const [hoveredDevice, setHoveredDevice] = useState(null);
 
     const predefinedPositions = {
         1: {
@@ -138,15 +138,14 @@ const TaskDetails = () => {
                 }));
             });
 
-            // Handle send_packet command
+            
             const args = command.split(" ");
             if (args[0].toLowerCase() === "send_packet" && args.length === 4) {
-                const targetDeviceId = parseInt(args[1], 10); // Target device ID
+                const targetDeviceId = parseInt(args[1], 10);
                 if (!isNaN(targetDeviceId) && devicePositions[deviceId] && devicePositions[targetDeviceId]) {
                     const sourcePosition = devicePositions[deviceId];
                     const targetPosition = devicePositions[targetDeviceId];
 
-                    // Emit the packet simulation request
                     socket.emit("send_packet", deviceId, targetDeviceId, args[2], args[3]);
                     socket.once("packet_response", (response) => {
                         const { success, blockingDevice } = JSON.parse(response);
@@ -158,21 +157,21 @@ const TaskDetails = () => {
                         setPacketAnimation({
                             x: sourcePosition.x,
                             y: sourcePosition.y - 10,
-                            icon: null, // Default icon
+                            icon: null,
                         });
 
                         setTimeout(() => {
-                            const speed = 50; // Speed in pixels per second
+                            const speed = 50;
                             const devicesOnPath = Object.entries(devicePositions)
                                 .filter(([, pos]) => pos.y === sourcePosition.y && pos.x > sourcePosition.x && pos.x <= finalPosition.x)
-                                .sort(([, a], [, b]) => a.x - b.x); // Sort devices by x-coordinate
+                                .sort(([, a], [, b]) => a.x - b.x);
 
                             let pauseIndex = 0;
-                            let lastX = sourcePosition.x; // Track the last X position
+                            let lastX = sourcePosition.x;
 
                             const animateToNext = (currentX, nextX, startTime) => {
                                 const distance = Math.abs(nextX - currentX);
-                                const duration = (distance / speed) * 1000; // Duration in milliseconds
+                                const duration = (distance / speed) * 1000;
                                 const elapsedTime = performance.now() - startTime;
                                 const progress = Math.min(elapsedTime / duration, 1);
 
@@ -182,7 +181,7 @@ const TaskDetails = () => {
                                 if (progress < 1) {
                                     requestAnimationFrame(() => animateToNext(currentX, nextX, startTime));
                                 } else {
-                                    lastX = nextX; // Update lastX to the next position
+                                    lastX = nextX;
                                     if (pauseIndex < devicesOnPath.length) {
                                         const [, devicePos] = devicesOnPath[pauseIndex];
                                         if (Math.abs(nextX - devicePos.x) < 5) {
@@ -191,8 +190,15 @@ const TaskDetails = () => {
                                             setPacketAnimation({
                                                 x: nextX,
                                                 y: sourcePosition.y - 10,
-                                                icon: isBlocked ? <RiMailCloseFill style={{ width: "36px", height: "36px" }} /> : <MdMarkEmailRead style={{ width: "36px", height: "36px", color: "#13F100" }} />,
+                                                icon: isBlocked ? <RiMailCloseFill style={{ width: "36px", height: "36px", color: "#FF2D00" }} /> : <MdMarkEmailRead style={{ width: "36px", height: "36px", color: "#13F100" }} />,
                                             });
+
+                                            if (isBlocked) {
+                                                setTimeout(() => {
+                                                    setPacketAnimation(null);
+                                                }, 1500);
+                                            }
+
                                             setTimeout(() => {
                                                 if (!isBlocked && pauseIndex < devicesOnPath.length) {
                                                     const [, nextDevicePos] = devicesOnPath[pauseIndex];
@@ -200,13 +206,13 @@ const TaskDetails = () => {
                                                 } else if (!isBlocked) {
                                                     requestAnimationFrame(() => animateToNext(nextX, finalPosition.x, performance.now()));
                                                 }
-                                            }, 1000); // Pause for 1 second
+                                            }, 1000);
                                             return;
                                         }
                                     } else if (nextX !== finalPosition.x) {
                                         requestAnimationFrame(() => animateToNext(nextX, finalPosition.x, performance.now()));
                                     } else {
-                                        // Vertical movement to the final position
+                                        
                                         const verticalDistance = Math.abs(finalPosition.y - sourcePosition.y);
                                         const verticalDuration = (verticalDistance / speed) * 1000;
                                         const verticalStartTime = performance.now();
@@ -282,7 +288,7 @@ const TaskDetails = () => {
             <div className="deviceTooltip">
                 <p><strong>Device #{index}</strong></p>
                 {device.interfaces.map((iface, ifaceIndex) => (
-                    <p key={ifaceIndex}>int{ifaceIndex}: {iface || "(no address)"}</p> // Display "(no address)" for empty strings
+                    <p key={ifaceIndex}>int{ifaceIndex}: {iface || "(no address)"}</p>
                 ))}
             </div>
         );
