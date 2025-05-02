@@ -344,14 +344,14 @@
 
 .packetIcon {
     z-index: 10;
-    animation: scalePulse 0.5s infinite alternate; /* Add a pulsing effect */
+    /* animation: scalePulse 0.5s infinite alternate; Add a pulsing effect */
 }
 
-@keyframes scalePulse {
+/* @keyframes scalePulse {
     from {
         transform: scale(1);
     }
     to {
         transform: scale(1.2);
     }
-}
+} */

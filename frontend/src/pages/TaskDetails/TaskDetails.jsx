@@ -6,6 +6,9 @@ import Console from "../../components/Console/Console";
 import "./taskDetails.css";
 
 import assets from "../../assets/assets";
+import { IoMdMail } from "react-icons/io";
+import { RiMailCloseFill } from "react-icons/ri";
+import { MdMarkEmailRead } from "react-icons/md";
 
 const TaskDetails = () => {
     const { taskId } = useParams();
@@ -154,6 +157,7 @@ const TaskDetails = () => {
                         setPacketAnimation({
                             x: sourcePosition.x,
                             y: sourcePosition.y - 10,
+                            icon: null, // Default icon
                         });
 
                         setTimeout(() => {
@@ -172,7 +176,7 @@ const TaskDetails = () => {
                                 const progress = Math.min(elapsedTime / duration, 1);
 
                                 const newX = currentX + (nextX - currentX) * progress;
-                                setPacketAnimation({ x: newX, y: sourcePosition.y - 10 });
+                                setPacketAnimation({ x: newX, y: sourcePosition.y - 10, icon: null });
 
                                 if (progress < 1) {
                                     requestAnimationFrame(() => animateToNext(currentX, nextX, startTime));
@@ -182,11 +186,17 @@ const TaskDetails = () => {
                                         const [, devicePos] = devicesOnPath[pauseIndex];
                                         if (Math.abs(nextX - devicePos.x) < 5) {
                                             pauseIndex++;
+                                            const isBlocked = pauseIndex === devicesOnPath.length && !success;
+                                            setPacketAnimation({
+                                                x: nextX,
+                                                y: sourcePosition.y - 10,
+                                                icon: isBlocked ? <RiMailCloseFill style={{ width: "36px", height: "36px" }} /> : <MdMarkEmailRead style={{ width: "36px", height: "36px" }} />,
+                                            });
                                             setTimeout(() => {
-                                                if (pauseIndex < devicesOnPath.length) {
+                                                if (!isBlocked && pauseIndex < devicesOnPath.length) {
                                                     const [, nextDevicePos] = devicesOnPath[pauseIndex];
                                                     requestAnimationFrame(() => animateToNext(nextX, nextDevicePos.x, performance.now()));
-                                                } else {
+                                                } else if (!isBlocked) {
                                                     requestAnimationFrame(() => animateToNext(nextX, finalPosition.x, performance.now()));
                                                 }
                                             }, 1000); // Pause for 1 second
@@ -205,7 +215,7 @@ const TaskDetails = () => {
                                             const verticalProgress = Math.min(verticalElapsedTime / verticalDuration, 1);
 
                                             const newY = sourcePosition.y + (finalPosition.y - sourcePosition.y) * verticalProgress;
-                                            setPacketAnimation({ x: finalPosition.x, y: newY - 10 });
+                                            setPacketAnimation({ x: finalPosition.x, y: newY - 10, icon: null });
 
                                             if (verticalProgress < 1) {
                                                 requestAnimationFrame(animateVertical);
@@ -406,21 +416,35 @@ const TaskDetails = () => {
                                 </div>
                             );
                         })}
+
                         {/* Render packet animation */}
                         {packetAnimation && (
-                            <img
-                                src={assets.packetIcon}
-                                alt="Packet"
-                                className="packetIcon"
-                                style={{
-                                    position: "absolute",
-                                    left: packetAnimation.x,
-                                    top: packetAnimation.y,
-                                    width: "30px",
-                                    height: "30px",
-                                    transition: "transform 0.2s ease-in-out", // Smooth scaling effect
-                                }}
-                            />
+                            <>
+                                {packetAnimation.icon ? (
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            left: packetAnimation.x,
+                                            top: packetAnimation.y,
+                                            width: "36px",
+                                            height: "36px",
+                                        }}
+                                    >
+                                        {packetAnimation.icon}
+                                    </div>
+                                ) : (
+                                    <IoMdMail
+                                        className="packetIcon"
+                                        style={{
+                                            position: "absolute",
+                                            left: packetAnimation.x,
+                                            top: packetAnimation.y,
+                                            width: "36px",
+                                            height: "36px",
+                                        }}
+                                    />
+                                )}
+                            </>
                         )}
                     </div>
                 </div>
