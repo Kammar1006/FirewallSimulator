@@ -11,7 +11,7 @@ import { RiMailCloseFill } from "react-icons/ri";
 import { MdMarkEmailRead } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaLightbulb } from "react-icons/fa";
+import { FaLightbulb, FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const TaskDetails = () => {
     const { taskId } = useParams();
@@ -101,6 +101,7 @@ const TaskDetails = () => {
             socket.on("tasks", (data) => {
                 const taskData = data.find((task) => task.id === parseInt(taskId, 10));
                 if (taskData) {
+                    console.log("Task data:", taskData); // Debug log
                     setTask({
                         id: taskData.id,
                         title: taskData.title || `Task ${taskId}`,
@@ -108,6 +109,7 @@ const TaskDetails = () => {
                         difficulty: taskData.difficulty || "Unknown",
                         subtasks: taskData.subtasks || [],
                         topology: taskData.topology || { devices: [], connections: [] },
+                        hints: taskData.hints || [], // Ensure hints are included
                     });
                     socket.emit("switch_task", parseInt(taskId, 10));
                 } else {
@@ -291,15 +293,21 @@ const TaskDetails = () => {
         }
     };
 
-    const handleShowHint = () => {
-        if (task && task.subtasks && task.subtasks.length > 0) {
+    const handleShowHints = () => {
+        console.log("Current task:", task); // Debug log
+        if (task?.hints && task.hints.length > 0) {
             setShowHints(true);
             setCurrentHint(0);
+        } else {
+            toast.warning("No hints available for this task.", {
+                position: "top-right",
+                autoClose: 3000,
+            });
         }
     };
 
     const handleNextHint = () => {
-        if (task && task.subtasks && currentHint < task.subtasks.length - 1) {
+        if (task && task.hints && currentHint < task.hints.length - 1) {
             setCurrentHint(prev => prev + 1);
         }
     };
@@ -385,19 +393,7 @@ const TaskDetails = () => {
         <div className="taskDetails">
             <ToastContainer />
             <div className="taskDetailsContainer">
-                {/* Top Part */}
                 <div className="taskDetailsContainerTop">
-                    {/* Progress Bar */}
-                    <div className="progressBarContainer">
-                        <div className="progressBar">
-                            <div 
-                                className="progressBarFill" 
-                                style={{ width: `${(completedTasks / totalTasks) * 100}%` }}
-                            />
-                        </div>
-                        <p className="progressText">{completedTasks}/{totalTasks} Tasks Completed</p>
-                    </div>
-
                     {/* Task Completed Badge */}
                     {taskCompleted && (
                         <div className="taskCompletedBadge">
@@ -411,7 +407,7 @@ const TaskDetails = () => {
                             {/* Left Part */}
                             <div className="taskDetailsContainerTopFirstContainerLeft">
                                 <p className="taskDetailsContainerTopFirstContainerLeftText">
-                                    Task #{task.id}: {task.title}
+                                    Task #{task?.id}: {task?.title}
                                 </p>
                             </div>
 
@@ -430,15 +426,40 @@ const TaskDetails = () => {
                                         className={`taskDetailsContainerTopFirstContainerRightContainerBtn ${taskCompleted ? "enabled" : "disabled"}`}
                                         onClick={handleSubmit}
                                         disabled={!taskCompleted}
-                                        style={{
-                                            filter: taskCompleted ? "none" : "blur(2px)",
-                                            cursor: taskCompleted ? "pointer" : "not-allowed",
-                                        }}
                                     >
                                         <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
                                             Submit
                                         </p>
                                     </button>
+                                </div>
+                                <div className="hintsContainer">
+                                    <button 
+                                        className="hintsButton"
+                                        onClick={handleShowHints}
+                                    >
+                                        <FaLightbulb /> Show Hints
+                                    </button>
+                                    {showHints && task?.hints && task.hints.length > 0 && (
+                                        <div className="hintsSection">
+                                            <div className="hintsHeader">
+                                                <h3>Task Hints</h3>
+                                                <button 
+                                                    className="hintsCloseButton"
+                                                    onClick={() => setShowHints(false)}
+                                                >
+                                                    <FaTimes />
+                                                </button>
+                                            </div>
+                                            <div className="hintsContent">
+                                                {task.hints.map((hint, index) => (
+                                                    <div key={index} className="hintItem">
+                                                        <span className="hintNumber">{index + 1}.</span>
+                                                        <p>{hint}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -452,7 +473,7 @@ const TaskDetails = () => {
                                 <div className="taskDetailsContainerTopElementContainerFirstContainer">
                                     <div className="taskDetailsContainerTopElementContainerFirstContainerDiv">
                                         <p className="taskDetailsContainerTopElementContainerFirstContainerDivText">
-                                            Difficulty: {task.difficulty}
+                                            Difficulty: {task?.difficulty}
                                         </p>
                                     </div>
                                 </div>
@@ -481,7 +502,7 @@ const TaskDetails = () => {
                     {/* Fourth Element */}
                     <div className="taskDetailsContainerTopFourth">
                         <div className="taskDetailsContainerTopFourthContainer">
-                            {task.subtasks && task.subtasks.map((subtask) => (
+                            {task?.subtasks?.map((subtask) => (
                                 <div key={subtask.id} className="taskDetailsContainerTopFourthContainerSubtask">
                                     <img src={assets.dotIcon} alt="" className="taskDetailsContainerTopFourthContainerSubtaskDotIcon" />
                                     <p className="taskDetailsContainerTopFourthContainerSubtaskText">
@@ -490,39 +511,6 @@ const TaskDetails = () => {
                                 </div>
                             ))}
                         </div>
-                    </div>
-
-                    {/* Hints Section */}
-                    <div className="hintsSection">
-                        <button 
-                            className="hintsButton"
-                            onClick={handleShowHint}
-                        >
-                            <FaLightbulb /> Show Hints
-                        </button>
-                        
-                        {showHints && task && task.subtasks && (
-                            <div className="hintsContainer">
-                                <div className="hintsNavigation">
-                                    <button 
-                                        onClick={handlePreviousHint}
-                                        disabled={currentHint === 0}
-                                    >
-                                        Previous
-                                    </button>
-                                    <button 
-                                        onClick={handleNextHint}
-                                        disabled={currentHint === task.subtasks.length - 1}
-                                    >
-                                        Next
-                                    </button>
-                                </div>
-                                <div className="hintContent">
-                                    <h3>Hint {currentHint + 1}: {task.subtasks[currentHint].title}</h3>
-                                    <p>{task.subtasks[currentHint].description}</p>
-                                </div>
-                            </div>
-                        )}
                     </div>
                 </div>
 
@@ -593,7 +581,7 @@ const TaskDetails = () => {
             </div>
 
             {/* Render all open consoles */}
-            {task.topology && task.topology.devices && openConsoles.map((deviceId) => (
+            {task?.topology?.devices && openConsoles.map((deviceId) => (
                 <Console
                     key={deviceId}
                     deviceName={task.topology.devices[deviceId].name}

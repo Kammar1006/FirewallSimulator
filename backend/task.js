@@ -6,6 +6,13 @@ const { Interface } = require("./interface");
 
 function Task() {
     this.network = new Network();
+    this.id = 1;
+    this.title = "";
+    this.desc = [];
+    this.difficulty = "";
+    this.subtasks = [];
+    this.topology = { devices: [], connections: [] };
+    this.hints = [];
 
     this.clearRules = () => {
         // Clear all firewall rules for all devices
@@ -25,7 +32,7 @@ function Task() {
             case 1: {
                 const devices = [
                     new Device("PC_1", ["192.168.1.2"]),
-                    new Device("S_1", ["", ""], 0, 0), // Use empty strings for interfaces without IPs
+                    new Device("S_1", ["", ""], 0, 0),
                     new Device("R_1", ["192.168.1.1", "192.168.2.1", "192.168.3.1"]),
                     new Device("PC_2", ["192.168.2.2"]),
                     new Device("PC_3", ["192.168.3.2"]),
@@ -37,7 +44,7 @@ function Task() {
                     devices: devices.map((device, index) => ({
                         id: index,
                         name: device.name,
-                        interfaces: device.interfaces.map((iface) => iface.inet || ""), // Ensure empty strings for missing IPs
+                        interfaces: device.interfaces.map((iface) => iface.inet || ""),
                     })),
                     connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
@@ -76,6 +83,12 @@ function Task() {
                 this.subtasks = [
                     { id: 1, title: "Zezwól na TCP/80", description: "Skonfiguruj zaporę, aby zezwolić na ruch TCP na porcie 80 z PC_1 do PC_3" },
                     { id: 2, title: "Zablokuj inny ruch", description: "Upewnij się, że cały inny ruch jest zablokowany" },
+                ];
+                this.hints = [
+                    "Sprawdź adresy IP źródłowe i docelowe dla każdej reguły",
+                    "Upewnij się, że zezwalasz na ruch z PC_1 do PC_3 na porcie 80",
+                    "Pamiętaj, aby zablokować ruch z PC_1 do PC_2",
+                    "Sprawdź, czy Twoje reguły są w odpowiedniej kolejności - bardziej szczegółowe reguły powinny być pierwsze"
                 ];
             } break;
 
@@ -143,6 +156,12 @@ function Task() {
                     { id: 1, title: "Zezwól na ruch z PC_A do PC_B", description: "Upewnij się, że ruch z PC_A do PC_B jest dozwolony." },
                     { id: 2, title: "Zablokuj ruch z PC_A do PC_C", description: "Upewnij się, że ruch z PC_A do PC_C jest zablokowany." },
                     { id: 3, title: "Zezwól na ruch między PC_B a PC_C", description: "Upewnij się, że ruch między PC_B a PC_C jest dozwolony." },
+                ];
+                this.hints = [
+                    "Start by allowing traffic from PC_A to PC_B",
+                    "Remember to block traffic from PC_A to PC_C",
+                    "Check if your rules are properly configured on the correct interfaces",
+                    "Make sure to test your configuration with the send_packet command"
                 ];
             } break;
 
@@ -215,6 +234,12 @@ function Task() {
                     { id: 2, title: "Zablokuj ruch z PC_X do PC_W", description: "Upewnij się, że ruch z PC_X do PC_W jest zablokowany." },
                     { id: 3, title: "Zezwól na ruch między PC_Y a PC_Z", description: "Upewnij się, że ruch między PC_Y a PC_Z jest dozwolony." },
                 ];
+                this.hints = [
+                    "Focus on allowing traffic between PC_X and PC_Y first",
+                    "Don't forget to block traffic from PC_X to PC_Z",
+                    "Check if your rules are properly configured on all necessary devices",
+                    "Remember to test your configuration with different protocols"
+                ];
             } break;
 
             case 4: {
@@ -281,6 +306,12 @@ function Task() {
                     { id: 1, title: "Allow traffic from PC_1 to PC_2", description: "Ensure traffic from PC_1 to PC_2 is allowed." },
                     { id: 2, title: "Block traffic from PC_1 to PC_3", description: "Ensure traffic from PC_1 to PC_3 is blocked." },
                     { id: 3, title: "Allow traffic between PC_2 and PC_3", description: "Ensure traffic between PC_2 and PC_3 is allowed." },
+                ];
+                this.hints = [
+                    "Start by configuring the basic traffic rules",
+                    "Remember to check the protocol and port requirements",
+                    "Make sure your rules are properly ordered",
+                    "Test your configuration with different source and destination combinations"
                 ];
             } break;
 
@@ -350,6 +381,12 @@ function Task() {
                     { id: 1, title: "Allow traffic from PC_A to PC_B", description: "Ensure traffic from PC_A to PC_B is allowed." },
                     { id: 2, title: "Block traffic from PC_A to PC_C", description: "Ensure traffic from PC_A to PC_C is blocked." },
                     { id: 3, title: "Allow traffic between PC_B and PC_D", description: "Ensure traffic between PC_B and PC_D is allowed." },
+                ];
+                this.hints = [
+                    "Focus on the specific requirements for PC_A to PC_B traffic",
+                    "Remember to block unwanted traffic from PC_A to PC_C",
+                    "Check if your rules are properly configured on all interfaces",
+                    "Test your configuration with different protocols and ports"
                 ];
             } break;
 
@@ -421,6 +458,12 @@ function Task() {
                     { id: 1, title: "Allow traffic from PC_X to PC_Y", description: "Ensure traffic from PC_X to PC_Y is allowed." },
                     { id: 2, title: "Block traffic from PC_X to PC_Z", description: "Ensure traffic from PC_X to PC_Z is blocked." },
                     { id: 3, title: "Allow traffic between PC_W and PC_V", description: "Ensure traffic between PC_W and PC_V is allowed." },
+                ];
+                this.hints = [
+                    "Start by allowing traffic between PC_X and PC_Y",
+                    "Remember to block traffic from PC_X to PC_Z",
+                    "Check if your rules are properly configured on all devices",
+                    "Test your configuration with different protocols and ports"
                 ];
             } break;
 

@@ -135,7 +135,7 @@ io.on("connection", (sock) => {
 
 	sock.on("get_tasks", () => {
 		const tasks = [];
-		for (let i = 1; i <= 6; i++) { // Adjusted range to include all six tasks
+		for (let i = 1; i <= 6; i++) {
 			const task = new Task();
 			task.set(i);
 			tasks.push({
@@ -145,6 +145,7 @@ io.on("connection", (sock) => {
 				difficulty: task.difficulty,
 				subtasks: task.subtasks,
 				topology: task.topology,
+				hints: task.hints || [],
 			});
 		}
 		sock.emit("tasks", tasks);
