@@ -4,7 +4,7 @@ import "./taskCard.css";
 const TaskCard = ({ task, onClick, completed }) => {
     return (
         <div
-            className={`taskCard ${task.difficulty.toLowerCase()} ${completed ? "completed" : ""}`}
+            className={`taskCard ${completed ? "completed" : ""}`}
             onClick={onClick}
         >
             <div className="taskCardContainer">
@@ -18,9 +18,18 @@ const TaskCard = ({ task, onClick, completed }) => {
                         </div>
                         <div className="taskCardContainerFirstContainerRight">
                             <div className="taskCardContainerFirstContainerRightDiv">
-                                <p className="taskCardContainerFirstContainerRightDivText">
-                                    {task.difficulty}
-                                </p>
+                                {!completed && (
+                                    <p className="taskCardContainerFirstContainerRightDivText">
+                                        {task.difficulty}
+                                    </p>
+                                )}
+                                {completed && (
+                                    <div className="taskCompletedInlineLabel">
+                                        <p className="taskCompletedInlineLabelText">
+                                            ✔ Completed
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -48,8 +57,6 @@ const TaskCard = ({ task, onClick, completed }) => {
                         </p>
                     </button>
                 </div>
-
-                {completed && <p className="taskCompletedBadge">✅ Completed</p>}
             </div>
         </div>
     );

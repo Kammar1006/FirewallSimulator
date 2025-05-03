@@ -35,12 +35,19 @@
     letter-spacing: 0.6px;
 }
 
+.taskCardContainerFirstContainerRight {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
 .taskCardContainerFirstContainerRightDiv {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     background-color: #F3F4F6;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding: 6px 20px;
     border-radius: 50px;
 }
 
@@ -49,6 +56,7 @@
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 0.3px;
+    margin: 0;
 }
 
 .taskCardContainerSecond {
@@ -90,7 +98,6 @@
     border-radius: 8px;
     border: none;
     outline: none;
-    /* cursor: pointer; */
     transition: all 0.3s ease-in-out;
 }
 
@@ -104,4 +111,26 @@
     letter-spacing: 0.7px;
     text-align: center;
     line-height: 35px; 
+}
+
+.taskCompletedInlineLabel {
+    background-color: #4caf50;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #FFFFFF;
+    padding: 6px 20px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.taskCompletedInlineLabelText {
+    color: #FFFFFF;
+    margin: 0;
+    padding-left: 6px;
+    margin-right: 6px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    letter-spacing: 0.5px
 }

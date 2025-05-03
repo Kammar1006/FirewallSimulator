@@ -13,6 +13,14 @@ const Tasks = () => {
 
     useEffect(() => {
         if (socket) {
+            const studentId = localStorage.getItem("studentId"); // Retrieve studentId from localStorage
+            socket.emit("get_student_progress", { studentId });
+            socket.on("student_progress", (data) => {
+                if (data && data.progress) {
+                    setCompletedTasks(data.progress.map((status, index) => (status === 1 ? index + 1 : null)).filter(Boolean));
+                }
+            });
+
             socket.emit("get_tasks");
             socket.on("tasks", (data) => {
                 const taskList = data.map((task) => ({
@@ -22,12 +30,12 @@ const Tasks = () => {
                     difficulty: task.difficulty || "Unknown",
                 }));
                 setTasks(taskList);
-                setCompletedTasks(data.filter((task) => task.completed).map((task) => task.id)); // Handle completed tasks if provided
             });
         }
 
         return () => {
             if (socket) {
+                socket.off("student_progress");
                 socket.off("tasks");
             }
         };
@@ -67,7 +75,7 @@ const Tasks = () => {
                                     key={task.id}
                                     task={task}
                                     onClick={() => handleTaskClick(task.id)}
-                                    completed={completedTasks.includes(task.id)}
+                                    completed={completedTasks.includes(task.id)} // Pass completed status
                                 />
                             ))}
                         </div>

@@ -496,6 +496,15 @@ io.on("connection", (sock) => {
 		const isCompleted = task.check(); // Sprawdź poprawność zadania
 		sock.emit("task_completion_status", { taskId: task.id, isCompleted });
 	});
+
+	sock.on("get_student_progress", ({ studentId }) => {
+		const student = students.find((student) => student.id === studentId);
+		if (student) {
+			sock.emit("student_progress", { progress: student.progress });
+		} else {
+			sock.emit("student_progress", { progress: [] });
+		}
+	});
 });
 
 server.listen(PORT, () => {

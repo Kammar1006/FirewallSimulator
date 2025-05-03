@@ -81,6 +81,15 @@ const TaskDetails = () => {
 
     useEffect(() => {
         if (socket) {
+            const studentId = localStorage.getItem("studentId"); // Retrieve studentId from localStorage
+            socket.emit("get_student_progress", { studentId });
+            socket.on("student_progress", (data) => {
+                if (data && data.progress) {
+                    const taskIndex = parseInt(taskId, 10) - 1;
+                    setTaskCompleted(data.progress[taskIndex] === 1); // Check if the task is completed
+                }
+            });
+
             socket.emit("get_tasks");
             socket.on("tasks", (data) => {
                 const taskData = data.find((task) => task.id === parseInt(taskId, 10));
@@ -102,6 +111,7 @@ const TaskDetails = () => {
 
         return () => {
             if (socket) {
+                socket.off("student_progress");
                 socket.off("tasks");
             }
         };
@@ -258,13 +268,18 @@ const TaskDetails = () => {
             socket.emit("check_task_completion");
             socket.once("task_completion_status", ({ isCompleted }) => {
                 setTaskCompleted(isCompleted);
-                setTestResults([
-                    {
-                        id: 1,
-                        description: "All tests passed successfully.",
-                        status: isCompleted ? "PASSED" : "FAILED",
-                    },
-                ]);
+
+                if (isCompleted) {
+                    toast.success("All tests passed successfully!", {
+                        position: "top-right",
+                        autoClose: 3000,
+                    });
+                } else {
+                    toast.error("Some tests failed. Please review your configuration.", {
+                        position: "top-right",
+                        autoClose: 3000,
+                    });
+                }
             });
         }
     };
@@ -346,6 +361,12 @@ const TaskDetails = () => {
             <div className="taskDetailsContainer">
                 {/* Top Part */}
                 <div className="taskDetailsContainerTop">
+                    {/* Task Completed Badge */}
+                    {taskCompleted && (
+                        <div className="taskCompletedBadge">
+                            <p>🎉 Task Completed Successfully!</p>
+                        </div>
+                    )}
                     {/* First Element */}
                     <div className="taskDetailsContainerTopFirst">
                         <div className="taskDetailsContainerTopFirstContainer">
@@ -498,19 +519,6 @@ const TaskDetails = () => {
                         )}
                     </div>
                 </div>
-
-                {/* Test Results */}
-                {testResults.length > 0 && (
-                    <div className="testResults">
-                        <h3>Test Results</h3>
-                        {testResults.map((result) => (
-                            <div key={result.id} className={`testResult ${result.status.toLowerCase()}`}>
-                                <p>{result.description}</p>
-                                <p className="status">{result.status}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
             </div>
 
             {/* Render all open consoles */}
