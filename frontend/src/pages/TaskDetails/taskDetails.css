@@ -355,3 +355,35 @@
         transform: scale(1.2);
     }
 } */
+
+.modeSwitcher {
+    display: flex;
+    gap: 10px;
+    margin-right: 20px;
+}
+
+.modeButton {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #F3F4F6;
+    color: #374151;
+    border: 1px solid #D1D5DB;
+}
+
+.modeButton:hover {
+    background-color: #E5E7EB;
+}
+
+.modeButton.active {
+    background-color: #1F2937;
+    color: #fff;
+    border: none;
+}
+
+.modeButton.active:hover {
+    background-color: #374151;
+}

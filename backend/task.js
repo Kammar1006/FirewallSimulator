@@ -44,38 +44,38 @@ function Task() {
                     ),
                 };
 
-                this.title = "Basic Firewall Configuration";
+                this.title = "Podstawowa konfiguracja zapory sieciowej";
                 this.desc = [
-                    "Configure the firewall to allow traffic from PC_1 to PC_3 on port 80.",
-                    "Block all other traffic.",
+                    "Skonfiguruj zaporę, aby umożliwić ruch z PC_1 do PC_3 na porcie 80.",
+                    "Zablokuj cały inny ruch.",
                 ];
                 this.tests = [
                     {
-                        name: "Test 1: TCP/80 from PC_1 to PC_3",
+                        name: "Test 1: TCP/80 z PC_1 do PC_3",
                         endpoints: [0, 4],
                         packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "tcp:80" },
                         expected: true,
-                        description: "Should allow TCP traffic on port 80"
+                        description: "Powinien zezwolić na ruch TCP na porcie 80",
                     },
                     {
-                        name: "Test 2: TCP/443 from PC_1 to PC_3",
+                        name: "Test 2: TCP/443 z PC_1 do PC_3",
                         endpoints: [0, 4],
                         packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "tcp:443" },
                         expected: false,
-                        description: "Should block TCP traffic on port 443"
+                        description: "Powinien zablokować ruch TCP na porcie 443",
                     },
                     {
-                        name: "Test 3: UDP/80 from PC_1 to PC_3",
+                        name: "Test 3: UDP/80 z PC_1 do PC_3",
                         endpoints: [0, 4],
                         packet: { src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80" },
                         expected: false,
-                        description: "Should block UDP traffic"
-                    }
+                        description: "Powinien zablokować ruch UDP",
+                    },
                 ];
-                this.difficulty = "Easy";
+                this.difficulty = "Łatwy";
                 this.subtasks = [
-                    { id: 1, title: "Allow TCP/80", description: "Configure firewall to allow TCP traffic on port 80 from PC_1 to PC_3" },
-                    { id: 2, title: "Block other traffic", description: "Ensure all other traffic is blocked" }
+                    { id: 1, title: "Zezwól na TCP/80", description: "Skonfiguruj zaporę, aby zezwolić na ruch TCP na porcie 80 z PC_1 do PC_3" },
+                    { id: 2, title: "Zablokuj inny ruch", description: "Upewnij się, że cały inny ruch jest zablokowany" },
                 ];
             } break;
 
@@ -109,40 +109,40 @@ function Task() {
                     ),
                 };
 
-                this.title = "Intermediate Firewall Rules";
+                this.title = "Średniozaawansowane reguły zapory sieciowej";
                 this.desc = [
-                    "Configure the firewall to allow traffic from PC_A to PC_B.",
-                    "Ensure traffic from PC_A to PC_C is blocked.",
-                    "Allow traffic between PC_B and PC_C."
+                    "Skonfiguruj zaporę, aby umożliwić ruch z PC_A do PC_B.",
+                    "Upewnij się, że ruch z PC_A do PC_C jest zablokowany.",
+                    "Zezwól na ruch między PC_B a PC_C.",
                 ];
                 this.tests = [
                     {
-                        name: "Test 1: Allow traffic from PC_A to PC_B",
+                        name: "Test 1: Zezwól na ruch z PC_A do PC_B",
                         endpoints: [0, 3],
                         packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "tcp:80" },
                         expected: true,
-                        description: "Should allow traffic from PC_A to PC_B on port 80"
+                        description: "Powinien zezwolić na ruch z PC_A do PC_B na porcie 80",
                     },
                     {
-                        name: "Test 2: Block traffic from PC_A to PC_C",
+                        name: "Test 2: Zablokuj ruch z PC_A do PC_C",
                         endpoints: [0, 4],
                         packet: { src: "10.0.0.2", des: "192.168.1.3", protocol: "tcp:80" },
                         expected: false,
-                        description: "Should block traffic from PC_A to PC_C"
+                        description: "Powinien zablokować ruch z PC_A do PC_C",
                     },
                     {
-                        name: "Test 3: Allow traffic between PC_B and PC_C",
+                        name: "Test 3: Zezwól na ruch między PC_B a PC_C",
                         endpoints: [3, 4],
                         packet: { src: "192.168.1.2", des: "192.168.1.3", protocol: "udp:53" },
                         expected: true,
-                        description: "Should allow traffic between PC_B and PC_C"
-                    }
+                        description: "Powinien zezwolić na ruch między PC_B a PC_C",
+                    },
                 ];
-                this.difficulty = "Medium";
+                this.difficulty = "Średni";
                 this.subtasks = [
-                    { id: 1, title: "Allow traffic from PC_A to PC_B", description: "Ensure traffic from PC_A to PC_B is allowed." },
-                    { id: 2, title: "Block traffic from PC_A to PC_C", description: "Ensure traffic from PC_A to PC_C is blocked." },
-                    { id: 3, title: "Allow traffic between PC_B and PC_C", description: "Ensure traffic between PC_B and PC_C is allowed." },
+                    { id: 1, title: "Zezwól na ruch z PC_A do PC_B", description: "Upewnij się, że ruch z PC_A do PC_B jest dozwolony." },
+                    { id: 2, title: "Zablokuj ruch z PC_A do PC_C", description: "Upewnij się, że ruch z PC_A do PC_C jest zablokowany." },
+                    { id: 3, title: "Zezwól na ruch między PC_B a PC_C", description: "Upewnij się, że ruch między PC_B a PC_C jest dozwolony." },
                 ];
             } break;
 
@@ -180,40 +180,40 @@ function Task() {
                     ),
                 };
 
-                this.title = "Advanced Network Security";
+                this.title = "Zaawansowane zabezpieczenia sieci";
                 this.desc = [
-                    "Configure the firewall to allow traffic from PC_X to PC_Y.",
-                    "Block traffic from PC_X to PC_W.",
-                    "Allow traffic between PC_Y and PC_Z."
+                    "Skonfiguruj zaporę, aby umożliwić ruch z PC_X do PC_Y.",
+                    "Zablokuj ruch z PC_X do PC_W.",
+                    "Zezwól na ruch między PC_Y a PC_Z.",
                 ];
                 this.tests = [
                     {
-                        name: "Test 1: Allow traffic from PC_X to PC_Y",
+                        name: "Test 1: Zezwól na ruch z PC_X do PC_Y",
                         endpoints: [0, 3],
                         packet: { src: "192.168.100.2", des: "172.16.10.2", protocol: "tcp:22" },
                         expected: true,
-                        description: "Should allow traffic from PC_X to PC_Y on port 22"
+                        description: "Powinien zezwolić na ruch z PC_X do PC_Y na porcie 22",
                     },
                     {
-                        name: "Test 2: Block traffic from PC_X to PC_W",
+                        name: "Test 2: Zablokuj ruch z PC_X do PC_W",
                         endpoints: [0, 7],
                         packet: { src: "192.168.100.2", des: "192.168.200.2", protocol: "tcp:80" },
                         expected: false,
-                        description: "Should block traffic from PC_X to PC_W"
+                        description: "Powinien zablokować ruch z PC_X do PC_W",
                     },
                     {
-                        name: "Test 3: Allow traffic between PC_Y and PC_Z",
+                        name: "Test 3: Zezwól na ruch między PC_Y a PC_Z",
                         endpoints: [3, 5],
                         packet: { src: "172.16.10.2", des: "172.16.10.3", protocol: "udp:53" },
                         expected: true,
-                        description: "Should allow traffic between PC_Y and PC_Z"
-                    }
+                        description: "Powinien zezwolić na ruch między PC_Y a PC_Z",
+                    },
                 ];
-                this.difficulty = "Hard";
+                this.difficulty = "Trudny";
                 this.subtasks = [
-                    { id: 1, title: "Allow traffic from PC_X to PC_Y", description: "Ensure traffic from PC_X to PC_Y is allowed." },
-                    { id: 2, title: "Block traffic from PC_X to PC_W", description: "Ensure traffic from PC_X to PC_W is blocked." },
-                    { id: 3, title: "Allow traffic between PC_Y and PC_Z", description: "Ensure traffic between PC_Y and PC_Z is allowed." },
+                    { id: 1, title: "Zezwól na ruch z PC_X do PC_Y", description: "Upewnij się, że ruch z PC_X do PC_Y jest dozwolony." },
+                    { id: 2, title: "Zablokuj ruch z PC_X do PC_W", description: "Upewnij się, że ruch z PC_X do PC_W jest zablokowany." },
+                    { id: 3, title: "Zezwól na ruch między PC_Y a PC_Z", description: "Upewnij się, że ruch między PC_Y a PC_Z jest dozwolony." },
                 ];
             } break;
 

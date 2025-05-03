@@ -1,0 +1,134 @@
+.ruleEditorModal {
+    position: absolute;
+    width: 400px;
+    background-color: #ffffff;
+    border: 2px solid #555;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ruleEditorTitleBar {
+    background-color: #1F2937;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.ruleEditorTitleBar .closeButton {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.ruleEditorTitleBar .closeButton:hover {
+    color: #f00;
+}
+
+.ruleEditorForm {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ruleEditorField {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ruleEditorField label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.ruleEditorField input,
+.ruleEditorField select {
+    padding: 8px 12px;
+    border: 1px solid #D1D5DB;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #374151;
+    background-color: #F9FAFB;
+    transition: all 0.2s ease;
+}
+
+.ruleEditorField input:focus,
+.ruleEditorField select:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.ruleEditorButtons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.addButton,
+.cancelButton {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.addButton {
+    background-color: #1F2937;
+    color: #fff;
+    border: none;
+}
+
+.addButton:hover {
+    background-color: #374151;
+}
+
+.cancelButton {
+    background-color: #F3F4F6;
+    color: #374151;
+    border: 1px solid #D1D5DB;
+}
+
+.cancelButton:hover {
+    background-color: #E5E7EB;
+}
+
+.interfaceList {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.interfaceButton {
+    padding: 12px;
+    border: 1px solid #D1D5DB;
+    border-radius: 4px;
+    background-color: #F9FAFB;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.interfaceButton:hover {
+    background-color: #E5E7EB;
+    border-color: #9CA3AF;
+} 
