@@ -8,26 +8,37 @@ const Tasks = () => {
     const { socket } = useContext(RulesContext);
     const [tasks, setTasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
+    const [totalTasks, setTotalTasks] = useState(0);
+    const [completedCount, setCompletedCount] = useState(0);
+    const [studentProgress, setStudentProgress] = useState([]);
 
     const navigate = useNavigate();
 
     useEffect(() => {
         if (socket) {
-            const studentId = localStorage.getItem("studentId"); // Retrieve studentId from localStorage
+            const studentId = localStorage.getItem("studentId");
+            
+            // Get student progress
             socket.emit("get_student_progress", { studentId });
             socket.on("student_progress", (data) => {
                 if (data && data.progress) {
-                    setCompletedTasks(data.progress.map((status, index) => (status === 1 ? index + 1 : null)).filter(Boolean));
+                    setStudentProgress(data.progress);
+                    const completed = data.progress.map((status, index) => (status === 1 ? index + 1 : null)).filter(Boolean);
+                    setCompletedTasks(completed);
+                    setCompletedCount(completed.length);
+                    setTotalTasks(data.progress.length);
                 }
             });
 
+            // Get tasks
             socket.emit("get_tasks");
             socket.on("tasks", (data) => {
                 const taskList = data.map((task) => ({
                     id: task.id,
                     title: task.title || `Task ${task.id}`,
-                    description: task.desc.join(" ") || "No description available.",
+                    description: task.desc?.join(" ") || "No description available.",
                     difficulty: task.difficulty || "Unknown",
+                    completed: studentProgress[task.id - 1] === 1
                 }));
                 setTasks(taskList);
             });
@@ -39,7 +50,7 @@ const Tasks = () => {
                 socket.off("tasks");
             }
         };
-    }, [socket]);
+    }, [socket, studentProgress]);
 
     const handleTaskClick = (taskId) => {
         navigate(`/task/${taskId}`);
@@ -51,9 +62,30 @@ const Tasks = () => {
                 {/* Top Part */}
                 <div className="tasksContainerTop">
                     <div className="tasksContainerTopContainer">
-                        <p className="tasksContainerTopContainerText">
-                            Network Management Tasks
-                        </p>
+                        <div className="tasksContainerTopLeft">
+                            <p className="tasksContainerTopContainerText">
+                                Network Management Tasks
+                            </p>
+                            <div className="tasksProgressContainer">
+                                <div className="tasksProgressBar">
+                                    <div 
+                                        className="tasksProgressBarFill" 
+                                        style={{ width: `${(completedCount / totalTasks) * 100}%` }}
+                                    />
+                                </div>
+                                <p className="tasksProgressText">
+                                    {completedCount}/{totalTasks} Tasks Completed
+                                </p>
+                            </div>
+                        </div>
+                        <div className="tasksContainerTopRight">
+                            <div className="tasksProgressBadge">
+                                <span className="tasksProgressBadgeIcon">🏆</span>
+                                <span className="tasksProgressBadgeText">
+                                    {Math.round((completedCount / totalTasks) * 100)}% Complete
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -75,7 +107,7 @@ const Tasks = () => {
                                     key={task.id}
                                     task={task}
                                     onClick={() => handleTaskClick(task.id)}
-                                    completed={completedTasks.includes(task.id)} // Pass completed status
+                                    completed={studentProgress[task.id - 1] === 1}
                                 />
                             ))}
                         </div>

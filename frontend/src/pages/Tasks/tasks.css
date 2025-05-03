@@ -28,6 +28,20 @@
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.tasksContainerTopContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.tasksContainerTopLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .tasksContainerTopContainerText {
@@ -35,6 +49,62 @@
     font-weight: 600;
     color: #000000;
     letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.tasksProgressContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.tasksProgressBar {
+    width: 100%;
+    height: 12px;
+    background-color: #E5E7EB;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.tasksProgressBarFill {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.3s ease-in-out;
+    border-radius: 6px;
+}
+
+.tasksProgressText {
+    color: #4B5563;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.tasksContainerTopRight {
+    display: flex;
+    align-items: center;
+}
+
+.tasksProgressBadge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #F3F4F6;
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tasksProgressBadgeIcon {
+    font-size: 20px;
+}
+
+.tasksProgressBadgeText {
+    color: #1F2937;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .tasksContainerMiddle {

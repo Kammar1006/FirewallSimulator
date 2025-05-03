@@ -11,6 +11,7 @@ import { RiMailCloseFill } from "react-icons/ri";
 import { MdMarkEmailRead } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaLightbulb } from "react-icons/fa";
 
 const TaskDetails = () => {
     const { taskId } = useParams();
@@ -23,6 +24,10 @@ const TaskDetails = () => {
     const [devicePositions, setDevicePositions] = useState({});
     const [packetAnimation, setPacketAnimation] = useState(null);
     const [hoveredDevice, setHoveredDevice] = useState(null);
+    const [totalTasks, setTotalTasks] = useState(0);
+    const [completedTasks, setCompletedTasks] = useState(0);
+    const [showHints, setShowHints] = useState(false);
+    const [currentHint, setCurrentHint] = useState(0);
 
     const predefinedPositions = {
         1: {
@@ -81,12 +86,14 @@ const TaskDetails = () => {
 
     useEffect(() => {
         if (socket) {
-            const studentId = localStorage.getItem("studentId"); // Retrieve studentId from localStorage
+            const studentId = localStorage.getItem("studentId");
             socket.emit("get_student_progress", { studentId });
             socket.on("student_progress", (data) => {
                 if (data && data.progress) {
                     const taskIndex = parseInt(taskId, 10) - 1;
-                    setTaskCompleted(data.progress[taskIndex] === 1); // Check if the task is completed
+                    setTaskCompleted(data.progress[taskIndex] === 1);
+                    setCompletedTasks(data.progress.filter(status => status === 1).length);
+                    setTotalTasks(data.progress.length);
                 }
             });
 
@@ -284,13 +291,32 @@ const TaskDetails = () => {
         }
     };
 
+    const handleShowHint = () => {
+        if (task && task.subtasks && task.subtasks.length > 0) {
+            setShowHints(true);
+            setCurrentHint(0);
+        }
+    };
+
+    const handleNextHint = () => {
+        if (task && task.subtasks && currentHint < task.subtasks.length - 1) {
+            setCurrentHint(prev => prev + 1);
+        }
+    };
+
+    const handlePreviousHint = () => {
+        if (currentHint > 0) {
+            setCurrentHint(prev => prev - 1);
+        }
+    };
+
     const handleSubmit = () => {
         if (taskCompleted && socket) {
-            const studentId = localStorage.getItem("studentId"); // Retrieve studentId from localStorage
+            const studentId = localStorage.getItem("studentId");
             socket.emit("submit_task", { taskId: task.id, studentId });
             socket.once("task_submitted", ({ taskId, success }) => {
                 if (success) {
-                    toast.success(`Task ${taskId} submitted successfully!`, {
+                    toast.success(`Task ${taskId} submitted successfully! (${completedTasks + 1}/${totalTasks} completed)`, {
                         position: "top-right",
                         autoClose: 3000,
                     });
@@ -361,12 +387,24 @@ const TaskDetails = () => {
             <div className="taskDetailsContainer">
                 {/* Top Part */}
                 <div className="taskDetailsContainerTop">
+                    {/* Progress Bar */}
+                    <div className="progressBarContainer">
+                        <div className="progressBar">
+                            <div 
+                                className="progressBarFill" 
+                                style={{ width: `${(completedTasks / totalTasks) * 100}%` }}
+                            />
+                        </div>
+                        <p className="progressText">{completedTasks}/{totalTasks} Tasks Completed</p>
+                    </div>
+
                     {/* Task Completed Badge */}
                     {taskCompleted && (
                         <div className="taskCompletedBadge">
                             <p>🎉 Task Completed Successfully!</p>
                         </div>
                     )}
+
                     {/* First Element */}
                     <div className="taskDetailsContainerTopFirst">
                         <div className="taskDetailsContainerTopFirstContainer">
@@ -452,6 +490,39 @@ const TaskDetails = () => {
                                 </div>
                             ))}
                         </div>
+                    </div>
+
+                    {/* Hints Section */}
+                    <div className="hintsSection">
+                        <button 
+                            className="hintsButton"
+                            onClick={handleShowHint}
+                        >
+                            <FaLightbulb /> Show Hints
+                        </button>
+                        
+                        {showHints && task && task.subtasks && (
+                            <div className="hintsContainer">
+                                <div className="hintsNavigation">
+                                    <button 
+                                        onClick={handlePreviousHint}
+                                        disabled={currentHint === 0}
+                                    >
+                                        Previous
+                                    </button>
+                                    <button 
+                                        onClick={handleNextHint}
+                                        disabled={currentHint === task.subtasks.length - 1}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                                <div className="hintContent">
+                                    <h3>Hint {currentHint + 1}: {task.subtasks[currentHint].title}</h3>
+                                    <p>{task.subtasks[currentHint].description}</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
