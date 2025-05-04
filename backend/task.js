@@ -95,19 +95,19 @@ function Task() {
             case 2: {
                 const devices = [
                     new Device("PC_A", ["10.0.0.2"]),
-                    new Device("R_A", ["10.0.0.1", "172.16.0.1"]),
-                    new Device("R_B", ["172.16.0.2", "192.168.1.1"]),
+                    new Device("S_1", ["", ""], 0, 0), // Switch between PC_A and R_A
+                    new Device("R_A", ["10.0.0.1", "172.16.0.1", "192.168.2.1"]), // R_A with 3 interfaces
+                    new Device("R_B", ["192.168.2.2", "192.168.1.1"]), // Adjusted R_B to connect to R_A's third interface
                     new Device("PC_B", ["192.168.1.2"]),
                     new Device("PC_C", ["192.168.1.3"]),
-                    new Device("S_1", ["", ""], 0, 0),
                 ];
                 const connections = [
-                    [1],       // PC_A -> R_A
-                    [0, 2, 5], // R_A -> PC_A, R_B, S_1
-                    [1, 3, 4], // R_B -> R_A, PC_B, PC_C
-                    [2],       // PC_B -> R_B
-                    [2],       // PC_C -> R_B
-                    [1],       // S_1 -> R_A
+                    [1],       // PC_A -> S_1
+                    [0, 2],    // S_1 -> PC_A, R_A
+                    [1, 3, 4], // R_A -> S_1, R_B, PC_B
+                    [2, 5],    // R_B -> R_A, PC_C
+                    [2],       // PC_B -> R_A
+                    [3],       // PC_C -> R_B
                 ];
 
                 this.network.set(devices, connections);
@@ -131,25 +131,39 @@ function Task() {
                 this.tests = [
                     {
                         name: "Test 1: Zezwól na ruch z PC_A do PC_B",
-                        endpoints: [0, 3],
+                        endpoints: [0, 4],
                         packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "tcp:80" },
                         expected: true,
-                        description: "Powinien zezwolić na ruch z PC_A do PC_B na porcie 80",
+                        description: "Powinien zezwolić na ruch z PC_A do PC_B na porcie 80. Wymaga reguł na R_A i R_B.",
                     },
                     {
                         name: "Test 2: Zablokuj ruch z PC_A do PC_C",
-                        endpoints: [0, 4],
+                        endpoints: [0, 5],
                         packet: { src: "10.0.0.2", des: "192.168.1.3", protocol: "tcp:80" },
                         expected: false,
-                        description: "Powinien zablokować ruch z PC_A do PC_C",
+                        description: "Powinien zablokować ruch z PC_A do PC_C. Wymaga reguł na R_A i R_B.",
                     },
                     {
                         name: "Test 3: Zezwól na ruch między PC_B a PC_C",
-                        endpoints: [3, 4],
+                        endpoints: [4, 5],
                         packet: { src: "192.168.1.2", des: "192.168.1.3", protocol: "udp:53" },
                         expected: true,
-                        description: "Powinien zezwolić na ruch między PC_B a PC_C",
+                        description: "Powinien zezwolić na ruch między PC_B a PC_C. Wymaga reguł na R_B.",
                     },
+                    {
+                        name: "Test 4: Weryfikacja reguł na R_A",
+                        endpoints: [0, 2],
+                        packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "tcp:80" },
+                        expected: true,
+                        description: "Powinien zezwolić na ruch z PC_A przez R_A. Wymaga reguł na R_A.",
+                    },
+                    {
+                        name: "Test 5: Weryfikacja reguł na R_B",
+                        endpoints: [2, 5],
+                        packet: { src: "10.0.0.2", des: "192.168.1.3", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Powinien zablokować ruch z PC_A do PC_C na R_B. Wymaga reguł na R_B.",
+                    }
                 ];
                 this.difficulty = "Średni";
                 this.subtasks = [
@@ -158,10 +172,10 @@ function Task() {
                     { id: 3, title: "Zezwól na ruch między PC_B a PC_C", description: "Upewnij się, że ruch między PC_B a PC_C jest dozwolony." },
                 ];
                 this.hints = [
-                    "Start by allowing traffic from PC_A to PC_B",
-                    "Remember to block traffic from PC_A to PC_C",
-                    "Check if your rules are properly configured on the correct interfaces",
-                    "Make sure to test your configuration with the send_packet command"
+                    "Start by allowing traffic from PC_A to PC_B on R_A and R_B.",
+                    "Remember to block traffic from PC_A to PC_C on both R_A and R_B.",
+                    "Don't forget to configure the necessary rules on R_B for traffic between PC_B and PC_C.",
+                    "Test your configuration with the send_packet command to ensure correctness.",
                 ];
             } break;
 
