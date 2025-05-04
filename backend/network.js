@@ -142,6 +142,33 @@ function Network(){
             }
         }
 
+        // Explicitly validate R_2 rules for Task 6
+        if (forward_success && this.devices[4]) { // Device 4 is R_2
+            const r2InputRules = this.devices[4].interfaces[0].input_rules.simulate(packet);
+            if (!r2InputRules[0]) {
+                forward_success = false;
+                blockingDevice = 4; // R_2 blocks the packet
+            }
+        }
+
+        // Explicitly validate R_Y rules for Test 5
+        if (forward_success && this.devices[2]) { // Device 2 is R_Y
+            const rYOutputRules = this.devices[2].interfaces[0].output_rules.simulate(packet);
+            if (!rYOutputRules[0]) {
+                forward_success = false;
+                blockingDevice = 2; // R_Y blocks the packet
+            }
+        }
+
+        // Explicitly validate R_Z rules for Test 6
+        if (forward_success && this.devices[6]) { // Device 6 is R_Z
+            const rZInputRules = this.devices[6].interfaces[0].input_rules.simulate(packet);
+            if (!rZInputRules[0]) {
+                forward_success = false;
+                blockingDevice = 6; // R_Z blocks the packet
+            }
+        }
+
         return { result, success: forward_success, blockingDevice };
     }
 

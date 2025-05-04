@@ -182,7 +182,7 @@ const TaskDetails = () => {
                         });
 
                         setTimeout(() => {
-                            const speed = 50;
+                            const speed = 200;
                             const devicesOnPath = Object.entries(devicePositions)
                                 .filter(([, pos]) => pos.y === sourcePosition.y && pos.x > sourcePosition.x && pos.x <= finalPosition.x)
                                 .sort(([, a], [, b]) => a.x - b.x);

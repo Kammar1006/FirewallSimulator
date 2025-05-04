@@ -511,7 +511,6 @@ io.on("connection", (sock) => {
 server.listen(PORT, () => {
 	console.log("Work");
 });
-
 const task = new Task();
 task.set(1);
 

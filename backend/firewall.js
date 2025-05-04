@@ -53,6 +53,7 @@ function Firewall(){
     this.simulate = (packet) => {
         // If no rules, default permit
         if (this.list.length === 0) {
+            console.log("No rules configured. Default permit.");
             return [true, ["default_permit"]];
         }
 
@@ -79,12 +80,14 @@ function Firewall(){
                 // Rule matches - apply action and stop processing
                 const action = rule.action === "permit";
                 score.push(rule.action);
+                console.log(`Rule matched. Action: ${rule.action}`);
                 return [action, score];
             }
             score.push("no_match");
         }
 
         // If no rules matched, implicit deny
+        console.log("No matching rules. Implicit deny.");
         return [false, [...score, "implicit_deny"]];
     }
 

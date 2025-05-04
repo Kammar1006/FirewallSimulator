@@ -183,7 +183,7 @@ function Task() {
                 const devices = [
                     new Device("PC_X", ["192.168.100.2"]),
                     new Device("R_X", ["192.168.100.1", "10.10.10.1"]),
-                    new Device("R_Y", ["10.10.10.2", "172.16.10.1"]),
+                    new Device("R_Y", ["10.10.10.2", "172.16.10.1", "172.16.10.5"]),
                     new Device("S_2", ["", ""], 0, 0), // Switch
                     new Device("PC_Y", ["172.16.10.2"]),
                     new Device("PC_Z", ["172.16.10.3"]),
@@ -222,24 +222,59 @@ function Task() {
                 this.tests = [
                     {
                         name: "Test 1: Zezwól na ruch z PC_X do PC_Y",
-                        endpoints: [0, 3],
+                        endpoints: [0, 4],
                         packet: { src: "192.168.100.2", des: "172.16.10.2", protocol: "tcp:22" },
                         expected: true,
-                        description: "Powinien zezwolić na ruch z PC_X do PC_Y na porcie 22",
+                        description: "Powinien zezwolić na ruch z PC_X do PC_Y na porcie 22. Wymaga reguł na R_X i R_Y.",
                     },
                     {
                         name: "Test 2: Zablokuj ruch z PC_X do PC_W",
                         endpoints: [0, 7],
                         packet: { src: "192.168.100.2", des: "192.168.200.2", protocol: "tcp:80" },
                         expected: false,
-                        description: "Powinien zablokować ruch z PC_X do PC_W",
+                        description: "Powinien zablokować ruch z PC_X do PC_W. Wymaga reguł na R_X i R_Z.",
                     },
                     {
                         name: "Test 3: Zezwól na ruch między PC_Y a PC_Z",
-                        endpoints: [3, 5],
+                        endpoints: [4, 5],
                         packet: { src: "172.16.10.2", des: "172.16.10.3", protocol: "udp:53" },
                         expected: true,
-                        description: "Powinien zezwolić na ruch między PC_Y a PC_Z",
+                        description: "Powinien zezwolić na ruch między PC_Y a PC_Z. Wymaga reguł na R_Y.",
+                    },
+                    {
+                        name: "Test 4: Zablokuj ruch z PC_X do PC_Z",
+                        endpoints: [0, 5],
+                        packet: { src: "192.168.100.2", des: "172.16.10.3", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Powinien zablokować ruch z PC_X do PC_Z. Wymaga reguł na R_X i R_Y.",
+                    },
+                    {
+                        name: "Test 5: Zezwól na ruch z PC_Y do PC_W",
+                        endpoints: [4, 7],
+                        packet: { src: "172.16.10.2", des: "192.168.200.2", protocol: "tcp:443" },
+                        expected: true,
+                        description: "Powinien zezwolić na ruch z PC_Y do PC_W. Wymaga reguł na R_Y i R_Z.",
+                    },
+                    {
+                        name: "Test 6: Zablokuj ruch z PC_Z do PC_W",
+                        endpoints: [5, 7],
+                        packet: { src: "172.16.10.3", des: "192.168.200.2", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Powinien zablokować ruch z PC_Z do PC_W. Wymaga reguł na R_Z.",
+                    },
+                    {
+                        name: "Test 7: Zezwól na ruch z PC_X do R_Y",
+                        endpoints: [0, 2],
+                        packet: { src: "192.168.100.2", des: "10.10.10.2", protocol: "tcp:22" },
+                        expected: true,
+                        description: "Powinien zezwolić na ruch z PC_X do R_Y. Wymaga reguł na R_X.",
+                    },
+                    {
+                        name: "Test 8: Zablokuj ruch z PC_X do R_Z",
+                        endpoints: [0, 6],
+                        packet: { src: "192.168.100.2", des: "172.16.10.4", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Powinien zablokować ruch z PC_X do R_Z. Wymaga reguł na R_X i R_Z.",
                     },
                 ];
                 this.difficulty = "Trudny";
@@ -247,12 +282,15 @@ function Task() {
                     { id: 1, title: "Zezwól na ruch z PC_X do PC_Y", description: "Upewnij się, że ruch z PC_X do PC_Y jest dozwolony." },
                     { id: 2, title: "Zablokuj ruch z PC_X do PC_W", description: "Upewnij się, że ruch z PC_X do PC_W jest zablokowany." },
                     { id: 3, title: "Zezwól na ruch między PC_Y a PC_Z", description: "Upewnij się, że ruch między PC_Y a PC_Z jest dozwolony." },
+                    { id: 4, title: "Zablokuj ruch z PC_X do PC_Z", description: "Upewnij się, że ruch z PC_X do PC_Z jest zablokowany." },
+                    { id: 5, title: "Zezwól na ruch z PC_Y do PC_W", description: "Upewnij się, że ruch z PC_Y do PC_W jest dozwolony." },
                 ];
                 this.hints = [
-                    "Focus on allowing traffic between PC_X and PC_Y first",
-                    "Don't forget to block traffic from PC_X to PC_Z",
-                    "Check if your rules are properly configured on all necessary devices",
-                    "Remember to test your configuration with different protocols"
+                    "Skonfiguruj reguły na R_X, aby zezwolić na ruch z PC_X do PC_Y.",
+                    "Zablokuj ruch z PC_X do PC_W na R_X i R_Z.",
+                    "Zezwól na ruch między PC_Y a PC_Z na R_Y.",
+                    "Zablokuj ruch z PC_X do PC_Z na R_X i R_Y.",
+                    "Zezwól na ruch z PC_Y do PC_W na R_Y i R_Z.",
                 ];
             } break;
 
@@ -312,7 +350,50 @@ function Task() {
                         packet: { src: "10.10.1.4", des: "192.0.2.2", protocol: "udp:53" },
                         expected: true,
                         description: "Should allow DNS from PC_3 to Internet server"
-                    }
+                    },
+                    // --- Additional tests ---
+                    {
+                        name: "Test 4: Allow HTTP from PC_2 to PC_4",
+                        endpoints: [1, 5],
+                        packet: { src: "10.10.1.3", des: "192.0.2.2", protocol: "tcp:80" },
+                        expected: true,
+                        description: "Should allow HTTP from PC_2 to Internet server"
+                    },
+                    {
+                        name: "Test 5: Allow DNS from PC_1 to PC_4",
+                        endpoints: [0, 5],
+                        packet: { src: "10.10.1.2", des: "192.0.2.2", protocol: "udp:53" },
+                        expected: true,
+                        description: "Should allow DNS from PC_1 to Internet server"
+                    },
+                    {
+                        name: "Test 6: Block ICMP from PC_1 to PC_4",
+                        endpoints: [0, 5],
+                        packet: { src: "10.10.1.2", des: "192.0.2.2", protocol: "icmp:any" },
+                        expected: false,
+                        description: "Should block ICMP (ping) from PC_1 to Internet server"
+                    },
+                    {
+                        name: "Test 7: Block UDP/9999 from PC_3 to PC_4",
+                        endpoints: [2, 5],
+                        packet: { src: "10.10.1.4", des: "192.0.2.2", protocol: "udp:9999" },
+                        expected: false,
+                        description: "Should block UDP/9999 from PC_3 to Internet server"
+                    },
+                    {
+                        name: "Test 8: Block TCP/443 from PC_1 to PC_4",
+                        endpoints: [0, 5],
+                        packet: { src: "10.10.1.2", des: "192.0.2.2", protocol: "tcp:443" },
+                        expected: false,
+                        description: "Should block HTTPS from PC_1 to Internet server"
+                    },
+                    // {
+                    //     name: "Test 9: Block HTTP from PC_1 to PC_3",
+                    //     endpoints: [0, 2],
+                    //     packet: { src: "10.10.1.2", des: "10.10.1.4", protocol: "tcp:80" },
+                    //     expected: false,
+                    //     description: "Should block HTTP from PC_1 to PC_3 (no rule for this)"
+                    // }
                 ];
                 this.difficulty = "Medium";
                 this.subtasks = [
@@ -385,7 +466,57 @@ function Task() {
                         packet: { src: "172.16.1.2", des: "10.20.1.3", protocol: "tcp:80" },
                         expected: true,
                         description: "Should allow HTTP from PC_A to PC_D"
-                    }
+                    },
+                    // --- Additional tests ---
+                    {
+                        name: "Test 4: Block SSH from PC_B to PC_C",
+                        endpoints: [1, 5],
+                        packet: { src: "172.16.1.3", des: "10.20.1.2", protocol: "tcp:22" },
+                        expected: false,
+                        description: "Should block SSH from PC_B to PC_C"
+                    },
+                    {
+                        name: "Test 5: Block HTTP from PC_B to PC_C",
+                        endpoints: [1, 5],
+                        packet: { src: "172.16.1.3", des: "10.20.1.2", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Should block HTTP from PC_B to PC_C"
+                    },
+                    {
+                        name: "Test 6: Block HTTP from PC_A to PC_C",
+                        endpoints: [0, 5],
+                        packet: { src: "172.16.1.2", des: "10.20.1.2", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Should block HTTP from PC_A to PC_C (only SSH allowed)"
+                    },
+                    {
+                        name: "Test 7: Block SSH from PC_A to PC_D",
+                        endpoints: [0, 6],
+                        packet: { src: "172.16.1.2", des: "10.20.1.3", protocol: "tcp:22" },
+                        expected: false,
+                        description: "Should block SSH from PC_A to PC_D (only HTTP allowed)"
+                    },
+                    {
+                        name: "Test 8: Block UDP/53 from PC_A to PC_D",
+                        endpoints: [0, 6],
+                        packet: { src: "172.16.1.2", des: "10.20.1.3", protocol: "udp:53" },
+                        expected: false,
+                        description: "Should block DNS from PC_A to PC_D (no rule for DNS)"
+                    },
+                    {
+                        name: "Test 9: Block HTTP from PC_B to PC_D",
+                        endpoints: [1, 6],
+                        packet: { src: "172.16.1.3", des: "10.20.1.3", protocol: "tcp:80" },
+                        expected: false,
+                        description: "Should block HTTP from PC_B to PC_D"
+                    },
+                    // {
+                    //     name: "Test 10: Block HTTP from PC_A to PC_B",
+                    //     endpoints: [0, 1],
+                    //     packet: { src: "172.16.1.2", des: "172.16.1.3", protocol: "tcp:80" },
+                    //     expected: false,
+                    //     description: "Should block HTTP from PC_A to PC_B (no rule for this)"
+                    // }
                 ];
                 this.difficulty = "Hard";
                 this.subtasks = [
@@ -401,7 +532,6 @@ function Task() {
             } break;
 
             case 6: {
-                // Large: PC_1, PC_2 -> S_1 -> R_1 -> R_2 -> S_2 -> PC_3, PC_4
                 const devices = [
                     new Device("PC_1", ["192.168.10.2"]),
                     new Device("PC_2", ["192.168.10.3"]),
@@ -445,21 +575,42 @@ function Task() {
                         endpoints: [0, 6],
                         packet: { src: "192.168.10.2", des: "172.16.20.2", protocol: "tcp:21" },
                         expected: true,
-                        description: "Should allow FTP from PC_1 to PC_3"
+                        description: "Should allow FTP from PC_1 to PC_3. Requires rules on both R_1 and R_2.",
                     },
                     {
                         name: "Test 2: Block all from PC_2 to PC_4",
                         endpoints: [1, 7],
                         packet: { src: "192.168.10.3", des: "172.16.20.3", protocol: "tcp:80" },
                         expected: false,
-                        description: "Should block all from PC_2 to PC_4"
+                        description: "Should block all from PC_2 to PC_4. Requires rules on both R_1 and R_2.",
                     },
                     {
                         name: "Test 3: Allow SMTP from PC_1 to PC_4",
                         endpoints: [0, 7],
                         packet: { src: "192.168.10.2", des: "172.16.20.3", protocol: "tcp:25" },
                         expected: true,
-                        description: "Should allow SMTP from PC_1 to PC_4"
+                        description: "Should allow SMTP from PC_1 to PC_4. Requires rules on both R_1 and R_2.",
+                    },
+                    {
+                        name: "Test 4: Validate R_2 input rules for FTP",
+                        endpoints: [3, 4],
+                        packet: { src: "192.168.10.2", des: "172.16.20.2", protocol: "tcp:21" },
+                        expected: true,
+                        description: "R_2 should allow FTP traffic from R_1 to PC_3.",
+                    },
+                    {
+                        name: "Test 5: Validate R_2 input rules for SMTP",
+                        endpoints: [3, 4],
+                        packet: { src: "192.168.10.2", des: "172.16.20.3", protocol: "tcp:25" },
+                        expected: true,
+                        description: "R_2 should allow SMTP traffic from R_1 to PC_4.",
+                    },
+                    {
+                        name: "Test 6: Validate R_2 input rules for blocking PC_2",
+                        endpoints: [3, 4],
+                        packet: { src: "192.168.10.3", des: "172.16.20.3", protocol: "tcp:80" },
+                        expected: false,
+                        description: "R_2 should block traffic from PC_2 to PC_4.",
                     }
                 ];
                 this.difficulty = "Very Hard";
@@ -471,8 +622,16 @@ function Task() {
                 this.hints = [
                     "FTP uses tcp:21, SMTP uses tcp:25",
                     "Block all from PC_2 to PC_4",
-                    "Rules should be on R_1 and R_2"
+                    "Rules should be on both R_1 and R_2"
                 ];
+
+                // Add required rules
+                this.network.configure(3, 0, "output", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.2", protocol: "tcp:21" }); // R_1 for FTP
+                this.network.configure(4, 0, "input", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.2", protocol: "tcp:21" }); // R_2 for FTP
+                this.network.configure(3, 0, "output", "add", -1, { action: "deny", src: "192.168.10.3", des: "172.16.20.3", protocol: "any" }); // R_1 to block PC_2 to PC_4
+                this.network.configure(4, 0, "input", "add", -1, { action: "deny", src: "192.168.10.3", des: "172.16.20.3", protocol: "any" }); // R_2 to block PC_2 to PC_4
+                this.network.configure(3, 0, "output", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.3", protocol: "tcp:25" }); // R_1 for SMTP
+                this.network.configure(4, 0, "input", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.3", protocol: "tcp:25" }); // R_2 for SMTP
             } break;
 
             // for next
