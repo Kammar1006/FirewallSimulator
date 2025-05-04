@@ -257,227 +257,221 @@ function Task() {
             } break;
 
             case 4: {
+                // Small office: PC_1, PC_2, PC_3 -> S_1 -> R_1 -> PC_4 (Internet)
                 const devices = [
-                    new Device("PC_1", ["192.168.10.2"]),
-                    new Device("R_1", ["192.168.10.1", "10.0.0.1"]),
-                    new Device("R_2", ["10.0.0.2", "172.16.0.1"]),
-                    new Device("PC_2", ["172.16.0.2"]),
-                    new Device("PC_3", ["172.16.0.3"]),
-                    new Device("S_1", ["", ""], 0, 0), // Switch
+                    new Device("PC_1", ["10.10.1.2"]),
+                    new Device("PC_2", ["10.10.1.3"]),
+                    new Device("PC_3", ["10.10.1.4"]),
+                    new Device("S_1", ["", "", "", ""], 0, 0),
+                    new Device("R_1", ["10.10.1.1", "192.0.2.1"]),
+                    new Device("PC_4", ["192.0.2.2"]), // Internet server
                 ];
                 const connections = [
-                    [1],       // PC_1 -> R_1
-                    [0, 2, 5], // R_1 -> PC_1, R_2, S_1
-                    [1, 3, 4], // R_2 -> R_1, PC_2, PC_3
-                    [2],       // PC_2 -> R_2
-                    [2],       // PC_3 -> R_2
-                    [1],       // S_1 -> R_1
+                    [3],        // PC_1 -> S_1
+                    [3],        // PC_2 -> S_1
+                    [3],        // PC_3 -> S_1
+                    [0, 1, 2, 4], // S_1 -> PC_1, PC_2, PC_3, R_1
+                    [3, 5],     // R_1 -> S_1, PC_4
+                    [4],        // PC_4 -> R_1
                 ];
-
                 this.network.set(devices, connections);
                 this.topology = {
                     devices: devices.map((device, index) => ({
                         id: index,
                         name: device.name,
-                        interfaces: device.interfaces.map((iface) => iface.inet || ""), // Ensure empty strings for missing IPs
+                        interfaces: device.interfaces.map((iface) => iface.inet || "")
                     })),
                     connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
-                    ),
+                    )
                 };
-
-                this.title = "Advanced Firewall Configuration";
+                this.title = "Small Office Firewall";
                 this.desc = [
-                    "Allow traffic from PC_1 to PC_2 on port 22.",
-                    "Block traffic from PC_1 to PC_3.",
-                    "Allow traffic between PC_2 and PC_3."
+                    "Allow HTTP (tcp:80) from any PC to PC_4 (Internet server)",
+                    "Block all other outgoing traffic from PCs to PC_4",
+                    "Allow DNS (udp:53) from any PC to PC_4"
                 ];
                 this.tests = [
                     {
-                        name: "Test 1: Allow traffic from PC_1 to PC_2",
-                        endpoints: [0, 3],
-                        packet: { src: "192.168.10.2", des: "172.16.0.2", protocol: "tcp:22" },
+                        name: "Test 1: Allow HTTP from PC_1 to PC_4",
+                        endpoints: [0, 5],
+                        packet: { src: "10.10.1.2", des: "192.0.2.2", protocol: "tcp:80" },
                         expected: true,
-                        description: "Should allow traffic from PC_1 to PC_2 on port 22"
+                        description: "Should allow HTTP from PC_1 to Internet server"
                     },
                     {
-                        name: "Test 2: Block traffic from PC_1 to PC_3",
-                        endpoints: [0, 4],
-                        packet: { src: "192.168.10.2", des: "172.16.0.3", protocol: "tcp:80" },
+                        name: "Test 2: Block SSH from PC_2 to PC_4",
+                        endpoints: [1, 5],
+                        packet: { src: "10.10.1.3", des: "192.0.2.2", protocol: "tcp:22" },
                         expected: false,
-                        description: "Should block traffic from PC_1 to PC_3"
+                        description: "Should block SSH from PC_2 to Internet server"
                     },
                     {
-                        name: "Test 3: Allow traffic between PC_2 and PC_3",
-                        endpoints: [3, 4],
-                        packet: { src: "172.16.0.2", des: "172.16.0.3", protocol: "udp:53" },
+                        name: "Test 3: Allow DNS from PC_3 to PC_4",
+                        endpoints: [2, 5],
+                        packet: { src: "10.10.1.4", des: "192.0.2.2", protocol: "udp:53" },
                         expected: true,
-                        description: "Should allow traffic between PC_2 and PC_3"
+                        description: "Should allow DNS from PC_3 to Internet server"
                     }
                 ];
                 this.difficulty = "Medium";
                 this.subtasks = [
-                    { id: 1, title: "Allow traffic from PC_1 to PC_2", description: "Ensure traffic from PC_1 to PC_2 is allowed." },
-                    { id: 2, title: "Block traffic from PC_1 to PC_3", description: "Ensure traffic from PC_1 to PC_3 is blocked." },
-                    { id: 3, title: "Allow traffic between PC_2 and PC_3", description: "Ensure traffic between PC_2 and PC_3 is allowed." },
+                    { id: 1, title: "Allow HTTP", description: "Allow HTTP from all PCs to Internet server" },
+                    { id: 2, title: "Block other outgoing", description: "Block all other outgoing traffic from PCs to Internet server" },
+                    { id: 3, title: "Allow DNS", description: "Allow DNS from all PCs to Internet server" }
                 ];
                 this.hints = [
-                    "Start by configuring the basic traffic rules",
-                    "Remember to check the protocol and port requirements",
-                    "Make sure your rules are properly ordered",
-                    "Test your configuration with different source and destination combinations"
+                    "HTTP uses tcp:80, DNS uses udp:53",
+                    "Block all except allowed protocols",
+                    "Rules should be on R_1 input/output"
                 ];
             } break;
 
             case 5: {
+                // Medium: PC_A, PC_B -> S_A -> R_A -> S_B -> PC_C, PC_D
                 const devices = [
-                    new Device("PC_A", ["192.168.50.2"]),
-                    new Device("R_A", ["192.168.50.1", "10.50.0.1"]),
-                    new Device("R_B", ["10.50.0.2", "172.50.0.1"]),
-                    new Device("PC_B", ["172.50.0.2"]),
-                    new Device("PC_C", ["172.50.0.3"]),
-                    new Device("S_2", ["", ""], 0, 0), // Switch
-                    new Device("PC_D", ["172.50.0.4"]),
+                    new Device("PC_A", ["172.16.1.2"]),
+                    new Device("PC_B", ["172.16.1.3"]),
+                    new Device("S_A", ["", "", ""], 0, 0),
+                    new Device("R_A", ["172.16.1.1", "10.20.1.1"]),
+                    new Device("S_B", ["", "", ""], 0, 0),
+                    new Device("PC_C", ["10.20.1.2"]),
+                    new Device("PC_D", ["10.20.1.3"]),
                 ];
                 const connections = [
-                    [1],       // PC_A -> R_A
-                    [0, 2, 5], // R_A -> PC_A, R_B, S_2
-                    [1, 3, 4, 6], // R_B -> R_A, PC_B, PC_C, PC_D
-                    [2],       // PC_B -> R_B
-                    [2],       // PC_C -> R_B
-                    [1],       // S_2 -> R_A
-                    [2],       // PC_D -> R_B
+                    [2],        // PC_A -> S_A
+                    [2],        // PC_B -> S_A
+                    [0, 1, 3],  // S_A -> PC_A, PC_B, R_A
+                    [2, 4],     // R_A -> S_A, S_B
+                    [3, 5, 6],  // S_B -> R_A, PC_C, PC_D
+                    [4],        // PC_C -> S_B
+                    [4],        // PC_D -> S_B
                 ];
-
                 this.network.set(devices, connections);
                 this.topology = {
                     devices: devices.map((device, index) => ({
                         id: index,
                         name: device.name,
-                        interfaces: device.interfaces.map((iface) => iface.inet || ""), // Ensure empty strings for missing IPs
+                        interfaces: device.interfaces.map((iface) => iface.inet || "")
                     })),
                     connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
-                    ),
+                    )
                 };
-
-                this.title = "Complex Firewall Rules";
+                this.title = "Two-Switch Segmented Network";
                 this.desc = [
-                    "Allow traffic from PC_A to PC_B on port 443.",
-                    "Block traffic from PC_A to PC_C.",
-                    "Allow traffic between PC_B and PC_D."
+                    "Allow SSH (tcp:22) from PC_A to PC_C",
+                    "Block all traffic from PC_B to PC_D",
+                    "Allow HTTP (tcp:80) from PC_A to PC_D"
                 ];
                 this.tests = [
                     {
-                        name: "Test 1: Allow traffic from PC_A to PC_B",
-                        endpoints: [0, 3],
-                        packet: { src: "192.168.50.2", des: "172.50.0.2", protocol: "tcp:443" },
+                        name: "Test 1: Allow SSH from PC_A to PC_C",
+                        endpoints: [0, 5],
+                        packet: { src: "172.16.1.2", des: "10.20.1.2", protocol: "tcp:22" },
                         expected: true,
-                        description: "Should allow traffic from PC_A to PC_B on port 443"
+                        description: "Should allow SSH from PC_A to PC_C"
                     },
                     {
-                        name: "Test 2: Block traffic from PC_A to PC_C",
-                        endpoints: [0, 4],
-                        packet: { src: "192.168.50.2", des: "172.50.0.3", protocol: "tcp:80" },
+                        name: "Test 2: Block all from PC_B to PC_D",
+                        endpoints: [1, 6],
+                        packet: { src: "172.16.1.3", des: "10.20.1.3", protocol: "tcp:80" },
                         expected: false,
-                        description: "Should block traffic from PC_A to PC_C"
+                        description: "Should block all from PC_B to PC_D"
                     },
                     {
-                        name: "Test 3: Allow traffic between PC_B and PC_D",
-                        endpoints: [3, 6],
-                        packet: { src: "172.50.0.2", des: "172.50.0.4", protocol: "udp:53" },
+                        name: "Test 3: Allow HTTP from PC_A to PC_D",
+                        endpoints: [0, 6],
+                        packet: { src: "172.16.1.2", des: "10.20.1.3", protocol: "tcp:80" },
                         expected: true,
-                        description: "Should allow traffic between PC_B and PC_D"
+                        description: "Should allow HTTP from PC_A to PC_D"
                     }
                 ];
                 this.difficulty = "Hard";
                 this.subtasks = [
-                    { id: 1, title: "Allow traffic from PC_A to PC_B", description: "Ensure traffic from PC_A to PC_B is allowed." },
-                    { id: 2, title: "Block traffic from PC_A to PC_C", description: "Ensure traffic from PC_A to PC_C is blocked." },
-                    { id: 3, title: "Allow traffic between PC_B and PC_D", description: "Ensure traffic between PC_B and PC_D is allowed." },
+                    { id: 1, title: "Allow SSH", description: "Allow SSH from PC_A to PC_C" },
+                    { id: 2, title: "Block PC_B to PC_D", description: "Block all traffic from PC_B to PC_D" },
+                    { id: 3, title: "Allow HTTP", description: "Allow HTTP from PC_A to PC_D" }
                 ];
                 this.hints = [
-                    "Focus on the specific requirements for PC_A to PC_B traffic",
-                    "Remember to block unwanted traffic from PC_A to PC_C",
-                    "Check if your rules are properly configured on all interfaces",
-                    "Test your configuration with different protocols and ports"
+                    "SSH uses tcp:22, HTTP uses tcp:80",
+                    "Block all from PC_B to PC_D",
+                    "Rules should be on R_A input/output"
                 ];
             } break;
 
             case 6: {
+                // Large: PC_1, PC_2 -> S_1 -> R_1 -> R_2 -> S_2 -> PC_3, PC_4
                 const devices = [
-                    new Device("PC_X", ["192.168.100.2"]),
-                    new Device("R_X", ["192.168.100.1", "10.100.0.1"]),
-                    new Device("R_Y", ["10.100.0.2", "172.100.0.1"]),
-                    new Device("PC_Y", ["172.100.0.2"]),
-                    new Device("PC_Z", ["172.100.0.3"]),
-                    new Device("S_3", ["", ""], 0, 0), // Switch
-                    new Device("PC_W", ["172.100.0.4"]),
-                    new Device("PC_V", ["172.100.0.5"]),
+                    new Device("PC_1", ["192.168.10.2"]),
+                    new Device("PC_2", ["192.168.10.3"]),
+                    new Device("S_1", ["", "", ""], 0, 0),
+                    new Device("R_1", ["192.168.10.1", "10.30.1.1"]),
+                    new Device("R_2", ["10.30.1.2", "172.16.20.1"]),
+                    new Device("S_2", ["", "", ""], 0, 0),
+                    new Device("PC_3", ["172.16.20.2"]),
+                    new Device("PC_4", ["172.16.20.3"]),
                 ];
                 const connections = [
-                    [1],       // PC_X -> R_X
-                    [0, 2, 5], // R_X -> PC_X, R_Y, S_3
-                    [1, 3, 4, 6, 7], // R_Y -> R_X, PC_Y, PC_Z, PC_W, PC_V
-                    [2],       // PC_Y -> R_Y
-                    [2],       // PC_Z -> R_Y
-                    [1],       // S_3 -> R_X
-                    [2],       // PC_W -> R_Y
-                    [2],       // PC_V -> R_Y
+                    [2],        // PC_1 -> S_1
+                    [2],        // PC_2 -> S_1
+                    [0, 1, 3],  // S_1 -> PC_1, PC_2, R_1
+                    [2, 4],     // R_1 -> S_1, R_2
+                    [3, 5],     // R_2 -> R_1, S_2
+                    [4, 6, 7],  // S_2 -> R_2, PC_3, PC_4
+                    [5],        // PC_3 -> S_2
+                    [5],        // PC_4 -> S_2
                 ];
-
                 this.network.set(devices, connections);
                 this.topology = {
                     devices: devices.map((device, index) => ({
                         id: index,
                         name: device.name,
-                        interfaces: device.interfaces.map((iface) => iface.inet || ""), // Ensure empty strings for missing IPs
+                        interfaces: device.interfaces.map((iface) => iface.inet || "")
                     })),
                     connections: connections.flatMap((conn, index) =>
                         conn.map((target) => ({ source: index, target }))
-                    ),
+                    )
                 };
-
-                this.title = "Enterprise Firewall Rules";
+                this.title = "Enterprise Routed Network";
                 this.desc = [
-                    "Allow traffic from PC_X to PC_Y on port 22.",
-                    "Block traffic from PC_X to PC_Z.",
-                    "Allow traffic between PC_W and PC_V."
+                    "Allow FTP (tcp:21) from PC_1 to PC_3",
+                    "Block all from PC_2 to PC_4",
+                    "Allow SMTP (tcp:25) from PC_1 to PC_4"
                 ];
                 this.tests = [
                     {
-                        name: "Test 1: Allow traffic from PC_X to PC_Y",
-                        endpoints: [0, 3],
-                        packet: { src: "192.168.100.2", des: "172.100.0.2", protocol: "tcp:22" },
+                        name: "Test 1: Allow FTP from PC_1 to PC_3",
+                        endpoints: [0, 6],
+                        packet: { src: "192.168.10.2", des: "172.16.20.2", protocol: "tcp:21" },
                         expected: true,
-                        description: "Should allow traffic from PC_X to PC_Y on port 22"
+                        description: "Should allow FTP from PC_1 to PC_3"
                     },
                     {
-                        name: "Test 2: Block traffic from PC_X to PC_Z",
-                        endpoints: [0, 4],
-                        packet: { src: "192.168.100.2", des: "172.100.0.3", protocol: "tcp:80" },
+                        name: "Test 2: Block all from PC_2 to PC_4",
+                        endpoints: [1, 7],
+                        packet: { src: "192.168.10.3", des: "172.16.20.3", protocol: "tcp:80" },
                         expected: false,
-                        description: "Should block traffic from PC_X to PC_Z"
+                        description: "Should block all from PC_2 to PC_4"
                     },
                     {
-                        name: "Test 3: Allow traffic between PC_W and PC_V",
-                        endpoints: [6, 7],
-                        packet: { src: "172.100.0.4", des: "172.100.0.5", protocol: "udp:53" },
+                        name: "Test 3: Allow SMTP from PC_1 to PC_4",
+                        endpoints: [0, 7],
+                        packet: { src: "192.168.10.2", des: "172.16.20.3", protocol: "tcp:25" },
                         expected: true,
-                        description: "Should allow traffic between PC_W and PC_V"
+                        description: "Should allow SMTP from PC_1 to PC_4"
                     }
                 ];
                 this.difficulty = "Very Hard";
                 this.subtasks = [
-                    { id: 1, title: "Allow traffic from PC_X to PC_Y", description: "Ensure traffic from PC_X to PC_Y is allowed." },
-                    { id: 2, title: "Block traffic from PC_X to PC_Z", description: "Ensure traffic from PC_X to PC_Z is blocked." },
-                    { id: 3, title: "Allow traffic between PC_W and PC_V", description: "Ensure traffic between PC_W and PC_V is allowed." },
+                    { id: 1, title: "Allow FTP", description: "Allow FTP from PC_1 to PC_3" },
+                    { id: 2, title: "Block PC_2 to PC_4", description: "Block all from PC_2 to PC_4" },
+                    { id: 3, title: "Allow SMTP", description: "Allow SMTP from PC_1 to PC_4" }
                 ];
                 this.hints = [
-                    "Start by allowing traffic between PC_X and PC_Y",
-                    "Remember to block traffic from PC_X to PC_Z",
-                    "Check if your rules are properly configured on all devices",
-                    "Test your configuration with different protocols and ports"
+                    "FTP uses tcp:21, SMTP uses tcp:25",
+                    "Block all from PC_2 to PC_4",
+                    "Rules should be on R_1 and R_2"
                 ];
             } break;
 
