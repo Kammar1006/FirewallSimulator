@@ -184,18 +184,18 @@ function Task() {
                     new Device("PC_X", ["192.168.100.2"]),
                     new Device("R_X", ["192.168.100.1", "10.10.10.1"]),
                     new Device("R_Y", ["10.10.10.2", "172.16.10.1"]),
-                    new Device("PC_Y", ["172.16.10.2"]),
                     new Device("S_2", ["", ""], 0, 0), // Switch
+                    new Device("PC_Y", ["172.16.10.2"]),
                     new Device("PC_Z", ["172.16.10.3"]),
                     new Device("R_Z", ["172.16.10.4", "192.168.200.1"]),
                     new Device("PC_W", ["192.168.200.2"]),
                 ];
                 const connections = [
                     [1],       // PC_X -> R_X
-                    [0, 2, 4], // R_X -> PC_X, R_Y, S_2
-                    [1, 3, 6], // R_Y -> R_X, PC_Y, R_Z
-                    [2],       // PC_Y -> R_Y
+                    [0, 2, 3], // R_X -> PC_X, R_Y, S_2
+                    [1, 4, 5, 6], // R_Y -> R_X, PC_Y, PC_Z, R_Z
                     [1],       // S_2 -> R_X
+                    [2],       // PC_Y -> R_Y
                     [2],       // PC_Z -> R_Y
                     [2, 7],    // R_Z -> R_Y, PC_W
                     [6],       // PC_W -> R_Z
