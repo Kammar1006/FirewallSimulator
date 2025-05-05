@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import "./App.css";
 
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
@@ -11,9 +11,11 @@ import Login from './pages/Login/Login';
 import Documentation from './pages/Documentation/Documentation';
 import Admin from './pages/Admin/Admin';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import { RulesContext } from './context/RulesContext';
 // import Test from './pages/test/Test';
 
 const App = () => {
+  const { serverConfig } = useContext(RulesContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -65,7 +67,7 @@ export default App;
     window.flag_solved = function() {
       const studentId = localStorage.getItem("studentId");
       if (!studentId) return;
-      fetch("http://localhost:5003/students/" + studentId + "/progress", {
+      fetch(`${window.serverConfig.address}/students/${studentId}/progress`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ taskIndex: "all", value: 1 })

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import "./login.css";
 import assets from '../../assets/assets';
 import { FaShieldAlt } from "react-icons/fa";
@@ -8,10 +8,10 @@ import { useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
 import { toast } from 'react-toastify';
 import Loading from '../../components/Loading/Loading';
-
-const socket = io("http://localhost:5003");
+import { RulesContext } from '../../context/RulesContext';
 
 const Login = () => {
+  const { serverConfig } = useContext(RulesContext);
   const [id, setId] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
@@ -19,6 +19,8 @@ const Login = () => {
   const [idFocused, setIdFocused] = useState(false);
   const [lastNameFocused, setLastNameFocused] = useState(false);
   const navigate = useNavigate();
+
+  const socket = io(serverConfig.address);
 
   const handleLogin = () => {
     setLoading(true); // Show loading spinner

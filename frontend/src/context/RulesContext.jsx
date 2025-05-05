@@ -3,6 +3,10 @@ import { io } from "socket.io-client";
 
 export const RulesContext = createContext();
 
+export const SERVER_CONFIG = {
+  address: "http://localhost:5003"
+};
+
 const RulesContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [rules, setRules] = useState([]);
@@ -11,7 +15,7 @@ const RulesContextProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5003", { withCredentials: true });
+    const newSocket = io(SERVER_CONFIG.address, { withCredentials: true });
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
@@ -85,7 +89,8 @@ const RulesContextProvider = ({ children }) => {
         validateChallenge,
         loading,
         error,
-        socket
+        socket,
+        serverConfig: SERVER_CONFIG
       }}
     >
       {children}

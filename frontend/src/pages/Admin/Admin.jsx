@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bcrypt from 'bcryptjs';
 import './Admin.css';
 import { io } from "socket.io-client";
-
-// Initialize socket only once, outside the component
-const socket = io("http://localhost:5003", { transports: ["websocket"] });
+import { RulesContext } from '../../context/RulesContext';
 
 const Admin = () => {
+  const { serverConfig } = useContext(RulesContext);
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [students, setStudents] = useState([]);
@@ -21,6 +20,9 @@ const Admin = () => {
   });
 
   const hashedPassword = '$2a$12$GHr2VKqqFwUlTRbYXLrvkuGxK2xwwCVsWwvkKD6Q3wCYqK96vTRQK';
+
+  // Initialize socket only once, outside the component
+  const socket = io(serverConfig.address, { transports: ["websocket"] });
 
   useEffect(() => {
     const adminToken = localStorage.getItem('adminToken');
@@ -43,7 +45,7 @@ const Admin = () => {
   const fetchStudents = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5003/students');
+      const response = await fetch(`${serverConfig.address}/students`);
       if (!response.ok) {
         throw new Error('Failed to fetch students');
       }
@@ -81,7 +83,7 @@ const Admin = () => {
   const handleAddStudent = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5003/students', {
+      const response = await fetch(`${serverConfig.address}/students`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +112,7 @@ const Admin = () => {
 
   const handleUpdateProgress = async (studentId, taskIndex, value) => {
     try {
-      const response = await fetch(`http://localhost:5003/students/${studentId}/progress`, {
+      const response = await fetch(`${serverConfig.address}/students/${studentId}/progress`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
