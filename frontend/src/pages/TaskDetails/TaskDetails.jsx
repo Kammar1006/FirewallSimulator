@@ -433,22 +433,22 @@ const TaskDetails = () => {
                                     </button>
                                 </div>
                                 <div className="hintsContainer">
-                                    <button 
+                                    <div 
                                         className="hintsButton"
                                         onClick={handleShowHints}
                                     >
                                         <FaLightbulb /> Show Hints
-                                    </button>
+                                    </div>
                                     {showHints && task?.hints && task.hints.length > 0 && (
                                         <div className="hintsSection">
                                             <div className="hintsHeader">
                                                 <h3>Task Hints</h3>
-                                                <button 
+                                                <div 
                                                     className="hintsCloseButton"
                                                     onClick={() => setShowHints(false)}
                                                 >
                                                     <FaTimes />
-                                                </button>
+                                                </div>
                                             </div>
                                             <div className="hintsContent">
                                                 {task.hints.map((hint, index) => (
