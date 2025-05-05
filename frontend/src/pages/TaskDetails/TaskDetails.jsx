@@ -275,14 +275,17 @@ const TaskDetails = () => {
         if (socket) {
             socket.emit("check_task_completion");
             socket.once("task_completion_status", ({ isCompleted }) => {
-                setTaskCompleted(isCompleted);
-
                 if (isCompleted) {
+                    setTaskCompleted(true);
                     toast.success("All tests passed successfully!", {
                         position: "top-right",
                         autoClose: 3000,
                     });
+                    setTimeout(() => {
+                        handleSubmit();
+                    }, 1000);
                 } else {
+                    setTaskCompleted(false);
                     toast.error("Some tests failed. Please review your configuration.", {
                         position: "top-right",
                         autoClose: 3000,
@@ -318,7 +321,7 @@ const TaskDetails = () => {
     };
 
     const handleSubmit = () => {
-        if (taskCompleted && socket) {
+        if (socket) {
             const studentId = localStorage.getItem("studentId");
             socket.emit("submit_task", { taskId: task.id, studentId });
             socket.once("task_submitted", ({ taskId, success }) => {
@@ -333,11 +336,6 @@ const TaskDetails = () => {
                         autoClose: 3000,
                     });
                 }
-            });
-        } else {
-            toast.warn("Complete the task correctly before submitting.", {
-                position: "top-right",
-                autoClose: 3000,
             });
         }
     };
@@ -421,23 +419,17 @@ const TaskDetails = () => {
                                             Run Tests
                                         </p>
                                     </button>
-                                    <button
-                                        className={`taskDetailsContainerTopFirstContainerRightContainerBtn ${taskCompleted ? "enabled" : "disabled"}`}
-                                        onClick={handleSubmit}
-                                        disabled={!taskCompleted}
-                                    >
-                                        <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
-                                            Submit
-                                        </p>
-                                    </button>
-                                </div>
-                                <div className="hintsContainer">
-                                    <div className="hintsContainerBtn">
-                                        <div 
-                                            className="hintsButton"
+                                    <div className="hintsContainer">
+                                        <div
+                                            className="taskDetailsContainerTopFirstContainerRightContainerBtn"
                                             onClick={handleShowHints}
                                         >
-                                            <FaLightbulb /> Show Hints
+                                            <div className="hintsButton">
+                                                <FaLightbulb />
+                                                <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
+                                                    Show Hints
+                                                </p>
+                                            </div>
                                         </div>
                                         {showHints && task?.hints && task.hints.length > 0 && (
                                             <div className="hintsSection">

@@ -121,17 +121,38 @@
 }
 
 .taskDetailsContainerTopFirstContainerRightContainerBtn {
-    width: 110px;
+    /* width: 110px; */
     height: 35px;
     border-radius: 8px;
     border: none;
     outline: none;
     background-color: #1F2937;
     transition: all 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .taskDetailsContainerTopFirstContainerRightContainerBtn:hover {
     background-color: #374151;
+}
+
+.hintsButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+    width: 100%
+}
+
+.hintsButton svg {
+    width: 16px;
+    height: 16px;
+    color: #FFFFFF;
 }
 
 .taskDetailsContainerTopFirstContainerRightContainerBtnText {
@@ -139,6 +160,7 @@
     font-size: 15px;
     font-weight: 600;
     letter-spacing: 0.4px;
+    margin: 0;
 }
 
 .taskDetailsContainerTopFirstContainerRightContainerBtn.blurred {
@@ -431,23 +453,20 @@
 .hintsButton {
     display: flex;
     align-items: center;
-    gap: 8px;
-    background-color: #4F46E5;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-    display: flex;
     justify-content: center;
-    align-items: center;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+}
+
+.hintsButton svg {
+    width: 16px;
+    height: 16px;
+    color: #FFFFFF;
 }
 
 .hintsButton:hover {
-    background-color: #4338CA;
+    /* background-color: #4338CA; */
     /* transform: translateY(-2px); */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -578,13 +597,8 @@
 
 .hintsContainer {
     position: relative;
-    margin-top: 5px;
-    cursor: none;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin: 0;
+    cursor: pointer;
 }
 
 .hintsContainerBtn {
@@ -621,7 +635,7 @@
 
 .hintsHeader h3 {
     margin: 0;
-    color: #4F46E5;
+    color: #1F2937;
     font-size: 16px;
     font-weight: 600;
     display: flex;
@@ -692,7 +706,7 @@
 }
 
 .hintNumber {
-    color: #4F46E5;
+    color: #1F2937;
     font-weight: 600;
     min-width: 24px;
     font-size: 14px;
