@@ -1,45 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  cursor: none;
 }
 
 body {
-  font-family: "Nunito", sans-serif;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-body, a, button, input, textarea {
-  cursor: none;
-}
-
-::-webkit-scrollbar {
-  display: none;
-}
-
-::selection {
-  background-color: #000000;
-  color: #FFFFFF;
-}
-
-.custom-cursor {
-  position: fixed;
-  width: 40px;
-  height: 40px;
-  background: url('./assets/cursor.svg') no-repeat center center;
-  background-size: contain;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-20%, -22%);
-}
-
-.custom-cursor.dragging {
-  background: url('./assets/move.svg') no-repeat center center;
+  font-family: "Inter", sans-serif;
+  background-color: #F3F4F6;
+  color: #111827;
+  min-height: 100vh;
 }
 
 .inter {

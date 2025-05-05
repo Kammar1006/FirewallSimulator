@@ -9,7 +9,6 @@ import Navbar from './components/Navbar/Navbar';
 import TaskDetails from './pages/TaskDetails/TaskDetails';
 import Login from './pages/Login/Login';
 import Documentation from './pages/Documentation/Documentation';
-import Admin from './pages/Admin/Admin';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import { RulesContext } from './context/RulesContext';
 // import Test from './pages/test/Test';
@@ -21,7 +20,9 @@ const App = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    if (!token && location.pathname !== "/login" && location.pathname !== "/admin") {
+    const adminToken = localStorage.getItem("adminToken");
+    
+    if (!token && !adminToken && location.pathname !== "/login" && location.pathname !== "/documentation") {
       navigate("/login");
     } else if (token && !location.search.includes("token")) {
       navigate(`${location.pathname}?token=${token}`);
@@ -43,7 +44,7 @@ const App = () => {
     <ErrorBoundary>
       <div className="App">
         <div className="appContainer">
-          {location.pathname !== "/login" && location.pathname !== "/documentation" && location.pathname !== "/admin" && <Navbar />}
+          {location.pathname !== "/login" && location.pathname !== "/documentation" && <Navbar />}
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Home />} />
@@ -51,7 +52,6 @@ const App = () => {
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/task/:taskId" element={<TaskDetails />} />
             <Route path="/documentation" element={<Documentation />} />
-            <Route path="/admin" element={<Admin />} />
             {/* <Route path="/test" element={<Test />} /> */}
           </Routes>
         </div>
