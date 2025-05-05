@@ -419,8 +419,8 @@ const TaskDetails = () => {
                                             Run Tests
                                         </p>
                                     </button>
-                                    <div className="hintsContainer">
-                                        <div
+                                <div className="hintsContainer">
+                                        <div 
                                             className="taskDetailsContainerTopFirstContainerRightContainerBtn"
                                             onClick={handleShowHints}
                                         >

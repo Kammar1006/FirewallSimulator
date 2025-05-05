@@ -3,6 +3,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "ipaddr.js": "^2.2.0",
+    "path": "^0.12.7",
     "socket.io": "^4.8.1"
   },
   "name": "firewall_simulator",

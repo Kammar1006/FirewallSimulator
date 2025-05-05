@@ -30,6 +30,7 @@ const Login = () => {
       localStorage.setItem("authToken", token); // Store token in localStorage
       localStorage.setItem("studentId", id); // Store student ID in localStorage
       toast.success("Login successful!");
+      socket.emit("get_student_progress", { studentId: id });
       navigate(`/?token=${token}`);
     });
 

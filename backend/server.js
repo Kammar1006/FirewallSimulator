@@ -6,6 +6,7 @@ const PORT = 5003;
 const COOKIE_FLAG = "example_cookie";
 
 const express = require("express");
+const path = require('path');
 const http = require("http");
 const socketio = require("socket.io");
 const fs = require("fs");
@@ -28,9 +29,9 @@ const io = socketio(server, {
 const { randomBytes } = require("crypto");
 const { Task } = require("./task");
 
-const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, "utf-8"));
-
 let translationTab = [];
+let studentSocketMap = {}; // studentId -> [socketId, ...]
+
 const setCID = (sock) => {
 	//console.log(sock.request.headers.cookie);
 	let cid;
@@ -98,6 +99,8 @@ io.on("connection", (sock) => {
 		if (sid > 270000 && sid < 280000) {
 			translationTab[cid].sid = sid;
 			sock.emit("set_sid", true, translationTab[cid].sid);
+			if (!studentSocketMap[sid]) studentSocketMap[sid] = [];
+			if (!studentSocketMap[sid].includes(sock.id)) studentSocketMap[sid].push(sock.id);
 		} 
 		else sock.emit("set_sid", false);
 	});
@@ -449,6 +452,7 @@ io.on("connection", (sock) => {
 	});
 
 	sock.on("login", ({ id, lastName }) => {
+		const students = JSON.parse(fs.readFileSync(path.join(__dirname, 'students.json'), 'utf8'));
 		const student = students.find(
 			(student) => student.id === id && student.lastName.toLowerCase() === lastName.toLowerCase()
 		);
@@ -466,13 +470,15 @@ io.on("connection", (sock) => {
 	});
 
 	sock.on("submit_task", ({ taskId, studentId }) => {
+		const students = JSON.parse(fs.readFileSync(path.join(__dirname, 'students.json'), 'utf8'));
 		const student = students.find((student) => student.id === studentId);
 		if (student) {
 			if (!student.progress) {
 				student.progress = [0, 0, 0, 0, 0, 0];
 			}
 			student.progress[taskId - 1] = 1;
-			fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2));
+			fs.writeFileSync(path.join(__dirname, 'students.json'), JSON.stringify(students, null, 2));
+			io.emit("task_completed", { studentId, taskId });
 			sock.emit("task_submitted", { taskId, success: true });
 		} else {
 			sock.emit("task_submitted", { taskId, success: false });
@@ -502,6 +508,7 @@ io.on("connection", (sock) => {
 	});
 
 	sock.on("get_student_progress", ({ studentId }) => {
+		const students = JSON.parse(fs.readFileSync(path.join(__dirname, 'students.json'), 'utf8'));
 		const student = students.find((student) => student.id === studentId);
 		if (student) {
 			sock.emit("student_progress", { progress: student.progress });
@@ -509,12 +516,44 @@ io.on("connection", (sock) => {
 			sock.emit("student_progress", { progress: [] });
 		}
 	});
+
+	// Handle task reset
+	sock.on("reset_task", (data) => {
+		const { studentId, taskId } = data;
+		try {
+			const students = JSON.parse(fs.readFileSync(path.join(__dirname, 'students.json'), 'utf8'));
+			const studentIndex = students.findIndex(s => s.id === studentId);
+			
+			if (studentIndex !== -1) {
+				// Reset the task completion status to 0
+				students[studentIndex].progress[taskId - 1] = 0;
+				fs.writeFileSync(path.join(__dirname, 'students.json'), JSON.stringify(students, null, 2));
+				
+				// Broadcast task reset to all clients
+				io.emit("task_completed", { studentId, taskId });
+				
+				sock.emit("task_reset_confirmed", { success: true });
+			} else {
+				sock.emit("task_reset_confirmed", { success: false, error: "Student not found" });
+			}
+		} catch (error) {
+			console.error("Error resetting task:", error);
+			sock.emit("task_reset_confirmed", { success: false, error: "Internal server error" });
+		}
+	});
+
+	sock.on("disconnect", () => {
+		Object.keys(studentSocketMap).forEach(sid => {
+			studentSocketMap[sid] = studentSocketMap[sid].filter(id => id !== sock.id);
+			if (studentSocketMap[sid].length === 0) delete studentSocketMap[sid];
+		});
+	});
 });
 
 // Get all students
 app.get('/students', (req, res) => {
 	try {
-		const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, 'utf8'));
+		const students = JSON.parse(fs.readFileSync(path.join(__dirname, 'students.json'), 'utf8'));
 		res.json(students);
 	} catch (error) {
 		console.error('Error reading students:', error);
@@ -526,7 +565,7 @@ app.get('/students', (req, res) => {
 app.post('/students', (req, res) => {
 	try {
 		const newStudent = req.body;
-		const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, 'utf8'));
+		const students = JSON.parse(fs.readFileSync(path.join(__dirname, 'students.json'), 'utf8'));
 		
 		// Check if student already exists
 		if (students.some(s => s.id === newStudent.id)) {
@@ -534,7 +573,7 @@ app.post('/students', (req, res) => {
 		}
 		
 		students.push(newStudent);
-		fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2));
+		fs.writeFileSync(path.join(__dirname, 'students.json'), JSON.stringify(students, null, 2));
 		res.status(201).json(newStudent);
 	} catch (error) {
 		console.error('Error adding student:', error);
@@ -548,13 +587,14 @@ app.put('/students/:id/progress', (req, res) => {
 		const studentId = req.params.id;
 		const { taskIndex, value } = req.body;
 		
-		const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, 'utf8'));
+		const students = JSON.parse(fs.readFileSync(path.join(__dirname, 'students.json'), 'utf8'));
 		const student = students.find(s => s.id === studentId);
 		
 		if (student) {
 			student.progress[taskIndex] = value;
-			fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2));
+			fs.writeFileSync(path.join(__dirname, 'students.json'), JSON.stringify(students, null, 2));
 			res.json(student);
+			io.emit("student_progress_updated", { studentId });
 		} else {
 			res.status(404).json({ error: 'Student not found' });
 		}
@@ -573,3 +613,24 @@ task.set(1);
 // Add rules
 task.network.configure(1, 0, "input", "add", 0, { action: "permit", src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80" });
 task.network.configure(1, 0, "input", "add", 0, { action: "deny", src: "any", des: "any", protocol: "any" });
+
+let lastStudentsData = fs.readFileSync(path.join(__dirname, 'students.json'), 'utf8');
+
+fs.watchFile(path.join(__dirname, 'students.json'), { interval: 2000 }, (curr, prev) => {
+    const newData = fs.readFileSync(path.join(__dirname, 'students.json'), 'utf8');
+    if (newData !== lastStudentsData) {
+        try {
+            const oldArr = JSON.parse(lastStudentsData);
+            const newArr = JSON.parse(newData);
+            newArr.forEach((student, idx) => {
+                if (JSON.stringify(student.progress) !== JSON.stringify(oldArr[idx]?.progress)) {
+                    // Emit to ALL clients (including admin panel)
+                    io.emit('student_progress_updated', { studentId: student.id });
+                }
+            });
+        } catch (e) {
+            console.error('Error parsing students.json:', e);
+        }
+        lastStudentsData = newData;
+    }
+});

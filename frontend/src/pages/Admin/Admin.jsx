@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bcrypt from 'bcryptjs';
 import './Admin.css';
+import { io } from "socket.io-client";
+
+// Initialize socket only once, outside the component
+const socket = io("http://localhost:5003", { transports: ["websocket"] });
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -24,6 +28,16 @@ const Admin = () => {
       setIsAuthenticated(true);
     }
     fetchStudents();
+  }, []);
+
+  useEffect(() => {
+    const handleProgressUpdate = () => {
+      fetchStudents();
+    };
+    socket.on("student_progress_updated", handleProgressUpdate);
+    return () => {
+      socket.off("student_progress_updated", handleProgressUpdate);
+    };
   }, []);
 
   const fetchStudents = async () => {
