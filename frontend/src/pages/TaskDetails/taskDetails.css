@@ -7,7 +7,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* padding-top: 30px; */
     padding-bottom: 30px;
 }
 
@@ -85,7 +84,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    /* background-color: red; */
     margin-top: -5px;
 }
 
@@ -141,7 +139,7 @@
 
 .taskDetailsContainerTopFirstContainerRightContainerBtn.blurred {
     filter: blur(2px);
-    pointer-events: none; /* Disable interactions */
+    pointer-events: none;
     opacity: 0.6;
 }
 
@@ -358,17 +356,7 @@
 
 .packetIcon {
     z-index: 10;
-    /* animation: scalePulse 0.5s infinite alternate; Add a pulsing effect */
 }
-
-/* @keyframes scalePulse {
-    from {
-        transform: scale(1);
-    }
-    to {
-        transform: scale(1.2);
-    }
-} */
 
 .modeSwitcher {
     display: flex;
@@ -429,11 +417,6 @@
     font-weight: 500;
 }
 
-.hintsSection {
-    /* margin: 20px 0; */
-    /* padding: 0 20px; */
-}
-
 .hintsButtonContainer {
     margin: 20px 0;
     padding: 0 20px;
@@ -450,16 +433,18 @@
     border: none;
     padding: 8px 16px;
     border-radius: 8px;
-    /* cursor: pointer; */
     transition: all 0.3s ease;
     font-weight: 500;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .hintsButton:hover {
     background-color: #4338CA;
-    transform: translateY(-2px);
+    /* transform: translateY(-2px); */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -517,7 +502,6 @@
     background: none;
     border: none;
     color: #6B7280;
-    /* cursor: pointer; */
     font-size: 20px;
     padding: 8px;
     border-radius: 50%;
@@ -592,6 +576,19 @@
     position: relative;
     margin-top: 5px;
     cursor: none;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hintsContainerBtn {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .hintsSection {
@@ -632,7 +629,6 @@
     background: none;
     border: none;
     color: #6b7280;
-    /* cursor: pointer; */
     padding: 6px;
     border-radius: 50%;
     transition: all 0.2s ease;

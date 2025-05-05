@@ -471,8 +471,8 @@ io.on("connection", (sock) => {
 			if (!student.progress) {
 				student.progress = [0, 0, 0, 0, 0, 0];
 			}
-			student.progress[taskId - 1] = 1; // Mark the task as completed
-			fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2)); // Save progress to file
+			student.progress[taskId - 1] = 1;
+			fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2));
 			sock.emit("task_submitted", { taskId, success: true });
 		} else {
 			sock.emit("task_submitted", { taskId, success: false });
@@ -481,7 +481,7 @@ io.on("connection", (sock) => {
 
 	sock.on("check_task_completion", () => {
 		const task = translationTab[cid].task;
-		const isCompleted = task.check(); // Check if the task is completed
+		const isCompleted = task.check();
 		sock.emit("task_completion_status", { taskId: task.id, isCompleted });
 	});
 
@@ -497,7 +497,7 @@ io.on("connection", (sock) => {
 
 	sock.on("check_task_completion", () => {
 		const task = translationTab[cid].task;
-		const isCompleted = task.check(); // Sprawdź poprawność zadania
+		const isCompleted = task.check();
 		sock.emit("task_completion_status", { taskId: task.id, isCompleted });
 	});
 
@@ -570,6 +570,6 @@ server.listen(PORT, () => {
 const task = new Task();
 task.set(1);
 
-// Dodaj reguły
+// Add rules
 task.network.configure(1, 0, "input", "add", 0, { action: "permit", src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80" });
 task.network.configure(1, 0, "input", "add", 0, { action: "deny", src: "any", des: "any", protocol: "any" });

@@ -79,7 +79,7 @@ function Task() {
                         description: "Powinien zablokować ruch UDP",
                     },
                 ];
-                this.difficulty = "Łatwy";
+                this.difficulty = "Easy";
                 this.subtasks = [
                     { id: 1, title: "Zezwól na TCP/80", description: "Skonfiguruj zaporę, aby zezwolić na ruch TCP na porcie 80 z PC_1 do PC_3" },
                     { id: 2, title: "Zablokuj inny ruch", description: "Upewnij się, że cały inny ruch jest zablokowany" },
@@ -165,7 +165,7 @@ function Task() {
                         description: "Powinien zablokować ruch z PC_A do PC_C na R_B. Wymaga reguł na R_B.",
                     }
                 ];
-                this.difficulty = "Średni";
+                this.difficulty = "Medium";
                 this.subtasks = [
                     { id: 1, title: "Zezwól na ruch z PC_A do PC_B", description: "Upewnij się, że ruch z PC_A do PC_B jest dozwolony." },
                     { id: 2, title: "Zablokuj ruch z PC_A do PC_C", description: "Upewnij się, że ruch z PC_A do PC_C jest zablokowany." },
@@ -277,7 +277,7 @@ function Task() {
                         description: "Powinien zablokować ruch z PC_X do R_Z. Wymaga reguł na R_X i R_Z.",
                     },
                 ];
-                this.difficulty = "Trudny";
+                this.difficulty = "Hard";
                 this.subtasks = [
                     { id: 1, title: "Zezwól na ruch z PC_X do PC_Y", description: "Upewnij się, że ruch z PC_X do PC_Y jest dozwolony." },
                     { id: 2, title: "Zablokuj ruch z PC_X do PC_W", description: "Upewnij się, że ruch z PC_X do PC_W jest zablokowany." },
@@ -613,7 +613,7 @@ function Task() {
                         description: "R_2 should block traffic from PC_2 to PC_4.",
                     }
                 ];
-                this.difficulty = "Very Hard";
+                this.difficulty = "Hard";
                 this.subtasks = [
                     { id: 1, title: "Allow FTP", description: "Allow FTP from PC_1 to PC_3" },
                     { id: 2, title: "Block PC_2 to PC_4", description: "Block all from PC_2 to PC_4" },

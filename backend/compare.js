@@ -3,13 +3,11 @@
 const ipaddr = require("ipaddr.js");
 
 const compareSRC = (packetSRC, ruleSRC) => {
-    // Jeśli packetSRC jest obiektem Interface, użyj jego właściwości inet
     const srcIP = packetSRC.inet || packetSRC;
     return compareIP(srcIP, ruleSRC);
 }
 
 const compareDES = (packetDES, ruleDES) => {
-    // Jeśli packetDES jest obiektem Interface, użyj jego właściwości inet
     const desIP = packetDES.inet || packetDES;
     return compareIP(desIP, ruleDES);
 }

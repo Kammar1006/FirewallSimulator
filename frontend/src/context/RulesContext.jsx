@@ -64,7 +64,6 @@ const RulesContextProvider = ({ children }) => {
   };
 
   const validateChallenge = (challengeId) => {
-    // Simulate challenge validation logic
     setChallenges((prev) =>
       prev.map((challenge) =>
         challenge.id === challengeId
@@ -86,7 +85,7 @@ const RulesContextProvider = ({ children }) => {
         validateChallenge,
         loading,
         error,
-        socket, // Pass the socket instance
+        socket
       }}
     >
       {children}

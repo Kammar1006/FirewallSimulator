@@ -4,7 +4,6 @@ import { useContext } from "react";
 import { RulesContext } from "../../context/RulesContext";
 import Console from "../../components/Console/Console";
 import "./taskDetails.css";
-
 import assets from "../../assets/assets";
 import { IoMdMail } from "react-icons/io";
 import { RiMailCloseFill } from "react-icons/ri";
@@ -42,7 +41,7 @@ const TaskDetails = () => {
             1: { x: 400, y: 100 },  // S_1
             2: { x: 600, y: 100 },  // R_A
             3: { x: 800, y: 100 },  // R_B
-            4: { x: 600, y: 300 },  // PC_B (below R_A)
+            4: { x: 600, y: 300 },  // PC_B
             5: { x: 1000, y: 100 }, // PC_C
         },
         3: {
@@ -61,7 +60,7 @@ const TaskDetails = () => {
             2: { x: 200, y: 300 },  // PC_3
             3: { x: 400, y: 200 },  // S_1
             4: { x: 600, y: 200 },  // R_1
-            5: { x: 800, y: 200 },  // PC_4 (Internet)
+            5: { x: 800, y: 200 },  // PC_4
         },
         5: {
             0: { x: 200, y: 100 },  // PC_A
@@ -101,7 +100,7 @@ const TaskDetails = () => {
             socket.on("tasks", (data) => {
                 const taskData = data.find((task) => task.id === parseInt(taskId, 10));
                 if (taskData) {
-                    console.log("Task data:", taskData); // Debug log
+                    console.log("Task data:", taskData);
                     setTask({
                         id: taskData.id,
                         title: taskData.title || `Task ${taskId}`,
@@ -109,7 +108,7 @@ const TaskDetails = () => {
                         difficulty: taskData.difficulty || "Unknown",
                         subtasks: taskData.subtasks || [],
                         topology: taskData.topology || { devices: [], connections: [] },
-                        hints: taskData.hints || [], // Ensure hints are included
+                        hints: taskData.hints || [],
                     });
                     socket.emit("switch_task", parseInt(taskId, 10));
                 } else {
@@ -294,7 +293,7 @@ const TaskDetails = () => {
     };
 
     const handleShowHints = () => {
-        console.log("Current task:", task); // Debug log
+        console.log("Current task:", task);
         if (task?.hints && task.hints.length > 0) {
             setShowHints(true);
             setCurrentHint(0);
@@ -433,33 +432,35 @@ const TaskDetails = () => {
                                     </button>
                                 </div>
                                 <div className="hintsContainer">
-                                    <div 
-                                        className="hintsButton"
-                                        onClick={handleShowHints}
-                                    >
-                                        <FaLightbulb /> Show Hints
-                                    </div>
-                                    {showHints && task?.hints && task.hints.length > 0 && (
-                                        <div className="hintsSection">
-                                            <div className="hintsHeader">
-                                                <h3>Task Hints</h3>
-                                                <div 
-                                                    className="hintsCloseButton"
-                                                    onClick={() => setShowHints(false)}
-                                                >
-                                                    <FaTimes />
+                                    <div className="hintsContainerBtn">
+                                        <div 
+                                            className="hintsButton"
+                                            onClick={handleShowHints}
+                                        >
+                                            <FaLightbulb /> Show Hints
+                                        </div>
+                                        {showHints && task?.hints && task.hints.length > 0 && (
+                                            <div className="hintsSection">
+                                                <div className="hintsHeader">
+                                                    <h3>Task Hints</h3>
+                                                    <div 
+                                                        className="hintsCloseButton"
+                                                        onClick={() => setShowHints(false)}
+                                                    >
+                                                        <FaTimes />
+                                                    </div>
+                                                </div>
+                                                <div className="hintsContent">
+                                                    {task.hints.map((hint, index) => (
+                                                        <div key={index} className="hintItem">
+                                                            <span className="hintNumber">{index + 1}.</span>
+                                                            <p>{hint}</p>
+                                                        </div>
+                                                    ))}
                                                 </div>
                                             </div>
-                                            <div className="hintsContent">
-                                                {task.hints.map((hint, index) => (
-                                                    <div key={index} className="hintItem">
-                                                        <span className="hintNumber">{index + 1}.</span>
-                                                        <p>{hint}</p>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -580,7 +581,7 @@ const TaskDetails = () => {
                 </div>
             </div>
 
-            {/* Render all open consoles */}
+            {/* Render consoles */}
             {task?.topology?.devices && openConsoles.map((deviceId) => (
                 <Console
                     key={deviceId}
