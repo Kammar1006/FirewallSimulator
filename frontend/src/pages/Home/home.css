@@ -202,3 +202,215 @@
     font-weight: 600;
     letter-spacing: 0.3px;
 }
+
+.adminPanelFullPage {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f5f5f5;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.adminPanel {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.adminPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.adminPanelIcon {
+  font-size: 24px;
+  color: #2196f3;
+  margin-right: 10px;
+}
+
+.adminPanelHeader h2 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.adminPanelContent {
+  padding: 20px;
+}
+
+.admin-login {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-login h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.admin-login form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-login input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.admin-login button {
+  padding: 12px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.admin-login button:hover {
+  background-color: #1976d2;
+}
+
+.add-student {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.add-student h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.add-student form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.add-student input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.add-student button {
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.add-student button:hover {
+  background-color: #388e3c;
+}
+
+.students-list {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.students-list h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.students-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.students-list th,
+.students-list td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.students-list th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.students-list button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.students-list button.completed {
+  background-color: #4caf50;
+  color: white;
+}
+
+.students-list button.not-completed {
+  background-color: #f44336;
+  color: white;
+}
+
+.students-list button:hover {
+  opacity: 0.9;
+}
+
+.error {
+  color: #f44336;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+  color: #666;
+  margin: 20px 0;
+}
+
+.no-students {
+  text-align: center;
+  color: #666;
+  margin: 20px 0;
+}
+
+.logout-button {
+  padding: 8px 16px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #d32f2f;
+}

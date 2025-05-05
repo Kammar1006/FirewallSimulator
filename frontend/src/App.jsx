@@ -11,7 +11,6 @@ import Login from './pages/Login/Login';
 import Documentation from './pages/Documentation/Documentation';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import { RulesContext } from './context/RulesContext';
-// import Test from './pages/test/Test';
 
 const App = () => {
   const { serverConfig } = useContext(RulesContext);
@@ -29,16 +28,16 @@ const App = () => {
     }
   }, [location, navigate]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const studentId = localStorage.getItem("studentId");
-      if (studentId) {
-        console.log(`Logged-in Student ID: ${studentId}`);
-      }
-    }, 1000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const studentId = localStorage.getItem("studentId");
+  //     if (studentId) {
+  //       console.log(`Logged-in Student ID: ${studentId}`);
+  //     }
+  //   }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <ErrorBoundary>
@@ -52,7 +51,6 @@ const App = () => {
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/task/:taskId" element={<TaskDetails />} />
             <Route path="/documentation" element={<Documentation />} />
-            {/* <Route path="/test" element={<Test />} /> */}
           </Routes>
         </div>
       </div>
