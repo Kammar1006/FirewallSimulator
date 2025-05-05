@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import bcrypt from 'bcryptjs';
 import './Admin.css';
 
 const Admin = () => {
@@ -14,6 +15,8 @@ const Admin = () => {
     firstName: '',
     progress: [0, 0, 0, 0, 0, 0]
   });
+
+  const hashedPassword = '$2a$12$GHr2VKqqFwUlTRbYXLrvkuGxK2xwwCVsWwvkKD6Q3wCYqK96vTRQK';
 
   useEffect(() => {
     const adminToken = localStorage.getItem('adminToken');
@@ -41,12 +44,12 @@ const Admin = () => {
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     const username = e.target.username.value;
     const password = e.target.password.value;
 
-    if (username === 'admin' && password === 'admin') {
+    if (username === 'admin' && await bcrypt.compare(password, hashedPassword)) {
       setIsAuthenticated(true);
       localStorage.setItem('adminToken', 'admin');
       setError('');
@@ -110,7 +113,7 @@ const Admin = () => {
     } catch (error) {
       console.error('Error updating progress:', error);
       setError('Failed to update progress. Please try again.');
-    }j
+    }
   };
 
   if (!isAuthenticated) {
@@ -213,4 +216,4 @@ const Admin = () => {
   );
 };
 
-export default Admin; 
+export default Admin;
