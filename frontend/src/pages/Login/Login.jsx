@@ -169,7 +169,7 @@ const Login = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "Enter" && !showAdminPanel) {
+      if (event.key === "Enter") {
         handleLogin();
       }
     };
@@ -178,7 +178,7 @@ const Login = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [id, lastName, showAdminPanel]);
+  }, [id, lastName]);
 
   // Add the showHiddenAdminPanel function to window
   useEffect(() => {
