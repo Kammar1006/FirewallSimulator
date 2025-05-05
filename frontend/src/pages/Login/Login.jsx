@@ -30,7 +30,7 @@ const Login = () => {
   });
   const navigate = useNavigate();
 
-  const socket = io(serverConfig.address);
+  const socket = io();
 
   const hashedPassword = '$2a$12$GHr2VKqqFwUlTRbYXLrvkuGxK2xwwCVsWwvkKD6Q3wCYqK96vTRQK';
 
@@ -58,7 +58,7 @@ const Login = () => {
   const fetchStudents = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${serverConfig.address}/students`);
+      const response = await fetch(`/students`);
       if (!response.ok) {
         throw new Error('Failed to fetch students');
       }
@@ -118,7 +118,7 @@ const Login = () => {
   const handleAddStudent = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${serverConfig.address}/students`, {
+      const response = await fetch(`students`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -147,7 +147,7 @@ const Login = () => {
 
   const handleUpdateProgress = async (studentId, taskIndex, value) => {
     try {
-      const response = await fetch(`${serverConfig.address}/students/${studentId}/progress`, {
+      const response = await fetch(`/students/${studentId}/progress`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
