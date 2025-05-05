@@ -1,51 +1,61 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import "./App.css";
 
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Tasks from './pages/Tasks/Tasks';
 import Navbar from './components/Navbar/Navbar';
 import TaskDetails from './pages/TaskDetails/TaskDetails';
-
-import AlertsAndNotifications from './pages/Alerts and Notifications/AlertsAndNotifications';
-import InboundRules from './pages/Inbound Rules/InboundRules';
-import NetworkSettings from './pages/Network Settings/NetworkSettings';
-import OutboundRules from './pages/Outbound Rules/OutboundRules';
-import SecurityPolicies from './pages/Security Policies/SecurityPolicies';
-import TrafficMonitoring from './pages/Traffic Monitoring/TrafficMonitoring';
 import Login from './pages/Login/Login';
+import Documentation from './pages/Documentation/Documentation';
+import Admin from './pages/Admin/Admin';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
-import NotFound from "./pages/NotFound/NotFound";
+// import Test from './pages/test/Test';
 
 const App = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token && location.pathname !== "/login" && location.pathname !== "/admin") {
+      navigate("/login");
+    } else if (token && !location.search.includes("token")) {
+      navigate(`${location.pathname}?token=${token}`);
+    }
+  }, [location, navigate]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const studentId = localStorage.getItem("studentId");
+      if (studentId) {
+        console.log(`Logged-in Student ID: ${studentId}`);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <ErrorBoundary>
       <div className="App">
-
         <div className="appContainer">
-            <Navbar />
-
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/alertsAndNotifications" element={<AlertsAndNotifications />} />
-              <Route path="/inboundRules" element={<InboundRules />} />
-              <Route path="/networkSettings" element={<NetworkSettings />} />
-              <Route path="/outboundRules" element={<OutboundRules />} />
-              <Route path="/securityPolicies" element={<SecurityPolicies />} />
-              <Route path="/trafficMonitoring" element={<TrafficMonitoring />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/tasks" element={<Tasks />} />
-              <Route path="/task/:taskId" element={<TaskDetails />} />
-              <Route path="/404" element={<NotFound />} />
-            </Routes>
+          {location.pathname !== "/login" && location.pathname !== "/documentation" && location.pathname !== "/admin" && <Navbar />}
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/task/:taskId" element={<TaskDetails />} />
+            <Route path="/documentation" element={<Documentation />} />
+            <Route path="/admin" element={<Admin />} />
+            {/* <Route path="/test" element={<Test />} /> */}
+          </Routes>
         </div>
-
-        
       </div>
     </ErrorBoundary>
-  )
-}
+  );
+};
 
-export default App
+export default App;

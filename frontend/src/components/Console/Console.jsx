@@ -29,41 +29,6 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
 
             setInput("");
             setHistoryIndex(-1);
-            /*
-            if (command === "enable" || command === "en") {
-                setMode("privileged");
-                setHistory((prev) => [...prev, "Entering privileged EXEC mode."]);
-            } else if (command === "configure terminal" || command === "conf t") {
-                if (mode === "privileged") {
-                    setMode("config");
-                    setHistory((prev) => [...prev, "Enter configuration commands, one per line. End with CNTL/Z."]);
-                } else {
-                    setHistory((prev) => [...prev, "Error: Must be in privileged EXEC mode to enter configuration mode."]);
-                }
-            } else if (command === "end") {
-                if (mode === "config") {
-                    setMode("privileged");
-                    setHistory((prev) => [...prev, "Exiting configuration mode."]);
-                } else {
-                    setHistory((prev) => [...prev, "Error: 'end' command is not valid in this mode."]);
-                }
-            } else if (command === "exit") {
-                if (mode === "config") {
-                    setMode("privileged");
-                    setHistory((prev) => [...prev, "Exiting configuration mode."]);
-                } else if (mode === "privileged") {
-                    setMode("");
-                    setHistory((prev) => [...prev, "Exiting privileged EXEC mode."]);
-                } else {
-                    setHistory((prev) => [...prev, "Exiting session."]);
-                }
-            } else if (command === "clear") {
-                setHistory([]);
-                setOutput("");
-                onCommand(deviceId, command);
-            } else {
-                onCommand(deviceId, command);
-            }*/
         }
     };
 

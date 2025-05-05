@@ -9,8 +9,11 @@ const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
 const fs = require("fs");
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 app.use(express.static(`${__dirname}/../frontend`));
 
 const server = http.createServer(app);
@@ -83,6 +86,13 @@ io.on("connection", (sock) => {
 	if (translationTab[cid].sid)
 		sock.emit("set_sid", true, translationTab[cid].sid);
 
+	sock.on("switch_task", (taskId) => {
+		if (translationTab[cid]) {
+			translationTab[cid].task.set(taskId);
+			console.log(`Switched to task ${taskId} for user ${cid}`);
+		}
+	});
+
 	sock.on("set_sid", (sid) => {
 		console.log(sid);
 		if (sid > 270000 && sid < 280000) {
@@ -127,14 +137,21 @@ io.on("connection", (sock) => {
 	});
 
 	sock.on("get_tasks", () => {
-		const taskData = {
-			titles: [translationTab[cid].task.title], 
-			desc: translationTab[cid].task.desc || ["No description available."],
-			tests: translationTab[cid].task.tests || [],
-			subtasks: translationTab[cid].task.subtasks || [],
-			topology: translationTab[cid].task.topology || {}, 
-		};
-		sock.emit("tasks", taskData);
+		const tasks = [];
+		for (let i = 1; i <= 6; i++) {
+			const task = new Task();
+			task.set(i);
+			tasks.push({
+				id: i,
+				title: task.title,
+				desc: task.desc,
+				difficulty: task.difficulty,
+				subtasks: task.subtasks,
+				topology: task.topology,
+				hints: task.hints || [],
+			});
+		}
+		sock.emit("tasks", tasks);
 	});
 
 	sock.on("send_packet", (src_id, des_id, protocol, port) => {
@@ -214,13 +231,13 @@ io.on("connection", (sock) => {
 			let int = Number(device.configuration_submode);
 			switch (cmd) {
 				case "add_rule":{
-					if (args.length === 7) {
+					if (args.length >= 5) {
 						const rule = {
 							type: args[1],
 							action: args[2],
 							src: args[3],
 							des: args[4],
-							protocol: `${args[5]}:${args[6]}`,
+							protocol: args[5] ? args[5] : "any", // Default to "any" if not specified
 						};
 
 						if(rule.type == "o" || rule.type == "out" || rule.type == "output"){
@@ -236,6 +253,16 @@ io.on("connection", (sock) => {
 
 						const isValid = ["permit", "deny"].includes(rule.action) && rule.src && rule.des && rule.protocol;
 						if (isValid) {
+							// Fix: Format protocol with colon if port is provided
+							if (args.length >= 6 && args[6]) {
+								rule.protocol = `${rule.protocol}:${args[6]}`;
+							}
+							
+							// Special handling for "any" protocol
+							if (rule.protocol === "any" && args.length >= 6 && args[6] === "any") {
+								rule.protocol = "any:any";
+							}
+							
 							translationTab[cid].task.network.configure(deviceId, int, rule.type, "add", -1, rule);
 							output = `Rule added to Device ${deviceId} and Int ${int}: ${JSON.stringify(rule)}`;
 						} else {
@@ -438,6 +465,26 @@ io.on("connection", (sock) => {
 		sock.emit("test_results", results);
 	});
 
+	sock.on("submit_task", ({ taskId, studentId }) => {
+		const student = students.find((student) => student.id === studentId);
+		if (student) {
+			if (!student.progress) {
+				student.progress = [0, 0, 0, 0, 0, 0];
+			}
+			student.progress[taskId - 1] = 1;
+			fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2));
+			sock.emit("task_submitted", { taskId, success: true });
+		} else {
+			sock.emit("task_submitted", { taskId, success: false });
+		}
+	});
+
+	sock.on("check_task_completion", () => {
+		const task = translationTab[cid].task;
+		const isCompleted = task.check();
+		sock.emit("task_completion_status", { taskId: task.id, isCompleted });
+	});
+
 	sock.on("submit_task", ({ taskId }) => {
 		if (!translationTab[cid].completedTasks) {
 			translationTab[cid].completedTasks = [];
@@ -447,15 +494,82 @@ io.on("connection", (sock) => {
 		}
 		sock.emit("task_submitted", { taskId });
 	});
+
+	sock.on("check_task_completion", () => {
+		const task = translationTab[cid].task;
+		const isCompleted = task.check();
+		sock.emit("task_completion_status", { taskId: task.id, isCompleted });
+	});
+
+	sock.on("get_student_progress", ({ studentId }) => {
+		const student = students.find((student) => student.id === studentId);
+		if (student) {
+			sock.emit("student_progress", { progress: student.progress });
+		} else {
+			sock.emit("student_progress", { progress: [] });
+		}
+	});
+});
+
+// Get all students
+app.get('/students', (req, res) => {
+	try {
+		const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, 'utf8'));
+		res.json(students);
+	} catch (error) {
+		console.error('Error reading students:', error);
+		res.status(500).json({ error: 'Error reading students data' });
+	}
+});
+
+// Add new student
+app.post('/students', (req, res) => {
+	try {
+		const newStudent = req.body;
+		const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, 'utf8'));
+		
+		// Check if student already exists
+		if (students.some(s => s.id === newStudent.id)) {
+			return res.status(400).json({ error: 'Student with this ID already exists' });
+		}
+		
+		students.push(newStudent);
+		fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2));
+		res.status(201).json(newStudent);
+	} catch (error) {
+		console.error('Error adding student:', error);
+		res.status(500).json({ error: 'Error adding student' });
+	}
+});
+
+// Update student progress
+app.put('/students/:id/progress', (req, res) => {
+	try {
+		const studentId = req.params.id;
+		const { taskIndex, value } = req.body;
+		
+		const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, 'utf8'));
+		const student = students.find(s => s.id === studentId);
+		
+		if (student) {
+			student.progress[taskIndex] = value;
+			fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2));
+			res.json(student);
+		} else {
+			res.status(404).json({ error: 'Student not found' });
+		}
+	} catch (error) {
+		console.error('Error updating progress:', error);
+		res.status(500).json({ error: 'Error updating student progress' });
+	}
 });
 
 server.listen(PORT, () => {
 	console.log("Work");
 });
-
 const task = new Task();
 task.set(1);
 
-// Dodaj reguły
+// Add rules
 task.network.configure(1, 0, "input", "add", 0, { action: "permit", src: "192.168.1.2", des: "192.168.3.2", protocol: "udp:80" });
 task.network.configure(1, 0, "input", "add", 0, { action: "deny", src: "any", des: "any", protocol: "any" });

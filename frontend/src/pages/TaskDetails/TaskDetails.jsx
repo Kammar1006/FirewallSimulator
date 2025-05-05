@@ -4,8 +4,13 @@ import { useContext } from "react";
 import { RulesContext } from "../../context/RulesContext";
 import Console from "../../components/Console/Console";
 import "./taskDetails.css";
-
 import assets from "../../assets/assets";
+import { IoMdMail } from "react-icons/io";
+import { RiMailCloseFill } from "react-icons/ri";
+import { MdMarkEmailRead } from "react-icons/md";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FaLightbulb, FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const TaskDetails = () => {
     const { taskId } = useParams();
@@ -15,41 +20,123 @@ const TaskDetails = () => {
     const [consoleOutput, setConsoleOutput] = useState({});
     const [testResults, setTestResults] = useState([]);
     const [taskCompleted, setTaskCompleted] = useState(false);
+    const [devicePositions, setDevicePositions] = useState({});
+    const [packetAnimation, setPacketAnimation] = useState(null);
+    const [hoveredDevice, setHoveredDevice] = useState(null);
+    const [totalTasks, setTotalTasks] = useState(0);
+    const [completedTasks, setCompletedTasks] = useState(0);
+    const [showHints, setShowHints] = useState(false);
+    const [currentHint, setCurrentHint] = useState(0);
 
     const predefinedPositions = {
         1: {
             0: { x: 200, y: 100 },  // PC_1
-            1: { x: 400, y: 100 }, // R_1
-            2: { x: 650, y: 100 }, // R_2
+            1: { x: 400, y: 100 }, // S_1
+            2: { x: 650, y: 100 }, // R_1
             3: { x: 650, y: 250 }, // PC_2
             4: { x: 900, y: 100 }, // PC_3
         },
-        // Add predefined positions for other tasks here...
+        2: {
+            0: { x: 200, y: 100 },  // PC_A
+            1: { x: 400, y: 100 },  // S_1
+            2: { x: 600, y: 100 },  // R_A
+            3: { x: 800, y: 100 },  // R_B
+            4: { x: 600, y: 300 },  // PC_B
+            5: { x: 1000, y: 100 }, // PC_C
+        },
+        3: {
+            0: { x: 200, y: 100 },  // PC_X
+            1: { x: 400, y: 100 }, // R_X
+            2: { x: 600, y: 100 }, // R_Y
+            3: { x: 800, y: 100 }, // PC_Y
+            4: { x: 1000, y: 100 }, // PC_Z
+            5: { x: 600, y: 300 }, // S_2
+            6: { x: 800, y: 300 }, // R_Z
+            7: { x: 1000, y: 300 }, // PC_W
+        },
+        4: {
+            0: { x: 200, y: 100 },  // PC_1
+            1: { x: 200, y: 200 },  // PC_2
+            2: { x: 200, y: 300 },  // PC_3
+            3: { x: 400, y: 200 },  // S_1
+            4: { x: 600, y: 200 },  // R_1
+            5: { x: 800, y: 200 },  // PC_4
+        },
+        5: {
+            0: { x: 200, y: 100 },  // PC_A
+            1: { x: 200, y: 300 },  // PC_B
+            2: { x: 400, y: 200 },  // S_A
+            3: { x: 600, y: 200 },  // R_A
+            4: { x: 800, y: 200 },  // S_B
+            5: { x: 1000, y: 100 }, // PC_C
+            6: { x: 1000, y: 300 }, // PC_D
+        },
+        6: {
+            0: { x: 200, y: 100 },  // PC_1
+            1: { x: 200, y: 300 },  // PC_2
+            2: { x: 400, y: 200 },  // S_1
+            3: { x: 600, y: 200 },  // R_1
+            4: { x: 800, y: 200 },  // R_2
+            5: { x: 1000, y: 200 }, // S_2
+            6: { x: 1200, y: 100 }, // PC_3
+            7: { x: 1200, y: 300 }, // PC_4
+        },
     };
 
     useEffect(() => {
         if (socket) {
+            const studentId = localStorage.getItem("studentId");
+            socket.emit("get_student_progress", { studentId });
+            socket.on("student_progress", (data) => {
+                if (data && data.progress) {
+                    const taskIndex = parseInt(taskId, 10) - 1;
+                    setTaskCompleted(data.progress[taskIndex] === 1);
+                    setCompletedTasks(data.progress.filter(status => status === 1).length);
+                    setTotalTasks(data.progress.length);
+                }
+            });
+
             socket.emit("get_tasks");
             socket.on("tasks", (data) => {
-                const taskData = {
-                    id: taskId,
-                    title: data.titles[taskId - 1] || `Task ${taskId}`,
-                    description: data.desc[taskId - 1] || "No description available.",
-                    difficulty: ["Easy", "Medium", "Hard"][(taskId - 1) % 3],
-                    subtasks: data.subtasks || [],
-                    topology: data.topology || {},
-                };
-
-                setTask(taskData);
+                const taskData = data.find((task) => task.id === parseInt(taskId, 10));
+                if (taskData) {
+                    console.log("Task data:", taskData);
+                    setTask({
+                        id: taskData.id,
+                        title: taskData.title || `Task ${taskId}`,
+                        description: taskData.desc?.join(" ") || "No description available.",
+                        difficulty: taskData.difficulty || "Unknown",
+                        subtasks: taskData.subtasks || [],
+                        topology: taskData.topology || { devices: [], connections: [] },
+                        hints: taskData.hints || [],
+                    });
+                    socket.emit("switch_task", parseInt(taskId, 10));
+                } else {
+                    console.error(`Task with ID ${taskId} not found.`);
+                }
             });
         }
 
         return () => {
             if (socket) {
+                socket.off("student_progress");
                 socket.off("tasks");
             }
         };
     }, [socket, taskId]);
+
+    useEffect(() => {
+        if (task && task.topology && task.topology.devices) {
+            const positions = {};
+            task.topology.devices.forEach((device, index) => {
+                const position = predefinedPositions[taskId]?.[index];
+                if (position) {
+                    positions[index] = position;
+                }
+            });
+            setDevicePositions(positions);
+        }
+    }, [taskId, task]);
 
     const openConsole = (deviceId) => {
         if (!openConsoles.includes(deviceId)) {
@@ -70,15 +157,188 @@ const TaskDetails = () => {
                     [deviceId]: (prevState[deviceId] || "") + `\n> ${command}\n${data.output}`,
                 }));
             });
+
+            
+            const args = command.split(" ");
+            if (args[0].toLowerCase() === "send_packet" && args.length === 4) {
+                const targetDeviceId = parseInt(args[1], 10);
+                if (!isNaN(targetDeviceId) && devicePositions[deviceId] && devicePositions[targetDeviceId]) {
+                    const sourcePosition = devicePositions[deviceId];
+                    const targetPosition = devicePositions[targetDeviceId];
+
+                    socket.emit("send_packet", deviceId, targetDeviceId, args[2], args[3]);
+                    socket.once("packet_response", (response) => {
+                        const { success, blockingDevice } = JSON.parse(response);
+
+                        const finalPosition = success
+                            ? targetPosition
+                            : devicePositions[blockingDevice];
+
+                        setPacketAnimation({
+                            x: sourcePosition.x,
+                            y: sourcePosition.y - 10,
+                            icon: null,
+                        });
+
+                        setTimeout(() => {
+                            const speed = 200;
+                            const devicesOnPath = Object.entries(devicePositions)
+                                .filter(([, pos]) => pos.y === sourcePosition.y && pos.x > sourcePosition.x && pos.x <= finalPosition.x)
+                                .sort(([, a], [, b]) => a.x - b.x);
+
+                            let pauseIndex = 0;
+                            let lastX = sourcePosition.x;
+
+                            const animateToNext = (currentX, nextX, startTime) => {
+                                const distance = Math.abs(nextX - currentX);
+                                const duration = (distance / speed) * 1000;
+                                const elapsedTime = performance.now() - startTime;
+                                const progress = Math.min(elapsedTime / duration, 1);
+
+                                const newX = currentX + (nextX - currentX) * progress;
+                                setPacketAnimation({ x: newX, y: sourcePosition.y - 10, icon: null });
+
+                                if (progress < 1) {
+                                    requestAnimationFrame(() => animateToNext(currentX, nextX, startTime));
+                                } else {
+                                    lastX = nextX;
+                                    if (pauseIndex < devicesOnPath.length) {
+                                        const [, devicePos] = devicesOnPath[pauseIndex];
+                                        if (Math.abs(nextX - devicePos.x) < 5) {
+                                            pauseIndex++;
+                                            const isBlocked = pauseIndex === devicesOnPath.length && !success;
+                                            setPacketAnimation({
+                                                x: nextX,
+                                                y: sourcePosition.y - 10,
+                                                icon: isBlocked ? <RiMailCloseFill style={{ width: "36px", height: "36px", color: "#FF2D00" }} /> : <MdMarkEmailRead style={{ width: "36px", height: "36px", color: "#13F100" }} />,
+                                            });
+
+                                            if (isBlocked) {
+                                                setTimeout(() => {
+                                                    setPacketAnimation(null);
+                                                }, 1500);
+                                            }
+
+                                            setTimeout(() => {
+                                                if (!isBlocked && pauseIndex < devicesOnPath.length) {
+                                                    const [, nextDevicePos] = devicesOnPath[pauseIndex];
+                                                    requestAnimationFrame(() => animateToNext(nextX, nextDevicePos.x, performance.now()));
+                                                } else if (!isBlocked) {
+                                                    requestAnimationFrame(() => animateToNext(nextX, finalPosition.x, performance.now()));
+                                                }
+                                            }, 1000);
+                                            return;
+                                        }
+                                    } else if (nextX !== finalPosition.x) {
+                                        requestAnimationFrame(() => animateToNext(nextX, finalPosition.x, performance.now()));
+                                    } else {
+                                        
+                                        const verticalDistance = Math.abs(finalPosition.y - sourcePosition.y);
+                                        const verticalDuration = (verticalDistance / speed) * 1000;
+                                        const verticalStartTime = performance.now();
+
+                                        const animateVertical = (currentTime) => {
+                                            const verticalElapsedTime = currentTime - verticalStartTime;
+                                            const verticalProgress = Math.min(verticalElapsedTime / verticalDuration, 1);
+
+                                            const newY = sourcePosition.y + (finalPosition.y - sourcePosition.y) * verticalProgress;
+                                            setPacketAnimation({ x: finalPosition.x, y: newY - 10, icon: null });
+
+                                            if (verticalProgress < 1) {
+                                                requestAnimationFrame(animateVertical);
+                                            } else {
+                                                setTimeout(() => {
+                                                    setPacketAnimation(null);
+                                                }, 500);
+                                            }
+                                        };
+
+                                        requestAnimationFrame(animateVertical);
+                                    }
+                                }
+                            };
+
+                            if (devicesOnPath.length > 0) {
+                                const [, firstDevicePos] = devicesOnPath[0];
+                                requestAnimationFrame(() => animateToNext(lastX, firstDevicePos.x, performance.now()));
+                            } else {
+                                requestAnimationFrame(() => animateToNext(lastX, finalPosition.x, performance.now()));
+                            }
+                        }, 1500);
+                    });
+                }
+            }
+        }
+    };
+
+    const handleRunTests = () => {
+        if (socket) {
+            socket.emit("check_task_completion");
+            socket.once("task_completion_status", ({ isCompleted }) => {
+                setTaskCompleted(isCompleted);
+
+                if (isCompleted) {
+                    toast.success("All tests passed successfully!", {
+                        position: "top-right",
+                        autoClose: 3000,
+                    });
+                } else {
+                    toast.error("Some tests failed. Please review your configuration.", {
+                        position: "top-right",
+                        autoClose: 3000,
+                    });
+                }
+            });
+        }
+    };
+
+    const handleShowHints = () => {
+        console.log("Current task:", task);
+        if (task?.hints && task.hints.length > 0) {
+            setShowHints(true);
+            setCurrentHint(0);
+        } else {
+            toast.warning("No hints available for this task.", {
+                position: "top-right",
+                autoClose: 3000,
+            });
+        }
+    };
+
+    const handleNextHint = () => {
+        if (task && task.hints && currentHint < task.hints.length - 1) {
+            setCurrentHint(prev => prev + 1);
+        }
+    };
+
+    const handlePreviousHint = () => {
+        if (currentHint > 0) {
+            setCurrentHint(prev => prev - 1);
         }
     };
 
     const handleSubmit = () => {
         if (taskCompleted && socket) {
-            socket.emit("submit_task", { taskId: task.id });
-            alert("Task submitted successfully!");
+            const studentId = localStorage.getItem("studentId");
+            socket.emit("submit_task", { taskId: task.id, studentId });
+            socket.once("task_submitted", ({ taskId, success }) => {
+                if (success) {
+                    toast.success(`Task ${taskId} submitted successfully! (${completedTasks + 1}/${totalTasks} completed)`, {
+                        position: "top-right",
+                        autoClose: 3000,
+                    });
+                } else {
+                    toast.error("Failed to submit the task. Please try again.", {
+                        position: "top-right",
+                        autoClose: 3000,
+                    });
+                }
+            });
         } else {
-            alert("Complete the task correctly before submitting.");
+            toast.warn("Complete the task correctly before submitting.", {
+                position: "top-right",
+                autoClose: 3000,
+            });
         }
     };
 
@@ -89,8 +349,19 @@ const TaskDetails = () => {
         return "❓"
     };
 
+    const getDeviceTooltip = (device, index) => {
+        return (
+            <div className="deviceTooltip">
+                <p><strong>Device #{index}</strong></p>
+                {device.interfaces.map((iface, ifaceIndex) => (
+                    <p key={ifaceIndex}>int{ifaceIndex}: {iface || "(no address)"}</p>
+                ))}
+            </div>
+        );
+    };
+
     const renderConnections = () => {
-        if (!task || !task.topology) return null;
+        if (!task || !task.topology || !task.topology.connections) return null;
 
         return task.topology.connections.map((conn, index) => {
             const sourcePos = predefinedPositions[taskId]?.[conn.source];
@@ -113,166 +384,214 @@ const TaskDetails = () => {
         });
     };
 
+    if (!task) {
+        return <div className="taskDetails">Loading...</div>;
+    }
+
     return (
         <div className="taskDetails">
-            {task ? (
-                <>
-                    <div className="taskDetailsContainer">
-
-                        {/* Top Part */}
-                        <div className="taskDetailsContainerTop">
-                            {/* First Element */}
-                            <div className="taskDetailsContainerTopFirst">
-                                <div className="taskDetailsContainerTopFirstContainer">
-                                    {/* Left Part */}
-                                    <div className="taskDetailsContainerTopFirstContainerLeft">
-                                        <p className="taskDetailsContainerTopFirstContainerLeftText">
-                                            Task #{task.id}: {task.title}
-                                        </p>
-                                    </div>
-
-                                    {/* Right Part */}
-                                    <div className="taskDetailsContainerTopFirstContainerRight">
-                                        <div className="taskDetailsContainerTopFirstContainerRightContainer">
-                                            <button
-                                                className="taskDetailsContainerTopFirstContainerRightContainerBtnOne"
-              
-                                            >
-                                                <p className="taskDetailsContainerTopFirstContainerRightContainerBtnOneText">
-                                                    Run Tests
-                                                </p>
-                                            </button>
-                                            <button
-                                                className={`taskDetailsContainerTopFirstContainerRightContainerBtn ${taskCompleted ? "enabled" : "disabled"}`}
-                                                onClick={handleSubmit}
-                                                disabled={!taskCompleted}
-                                            >
-                                                <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
-                                                    Submit
-                                                </p>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Second Element */}
-                            <div className="taskDetailsContainerTopElement">
-                                <div className="taskDetailsContainerTopElementContainer">
-                                    {/* First Part */}
-                                    <div className="taskDetailsContainerTopElementContainerFirst">
-                                        <div className="taskDetailsContainerTopElementContainerFirstContainer">
-                                            <div className="taskDetailsContainerTopElementContainerFirstContainerDiv">
-                                                <p className="taskDetailsContainerTopElementContainerFirstContainerDivText">
-                                                    Difficulty: {task.difficulty}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Second Part */}
-                                    <div className="taskDetailsContainerTopElementContainerSecond">
-                                        <div className="taskDetailsContainerTopElementContainerSecondContainer">
-                                            <p className="taskDetailsContainerTopElementContainerSecondContainerText">
-                                                Time: 45 minutes
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Third Element */}
-                            <div className="taskDetailsContainerTopThird">
-                                <div className="taskDetailsContainerTopThirdContainer">
-                                    <p className="taskDetailsContainerTopThirdContainerText">
-                                        Configure the firewall rules for a secure network environment following the given requirements:
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Fourth Element */}
-                            <div className="taskDetailsContainerTopFourth">
-                                <div className="taskDetailsContainerTopFourthContainer">
-                                    {
-                                        task.subtasks.map((subtask) => (
-                                            <div key={subtask.id} className="taskDetailsContainerTopFourthContainerSubtask">
-                                                <img src={assets.dotIcon} alt="" className="taskDetailsContainerTopFourthContainerSubtaskDotIcon" />
-                                                <p className="taskDetailsContainerTopFourthContainerSubtaskText">
-                                                    {subtask.description}
-                                                </p>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Bottom Part */}
-                        <div className="taskDetailsContainerBottom">
-                            <div className="taskDetailsContainerBottomContainer">
-                                <svg className="taskDetailsContainerBottomContainerSvg">
-                                    {renderConnections()}
-                                </svg>
-                                {task.topology.devices.map((device, index) => {
-                                    const position = predefinedPositions[taskId]?.[index];
-                                    return (
-                                        <div
-                                            key={index}
-                                            className="deviceIcon"
-                                            style={{
-                                                left: position?.x || 0,
-                                                top: position?.y || 0,
-                                            }}
-                                            onClick={() => openConsole(index)}
-                                        >
-                                            <p className="taskDetailsContainerBottomContainerSvgText">{getDeviceIcon(device.name)}</p>
-                                            <p>{device.name}</p>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                    </div>
-
-                    {/* Render all open consoles */}
-                    {openConsoles.map((deviceId) => (
-                        <Console
-                            key={deviceId}
-                            deviceName={task.topology.devices[deviceId].name}
-                            deviceId={deviceId}
-                            onClose={() => closeConsole(deviceId)}
-                            onCommand={handleConsoleCommand}
-                            output={consoleOutput[deviceId]}
-                        />
-                    ))}
-
-                    {/* {testResults.length > 0 && (
-                        <div className="testResults">
-                            <h3>Test Results:</h3>
-                            <ul>
-                                {testResults.map((result, index) => (
-                                    <li key={index}>
-                                        Test {index + 1}: {result.passed ? "PASSED" : "FAILED"}
-                                        <br />
-                                        Expected: {JSON.stringify(result.test.result)}
-                                        <br />
-                                        Actual: {JSON.stringify(result.actual)}
-                                    </li>
-                                ))}
-                            </ul>
+            <ToastContainer />
+            <div className="taskDetailsContainer">
+                <div className="taskDetailsContainerTop">
+                    {/* Task Completed Badge */}
+                    {taskCompleted && (
+                        <div className="taskCompletedBadge">
+                            <p>🎉 Task Completed Successfully!</p>
                         </div>
                     )}
 
-                    {taskCompleted && (
-                        <div className="taskCompletedMessage">
-                            <p>ask Completed Successfully!</p>
+                    {/* First Element */}
+                    <div className="taskDetailsContainerTopFirst">
+                        <div className="taskDetailsContainerTopFirstContainer">
+                            {/* Left Part */}
+                            <div className="taskDetailsContainerTopFirstContainerLeft">
+                                <p className="taskDetailsContainerTopFirstContainerLeftText">
+                                    Task #{task?.id}: {task?.title}
+                                </p>
+                            </div>
+
+                            {/* Right Part */}
+                            <div className="taskDetailsContainerTopFirstContainerRight">
+                                <div className="taskDetailsContainerTopFirstContainerRightContainer">
+                                    <button
+                                        className="taskDetailsContainerTopFirstContainerRightContainerBtnOne"
+                                        onClick={handleRunTests}
+                                    >
+                                        <p className="taskDetailsContainerTopFirstContainerRightContainerBtnOneText">
+                                            Run Tests
+                                        </p>
+                                    </button>
+                                    <button
+                                        className={`taskDetailsContainerTopFirstContainerRightContainerBtn ${taskCompleted ? "enabled" : "disabled"}`}
+                                        onClick={handleSubmit}
+                                        disabled={!taskCompleted}
+                                    >
+                                        <p className="taskDetailsContainerTopFirstContainerRightContainerBtnText">
+                                            Submit
+                                        </p>
+                                    </button>
+                                </div>
+                                <div className="hintsContainer">
+                                    <div className="hintsContainerBtn">
+                                        <div 
+                                            className="hintsButton"
+                                            onClick={handleShowHints}
+                                        >
+                                            <FaLightbulb /> Show Hints
+                                        </div>
+                                        {showHints && task?.hints && task.hints.length > 0 && (
+                                            <div className="hintsSection">
+                                                <div className="hintsHeader">
+                                                    <h3>Task Hints</h3>
+                                                    <div 
+                                                        className="hintsCloseButton"
+                                                        onClick={() => setShowHints(false)}
+                                                    >
+                                                        <FaTimes />
+                                                    </div>
+                                                </div>
+                                                <div className="hintsContent">
+                                                    {task.hints.map((hint, index) => (
+                                                        <div key={index} className="hintItem">
+                                                            <span className="hintNumber">{index + 1}.</span>
+                                                            <p>{hint}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    )} */}
-                </>
-            ) : (
-                <p>Loading task details...</p>
-            )}
+                    </div>
+
+                    {/* Second Element */}
+                    <div className="taskDetailsContainerTopElement">
+                        <div className="taskDetailsContainerTopElementContainer">
+                            {/* First Part */}
+                            <div className="taskDetailsContainerTopElementContainerFirst">
+                                <div className="taskDetailsContainerTopElementContainerFirstContainer">
+                                    <div className="taskDetailsContainerTopElementContainerFirstContainerDiv">
+                                        <p className="taskDetailsContainerTopElementContainerFirstContainerDivText">
+                                            Difficulty: {task?.difficulty}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Second Part */}
+                            <div className="taskDetailsContainerTopElementContainerSecond">
+                                <div className="taskDetailsContainerTopElementContainerSecondContainer">
+                                    <p className="taskDetailsContainerTopElementContainerSecondContainerText">
+                                        Time: 45 minutes
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Third Element */}
+                    <div className="taskDetailsContainerTopThird">
+                        <div className="taskDetailsContainerTopThirdContainer">
+                            <p className="taskDetailsContainerTopThirdContainerText">
+                                Configure the firewall rules for a secure network environment following the given requirements:
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Fourth Element */}
+                    <div className="taskDetailsContainerTopFourth">
+                        <div className="taskDetailsContainerTopFourthContainer">
+                            {task?.subtasks?.map((subtask) => (
+                                <div key={subtask.id} className="taskDetailsContainerTopFourthContainerSubtask">
+                                    <img src={assets.dotIcon} alt="" className="taskDetailsContainerTopFourthContainerSubtaskDotIcon" />
+                                    <p className="taskDetailsContainerTopFourthContainerSubtaskText">
+                                        {subtask.description}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Bottom Part */}
+                <div className="taskDetailsContainerBottom">
+                    <div className="taskDetailsContainerBottomContainer">
+                        <svg className="taskDetailsContainerBottomContainerSvg">
+                            {renderConnections()}
+                        </svg>
+                        {task.topology && task.topology.devices && task.topology.devices.map((device, index) => {
+                            const position = predefinedPositions[taskId]?.[index];
+                            return (
+                                <div
+                                    key={index}
+                                    className="deviceIcon"
+                                    style={{
+                                        left: position?.x || 0,
+                                        top: position?.y || 0,
+                                    }}
+                                    onMouseEnter={() => setHoveredDevice({ device, index })}
+                                    onMouseLeave={() => setHoveredDevice(null)}
+                                    onClick={() => openConsole(index)}
+                                >
+                                    {getDeviceIcon(device.name)}
+                                    <p>{device.name}</p>
+                                </div>
+                            );
+                        })}
+
+                        {/* Render packet animation */}
+                        {packetAnimation && (
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    left: packetAnimation.x,
+                                    top: packetAnimation.y,
+                                    width: "36px",
+                                    height: "36px",
+                                }}
+                            >
+                                {packetAnimation.icon || (
+                                    <IoMdMail
+                                        className="packetIcon"
+                                        style={{
+                                            width: "36px",
+                                            height: "36px",
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        )}
+
+                        {/* Render tooltip */}
+                        {hoveredDevice && (
+                            <div
+                                className="deviceTooltip"
+                                style={{
+                                    position: "absolute",
+                                    left: predefinedPositions[taskId]?.[hoveredDevice.index]?.x + 50 || 0,
+                                    top: predefinedPositions[taskId]?.[hoveredDevice.index]?.y || 0,
+                                }}
+                            >
+                                {getDeviceTooltip(hoveredDevice.device, hoveredDevice.index)}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Render consoles */}
+            {task?.topology?.devices && openConsoles.map((deviceId) => (
+                <Console
+                    key={deviceId}
+                    deviceName={task.topology.devices[deviceId].name}
+                    deviceId={deviceId}
+                    onClose={() => closeConsole(deviceId)}
+                    onCommand={handleConsoleCommand}
+                    output={consoleOutput[deviceId]}
+                />
+            ))}
         </div>
     );
 };

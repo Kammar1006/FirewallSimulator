@@ -3,68 +3,120 @@
 const {compareSRC, compareDES, compareProtocol} = require("./compare");
 
 function Firewall(){
-    this.list = []
+    this.list = [];
     
     this.add = (data) => {
-        if(this.validate(data))
+        if(this.validate(data)) {
+            // Ensure protocol has proper format
+            if (data.protocol && !data.protocol.includes(":")) {
+                data.protocol = data.protocol + ":any";
+            }
             this.list.push(data);
+        }
     }
 
     this.edit = (id, data) => {
-        if(this.validate(data) && id >= 0 && id < this.list.length)
+        if(this.validate(data) && id >= 0 && id < this.list.length) {
+            // Ensure protocol has proper format
+            if (data.protocol && !data.protocol.includes(":")) {
+                data.protocol = data.protocol + ":any";
+            }
             this.list[id] = data;
+        }
     }
 
     this.remove = (id) => {
-        if(id >= 0 && id < this.list.length)
-            this.list.splice(id);
+        if(id >= 0 && id < this.list.length) {
+            this.list.splice(id, 1);
+        }
     }
 
     this.configure = (action, id, data) => {
         switch(action){
-            case "add":{
+            case "add":
                 this.add(data);
-            }break;
-            case "edit":{
+                break;
+            case "edit":
                 this.edit(id, data);
-            }break;
-            case "remove":{
+                break;
+            case "remove":
                 this.remove(id);
-            }break;
-            case "export_iptables":{
-                this.exportToIptables();
-            }break;
-            case "export_cisco":{
-                this.exportToCiscoACL();
-            }break;
+                break;
+            case "export_iptables":
+                return this.exportToIptables();
+            case "export_cisco":
+                return this.exportToCiscoACL();
         }
-
         return this.list;
     }
 
     this.simulate = (packet) => {
-        let status = true;
-        let changeable = true;
-        let score = [];
-        this.list.forEach(record => {
-            if(compareSRC(packet.src, record.src) && compareDES(packet.des, record.des) && compareProtocol(packet.protocol, record.protocol) && changeable){
-                status = record.action;
-                changeable = false;
-                score.push("end");
-            }
-            else if(changeable){
-                score.push("go_next");
-            }
-        });
+        // If no rules, default permit
+        if (this.list.length === 0) {
+            console.log("No rules configured. Default permit.");
+            return [true, ["default_permit"]];
+        }
 
-        return [status, score]
+        let score = [];
+        
+        // Ensure packet protocol has proper format
+        if (packet.protocol && !packet.protocol.includes(":")) {
+            packet.protocol = packet.protocol + ":any";
+        }
+
+        console.log("Simulating packet:", packet);
+        console.log("Against rules:", this.list);
+
+        // Check each rule in order
+        for (const rule of this.list) {
+            const srcMatch = compareSRC(packet.src, rule.src);
+            const desMatch = compareDES(packet.des, rule.des);
+            const protocolMatch = compareProtocol(packet.protocol, rule.protocol);
+
+            console.log(`Rule check:`, rule);
+            console.log(`Matches - src: ${srcMatch}, des: ${desMatch}, protocol: ${protocolMatch}`);
+
+            if (srcMatch && desMatch && protocolMatch) {
+                // Rule matches - apply action and stop processing
+                const action = rule.action === "permit";
+                score.push(rule.action);
+                console.log(`Rule matched. Action: ${rule.action}`);
+                return [action, score];
+            }
+            score.push("no_match");
+        }
+
+        // If no rules matched, implicit deny
+        console.log("No matching rules. Implicit deny.");
+        return [false, [...score, "implicit_deny"]];
     }
 
     this.validate = (record) => {
-        /* Function for validate record */
+        if (!record) return false;
+        
+        // Check required fields
+        if (!record.action || !record.src || !record.des || !record.protocol) {
+            return false;
+        }
+
+        // Validate action
         const validActions = ["permit", "deny", "accept", "drop"];
-        if (!validActions.includes(record.action)) return false;
-        if (!record.src || !record.des || !record.protocol) return false;
+        if (!validActions.includes(record.action)) {
+            return false;
+        }
+
+        // Validate protocol format
+        if (record.protocol !== "any" && record.protocol !== "any:any") {
+            const [proto, port] = record.protocol.split(":");
+            const validProtos = ["tcp", "udp", "icmp", "ip"];
+            if (!validProtos.includes(proto)) {
+                return false;
+            }
+            if (port && port !== "any" && isNaN(parseInt(port))) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -85,47 +137,37 @@ function Firewall(){
     }
 
     this.exportToIptables = () => {
-        return this.list.map(record => {
-            let action = record.action === "permit" ? "ACCEPT" : "DROP";
-            let src = record.src === "any" ? "0.0.0.0/0" : record.src;
-            let des = record.des === "any" ? "0.0.0.0/0" : record.des;
+        return this.list.map(rule => {
+            let action = rule.action === "permit" ? "ACCEPT" : "DROP";
+            let src = rule.src === "any" ? "0.0.0.0/0" : rule.src;
+            let des = rule.des === "any" ? "0.0.0.0/0" : rule.des;
             
-            let protocol, port;
-            if (record.protocol.includes(":")) {
-                [protocol, port] = record.protocol.split(":");
-            } else {
-                protocol = record.protocol;
-                port = "";
-            }
-
-            let rule = `iptables -A INPUT -p ${protocol}`;
-            if (src) rule += ` -s ${src}`;
-            if (des) rule += ` -d ${des}`;
-            if (port) rule += ` --dport ${port}`;
-            rule += ` -j ${action}`;
-
-            return rule;
+            let [proto, port] = (rule.protocol || "any").split(":");
+            
+            let cmd = `iptables -A INPUT -p ${proto === "any" ? "all" : proto}`;
+            if (src !== "0.0.0.0/0") cmd += ` -s ${src}`;
+            if (des !== "0.0.0.0/0") cmd += ` -d ${des}`;
+            if (port && port !== "any") cmd += ` --dport ${port}`;
+            cmd += ` -j ${action}`;
+            
+            return cmd;
         }).join("\n");
     }
 
     this.exportToCiscoACL = () => {
-        return this.list.map(record => {
-            let action = record.action === "permit" ? "permit" : "deny";
-            let protocol, port;
-            if (record.protocol.includes(":")) {
-                [protocol, port] = record.protocol.split(":");
-            } else {
-                protocol = record.protocol;
-                port = "";
-            }
-
-            let src = record.src === "any" ? "any" : (record.src.split(" ").length === 1 ? `host ${record.src}` : record.src);
-            let des = record.des === "any" ? "any" : (record.des.split(" ").length === 1 ? `host ${record.des}` : record.des);
-
-            let rule = `access-list 100 ${action} ${protocol} ${src} ${des}`;
-            if (port) rule += ` eq ${port}`;
-
-            return rule;
+        return this.list.map(rule => {
+            let action = rule.action === "permit" ? "permit" : "deny";
+            let [proto, port] = (rule.protocol || "any").split(":");
+            
+            let src = rule.src === "any" ? "any" : 
+                     (rule.src.includes(" ") ? rule.src : `host ${rule.src}`);
+            let des = rule.des === "any" ? "any" : 
+                     (rule.des.includes(" ") ? rule.des : `host ${rule.des}`);
+            
+            let cmd = `access-list 100 ${action} ${proto === "any" ? "ip" : proto} ${src} ${des}`;
+            if (port && port !== "any") cmd += ` eq ${port}`;
+            
+            return cmd;
         }).join("\n");
     }
 }
