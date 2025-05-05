@@ -586,12 +586,16 @@ app.put('/students/:id/progress', (req, res) => {
 	try {
 		const studentId = req.params.id;
 		const { taskIndex, value } = req.body;
-		
 		const students = JSON.parse(fs.readFileSync(path.join(__dirname, 'students.json'), 'utf8'));
 		const student = students.find(s => s.id === studentId);
-		
 		if (student) {
-			student.progress[taskIndex] = value;
+			if (taskIndex === "all") {
+				for (let i = 0; i < student.progress.length; i++) {
+					student.progress[i] = value;
+				}
+			} else {
+				student.progress[taskIndex] = value;
+			}
 			fs.writeFileSync(path.join(__dirname, 'students.json'), JSON.stringify(students, null, 2));
 			res.json(student);
 			io.emit("student_progress_updated", { studentId });
