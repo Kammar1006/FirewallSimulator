@@ -20,6 +20,13 @@ body {
   color: var(--text-primary);
 }
 
+.admin-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
 .admin-login, .admin-panel {
   max-width: 1200px;
   margin: 2rem auto;
@@ -29,6 +36,15 @@ body {
   box-shadow: var(--box-shadow);
   color: var(--text-primary);
   overflow-y: auto;
+}
+
+.admin-login {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
 }
 
 .admin-header {
@@ -44,7 +60,6 @@ body {
   color: white;
   border: none;
   border-radius: var(--border-radius);
-  /* cursor: pointer; */
   font-weight: 600;
   transition: var(--transition);
   display: flex;
@@ -100,7 +115,6 @@ body {
   color: white;
   border: none;
   border-radius: var(--border-radius);
-  /* cursor: pointer; */
   font-size: 1rem;
   font-weight: 600;
   transition: var(--transition);
@@ -164,7 +178,6 @@ body {
   color: white;
   border: none;
   border-radius: var(--border-radius);
-  /* cursor: pointer; */
   font-weight: 600;
   transition: var(--transition);
 }
@@ -217,7 +230,6 @@ body {
   padding: 0.5rem;
   border: none;
   border-radius: var(--border-radius);
-  /* cursor: pointer; */
   width: 35px;
   height: 35px;
   display: flex;
@@ -240,7 +252,6 @@ body {
   transform: scale(1.1);
 }
 
-/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -259,7 +270,6 @@ body {
   background: var(--accent-primary);
 }
 
-/* Loading state */
 .loading {
   text-align: center;
   padding: 2rem;
@@ -267,7 +277,6 @@ body {
   font-size: 1.2rem;
 }
 
-/* No students message */
 .no-students {
   text-align: center;
   padding: 2rem;
@@ -276,4 +285,4 @@ body {
   background: var(--bg-primary);
   border-radius: var(--border-radius);
   margin-top: 1rem;
-} 
+}

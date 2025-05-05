@@ -110,19 +110,21 @@ const Admin = () => {
     } catch (error) {
       console.error('Error updating progress:', error);
       setError('Failed to update progress. Please try again.');
-    }
+    }j
   };
 
   if (!isAuthenticated) {
     return (
-      <div className="admin-login">
-        <h2>Admin Login</h2>
-        <form onSubmit={handleLogin}>
-          <input type="text" name="username" placeholder="Username" required />
-          <input type="password" name="password" placeholder="Password" required />
-          {error && <p className="error">{error}</p>}
-          <button type="submit">Login</button>
-        </form>
+      <div className="admin-login-container">
+        <div className="admin-login">
+          <h2>Admin Login</h2>
+          <form onSubmit={handleLogin}>
+            <input type="text" name="username" placeholder="Username" required />
+            <input type="password" name="password" placeholder="Password" required />
+            {error && <p className="error">{error}</p>}
+            <button type="submit">Login</button>
+          </form>
+        </div>
       </div>
     );
   }
