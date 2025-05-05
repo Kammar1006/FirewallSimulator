@@ -9,8 +9,11 @@ const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
 const fs = require("fs");
+const cors = require("cors");
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 app.use(express.static(`${__dirname}/../frontend`));
 
 const server = http.createServer(app);
@@ -506,6 +509,59 @@ io.on("connection", (sock) => {
 			sock.emit("student_progress", { progress: [] });
 		}
 	});
+});
+
+// Get all students
+app.get('/students', (req, res) => {
+	try {
+		const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, 'utf8'));
+		res.json(students);
+	} catch (error) {
+		console.error('Error reading students:', error);
+		res.status(500).json({ error: 'Error reading students data' });
+	}
+});
+
+// Add new student
+app.post('/students', (req, res) => {
+	try {
+		const newStudent = req.body;
+		const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, 'utf8'));
+		
+		// Check if student already exists
+		if (students.some(s => s.id === newStudent.id)) {
+			return res.status(400).json({ error: 'Student with this ID already exists' });
+		}
+		
+		students.push(newStudent);
+		fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2));
+		res.status(201).json(newStudent);
+	} catch (error) {
+		console.error('Error adding student:', error);
+		res.status(500).json({ error: 'Error adding student' });
+	}
+});
+
+// Update student progress
+app.put('/students/:id/progress', (req, res) => {
+	try {
+		const studentId = req.params.id;
+		const { taskIndex, value } = req.body;
+		
+		const students = JSON.parse(fs.readFileSync(`${__dirname}/students.json`, 'utf8'));
+		const student = students.find(s => s.id === studentId);
+		
+		if (student) {
+			student.progress[taskIndex] = value;
+			fs.writeFileSync(`${__dirname}/students.json`, JSON.stringify(students, null, 2));
+			res.json(student);
+		} else {
+			res.status(404).json({ error: 'Student not found' });
+		}
+	} catch (error) {
+		console.error('Error updating progress:', error);
+		res.status(500).json({ error: 'Error updating student progress' });
+	}
 });
 
 server.listen(PORT, () => {
