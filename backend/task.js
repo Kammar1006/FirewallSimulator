@@ -353,9 +353,9 @@ function Task() {
                         description: "Should allow HTTP from PC_2 to Internet server"
                     },
                     {
-                        name: "Test 5: Allow DNS from PC_1 to PC_4",
+                        name: "Test 5: Allow DNS from PC_1 to PC_3",
                         endpoints: [0, 5],
-                        packet: { src: "10.10.1.2", des: "192.0.2.2", protocol: "udp:53" },
+                        packet: { src: "10.10.1.2", des: "10.10.1.4", protocol: "udp:53" },
                         expected: true,
                         description: "Should allow DNS from PC_1 to Internet server"
                     },
@@ -380,13 +380,13 @@ function Task() {
                         expected: false,
                         description: "Should block HTTPS from PC_1 to Internet server"
                     },
-                    // {
-                    //     name: "Test 9: Block HTTP from PC_1 to PC_3",
-                    //     endpoints: [0, 2],
-                    //     packet: { src: "10.10.1.2", des: "10.10.1.4", protocol: "tcp:80" },
-                    //     expected: false,
-                    //     description: "Should block HTTP from PC_1 to PC_3 (no rule for this)"
-                    // }
+                    {
+                        name: "Test 9: Allow HTTP from PC_1 to PC_3",
+                         endpoints: [0, 2],
+                         packet: { src: "10.10.1.2", des: "10.10.1.4", protocol: "tcp:80" },
+                         expected: true,
+                         description: "Should allow HTTP from PC_1 to PC_3 (no rule for this)"
+                    }
                 ];
                 this.difficulty = "Medium";
                 this.subtasks = [
