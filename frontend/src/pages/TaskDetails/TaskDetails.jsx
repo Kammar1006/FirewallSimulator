@@ -166,6 +166,10 @@ const TaskDetails = () => {
             if (args[0].toLowerCase() === "send_packet" && args.length === 4) {
                 const targetDeviceId = args[1];
                 if (devicePositions[deviceId]) {
+                    if (packetAnimation) {
+                        toast.warning("Please wait for the current packet to finish its journey before sending a new one.");
+                        return;
+                    }
 
                     socket.emit("send_packet", deviceId, targetDeviceId, args[2], args[3]);
                     socket.once("packet_response", (response) => {
@@ -387,9 +391,9 @@ const TaskDetails = () => {
     }
 
     return (
-        <div className="taskDetails">
+        <div className="taskDetails" style={{ minHeight: '90vh', height: '90vh' }}>
             <ToastContainer />
-            <div className="taskDetailsContainer">
+            <div className="taskDetailsContainer" style={{ minHeight: '90vh', height: '100%' }}>
                 <div className="taskDetailsContainerTop">
                     {/* Task Completed Badge */}
                     {taskCompleted && (
