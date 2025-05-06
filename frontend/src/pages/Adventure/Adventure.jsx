@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './adventure.css';
+import { useNavigate } from 'react-router-dom';
 
 // --- GAME CONSTANTS ---
 const TILE_SIZE = 32; // px
@@ -80,15 +81,136 @@ const ROOMS = {};
 // Room coordinates: [row, col] (row: 0-2, col: 0-2)
 // Each room: exits (up, down, left, right) = x or y coordinate of hole
 // Obstacles: array of [x, y] positions
-ROOMS['room_0_0'] = makeRoom({ down: 8, right: 6, obstacles: [[4,4],[5,5],[6,6],[7,7],[8,4],[10,8]] });
-ROOMS['room_0_1'] = makeRoom({ down: 8, left: 6, right: 8, obstacles: [[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9]] });
-ROOMS['room_0_2'] = makeRoom({ down: 8, left: 8, obstacles: [[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10]] });
-ROOMS['room_1_0'] = makeRoom({ up: 8, down: 8, right: 6, obstacles: [[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9]] });
-ROOMS['room_1_1'] = makeRoom({ up: 8, down: 8, left: 6, right: 8, obstacles: [[5,2],[6,2],[7,2],[8,2],[9,2],[10,2],[11,2],[12,2],[7,5],[8,5],[9,5],[10,5],[11,5],[12,5]] });
-ROOMS['room_1_2'] = makeRoom({ up: 8, down: 8, left: 8, obstacles: [[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10]] });
-ROOMS['room_2_0'] = makeRoom({ up: 8, right: 6, obstacles: [[4,4],[5,5],[6,6],[7,7],[8,4],[10,8],[11,9],[12,10]] });
-ROOMS['room_2_1'] = makeRoom({ up: 8, left: 6, right: 8, obstacles: [[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],[11,11]] });
-ROOMS['room_2_2'] = makeRoom({ up: 8, left: 8, obstacles: [[2,2],[3,3],[4,4],[5,5],[6,6],[7,7],[8,8],[9,9],[10,10],[11,11]] });
+ROOMS['room_0_0'] = makeRoom({ 
+  down: 8, 
+  right: 6, 
+  obstacles: [
+    // L-shaped obstacle
+    [4,4], [5,4], [6,4],
+    [4,5], [4,6],
+    // Small square
+    [10,8], [11,8],
+    [10,9], [11,9]
+  ] 
+});
+ROOMS['room_0_1'] = makeRoom({ 
+  down: 8, 
+  left: 6, 
+  right: 8, 
+  obstacles: [
+    // Zigzag pattern
+    [3,3], [4,4], [5,3], [6,4], [7,3], [8,4], [9,3],
+    // T-shaped obstacle
+    [12,6], [13,6], [14,6],
+    [13,7], [13,8]
+  ] 
+});
+ROOMS['room_0_2'] = makeRoom({ 
+  down: 8, 
+  left: 8, 
+  obstacles: [
+    // Spiral pattern
+    [2,2], [3,2], [4,2], [5,2],
+    [5,3], [5,4], [5,5],
+    [4,5], [3,5], [2,5],
+    [2,4], [2,3],
+    [3,3], [4,3],
+    // Small maze
+    [10,8], [11,8], [12,8],
+    [10,9], [12,9],
+    [10,10], [11,10], [12,10]
+  ] 
+});
+ROOMS['room_1_0'] = makeRoom({ 
+  up: 8, 
+  down: 8, 
+  right: 6, 
+  obstacles: [
+    // Cross pattern
+    [6,4], [7,4], [8,4],
+    [7,3], [7,5],
+    // Diamond
+    [11,7], [12,6], [13,7], [12,8]
+  ] 
+});
+ROOMS['room_1_1'] = makeRoom({ 
+  up: 8, 
+  down: 8, 
+  left: 6, 
+  right: 8, 
+  obstacles: [
+    // Maze-like pattern
+    [5,2], [6,2], [7,2], [8,2], [9,2],
+    [5,3], [9,3],
+    [5,4], [6,4], [7,4], [8,4], [9,4],
+    [5,5], [9,5],
+    [5,6], [6,6], [7,6], [8,6], [9,6],
+    // Additional obstacles
+    [11,4], [12,4], [13,4],
+    [11,5], [13,5],
+    [11,6], [12,6], [13,6]
+  ] 
+});
+ROOMS['room_1_2'] = makeRoom({ 
+  up: 8, 
+  down: 8, 
+  left: 8, 
+  obstacles: [
+    // Star pattern
+    [6,4], [7,4], [8,4],
+    [7,3], [7,5],
+    [6,6], [8,6],
+    // Arrow
+    [11,3], [12,3], [13,3],
+    [12,4],
+    [11,5], [12,5], [13,5]
+  ] 
+});
+ROOMS['room_2_0'] = makeRoom({ 
+  up: 8, 
+  right: 6, 
+  obstacles: [
+    // Castle-like structure
+    [4,4], [5,4], [6,4], [7,4], [8,4],
+    [4,5], [8,5],
+    [4,6], [5,6], [6,6], [7,6], [8,6],
+    // Small maze
+    [11,8], [12,8], [13,8],
+    [11,9], [13,9],
+    [11,10], [12,10], [13,10]
+  ] 
+});
+ROOMS['room_2_1'] = makeRoom({ 
+  up: 8, 
+  left: 6, 
+  right: 8, 
+  obstacles: [
+    // Complex pattern
+    [3,3], [4,3], [5,3], [6,3],
+    [3,4], [6,4],
+    [3,5], [4,5], [5,5], [6,5],
+    // Additional obstacles
+    [10,7], [11,7], [12,7],
+    [10,8], [12,8],
+    [10,9], [11,9], [12,9]
+  ] 
+});
+ROOMS['room_2_2'] = makeRoom({ 
+  up: 8, 
+  left: 8, 
+  obstacles: [
+    // Final challenge pattern
+    [2,2], [3,2], [4,2], [5,2], [6,2],
+    [2,3], [6,3],
+    [2,4], [3,4], [4,4], [5,4], [6,4],
+    [2,5], [6,5],
+    [2,6], [3,6], [4,6], [5,6], [6,6],
+    // Additional obstacles
+    [9,8], [10,8], [11,8],
+    [9,9], [11,9],
+    [9,10], [10,10], [11,10]
+  ] 
+});
 ROOMS['room_2_2'][11][8] = 0; // Ensure bottom center is a floor tile (exit)
 ROOMS['big_room'] = makeBigRoom();
 
@@ -125,7 +247,7 @@ const EXITS = [
 
 // Add exits to and from big_room
 EXITS.push(
-  { from: 'room_2_2', dir: 'down', x: 8, y: 11, to: 'big_room', toX: Math.floor(BIG_W/2), toY: 1 },
+  { from: 'room_2_2', dir: 'down', x: 8, y: 11, to: 'big_room', toX: Math.floor(BIG_W/2), toY: Math.floor(BIG_H/2) },
   { from: 'big_room', dir: 'up', x: Math.floor(BIG_W/2), y: 0, to: 'room_2_2', toX: 8, toY: 10 }
 );
 
@@ -134,7 +256,9 @@ const PLAYER_START = { x: 8, y: 6, screen: 'room_1_1' };
 function AdventureGame() {
   const [player, setPlayer] = useState({ ...PLAYER_START });
   const [screen, setScreen] = useState(PLAYER_START.screen);
+  const [showVictory, setShowVictory] = useState(false);
   const canvasRef = useRef(null);
+  const navigate = useNavigate();
 
   // Focus canvas on mount
   useEffect(() => {
@@ -143,9 +267,21 @@ function AdventureGame() {
     }
   }, []);
 
+  // Handle victory state
+  useEffect(() => {
+    if (screen === 'big_room') {
+      setShowVictory(true);
+      const timer = setTimeout(() => {
+        navigate('/'); // Redirect to home page
+      }, 10000); // Changed to 10 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [screen, navigate]);
+
   // Handle movement
   useEffect(() => {
     function handleKey(e) {
+      if (screen === 'big_room') return; // Disable movement in big room
       let dx = 0, dy = 0;
       if (e.key === 'ArrowUp' || e.key === 'w') dy = -1;
       if (e.key === 'ArrowDown' || e.key === 's') dy = 1;
@@ -157,7 +293,6 @@ function AdventureGame() {
     }
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-    // eslint-disable-next-line
   }, [player, screen]);
 
   function movePlayer(dx, dy) {
@@ -228,28 +363,35 @@ function AdventureGame() {
           tabIndex={0}
           onClick={() => canvasRef.current && canvasRef.current.focus()}
         />
-        {screen === 'big_room' && (
+        {showVictory && (
           <div style={{
             position: 'absolute',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            color: '#a00',
-            fontSize: '4rem',
+            color: '#4CAF50',
+            fontSize: '3rem',
             fontWeight: 'bold',
             fontFamily: 'monospace',
             pointerEvents: 'none',
             textShadow: '2px 2px 8px #000, 0 0 16px #fff',
             letterSpacing: '0.1em',
             userSelect: 'none',
+            textAlign: 'center',
+            animation: 'fadeIn 1s ease-in'
           }}>
-            SOLVED()
+            <div>YOU FOUND THE FLAG!</div>
+            <div style={{ fontSize: '2rem', marginTop: '20px', color: '#fff' }}>
+              flag_solved()
+            </div>
+            <div style={{ fontSize: '1.5rem', marginTop: '20px' }}>
+              Redirecting in 10 seconds...
+            </div>
           </div>
         )}
       </div>
       <div className="adventure-instructions">
         <p>Sterowanie: strzałki lub WASD</p>
-        <p>Przechodź przez dziury w ścianach, by eksplorować wszystkie pokoje!</p>
       </div>
     </div>
   );
