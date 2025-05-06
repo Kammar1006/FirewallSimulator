@@ -172,7 +172,7 @@ function Task() {
                 ];
             } break;
 
-            case 3: {
+            case 6: {
                 const devices = [
                     new Device("PC_X", ["192.168.100.2"]),
                     new Device("R_X", ["192.168.100.1", "10.10.10.1"]),
@@ -216,7 +216,7 @@ function Task() {
                     {
                         name: "Test 1: Zezwól na ruch z PC_X do PC_Y",
                         endpoints: [0, 4],
-                        packet: { src: "192.168.100.2", des: "172.16.10.2", protocol: "tcp:22" },
+                        packet: { src: "192.168.100.2", des: "10.10.20.2", protocol: "tcp:22" },
                         expected: true,
                         description: "Powinien zezwolić na ruch z PC_X do PC_Y na porcie 22. Wymaga reguł na R_X i R_Y.",
                     },
@@ -230,45 +230,31 @@ function Task() {
                     {
                         name: "Test 3: Zezwól na ruch między PC_Y a PC_Z",
                         endpoints: [4, 5],
-                        packet: { src: "172.16.10.2", des: "172.16.10.3", protocol: "udp:53" },
+                        packet: { src: "10.10.20.2", des: "172.16.10.2", protocol: "udp:53" },
                         expected: true,
                         description: "Powinien zezwolić na ruch między PC_Y a PC_Z. Wymaga reguł na R_Y.",
                     },
                     {
                         name: "Test 4: Zablokuj ruch z PC_X do PC_Z",
                         endpoints: [0, 5],
-                        packet: { src: "192.168.100.2", des: "172.16.10.3", protocol: "tcp:80" },
+                        packet: { src: "192.168.100.2", des: "172.16.10.2", protocol: "tcp:80" },
                         expected: false,
                         description: "Powinien zablokować ruch z PC_X do PC_Z. Wymaga reguł na R_X i R_Y.",
                     },
                     {
                         name: "Test 5: Zezwól na ruch z PC_Y do PC_W",
                         endpoints: [4, 7],
-                        packet: { src: "172.16.10.2", des: "192.168.200.2", protocol: "tcp:443" },
+                        packet: { src: "10.10.20.2", des: "192.168.200.2", protocol: "tcp:443" },
                         expected: true,
                         description: "Powinien zezwolić na ruch z PC_Y do PC_W. Wymaga reguł na R_Y i R_Z.",
                     },
                     {
-                        name: "Test 6: Zablokuj ruch z PC_Z do PC_W",
-                        endpoints: [5, 7],
-                        packet: { src: "172.16.10.3", des: "192.168.200.2", protocol: "tcp:80" },
-                        expected: false,
-                        description: "Powinien zablokować ruch z PC_Z do PC_W. Wymaga reguł na R_Z.",
-                    },
-                    {
-                        name: "Test 7: Zezwól na ruch z PC_X do R_Y",
+                        name: "Test 6: Zezwól na ruch z PC_X do R_Y",
                         endpoints: [0, 2],
                         packet: { src: "192.168.100.2", des: "10.10.10.2", protocol: "tcp:22" },
                         expected: true,
                         description: "Powinien zezwolić na ruch z PC_X do R_Y. Wymaga reguł na R_X.",
-                    },
-                    {
-                        name: "Test 8: Zablokuj ruch z PC_X do R_Z",
-                        endpoints: [0, 6],
-                        packet: { src: "192.168.100.2", des: "172.16.10.4", protocol: "tcp:80" },
-                        expected: false,
-                        description: "Powinien zablokować ruch z PC_X do R_Z. Wymaga reguł na R_X i R_Z.",
-                    },
+                    }
                 ];
                 this.difficulty = "Hard";
                 this.subtasks = [
@@ -517,7 +503,7 @@ function Task() {
                 ];
             } break;
 
-            case 6: {
+            case 3: {
                 const devices = [
                     new Device("PC_1", ["192.168.10.2"]),
                     new Device("PC_2", ["192.168.10.3"]),
@@ -599,7 +585,7 @@ function Task() {
                         description: "R_2 should block traffic from PC_2 to PC_4.",
                     }
                 ];
-                this.difficulty = "Hard";
+                this.difficulty = "Medium";
                 this.subtasks = [
                     { id: 1, title: "Allow FTP", description: "Allow FTP from PC_1 to PC_3" },
                     { id: 2, title: "Block PC_2 to PC_4", description: "Block all from PC_2 to PC_4" },
