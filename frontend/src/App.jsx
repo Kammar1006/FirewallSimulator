@@ -9,6 +9,7 @@ import Navbar from './components/Navbar/Navbar';
 import TaskDetails from './pages/TaskDetails/TaskDetails';
 import Login from './pages/Login/Login';
 import Documentation from './pages/Documentation/Documentation';
+import Adventure from './pages/Adventure/Adventure';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import { RulesContext } from './context/RulesContext';
 // import Test from './pages/test/Test';
@@ -17,6 +18,11 @@ const App = () => {
   const { serverConfig } = useContext(RulesContext);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    // Set serverConfig in window object
+    window.serverConfig = serverConfig;
+  }, [serverConfig]);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -43,8 +49,9 @@ const App = () => {
   return (
     <ErrorBoundary>
       <div className="App">
+        {/* Sprawdź konsolę przeglądarki, tam znajdziesz wskazówkę... */}
         <div className="appContainer">
-          {location.pathname !== "/login" && location.pathname !== "/documentation" && <Navbar />}
+          {location.pathname !== "/login" && location.pathname !== "/documentation" && location.pathname !== "/adventure" && <Navbar />}
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Home />} />
@@ -52,6 +59,7 @@ const App = () => {
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/task/:taskId" element={<TaskDetails />} />
             <Route path="/documentation" element={<Documentation />} />
+            <Route path="/adventure" element={<Adventure />} />
             {/* <Route path="/test" element={<Test />} /> */}
           </Routes>
         </div>
@@ -64,6 +72,9 @@ export default App;
 
 (function() {
   if (typeof window !== "undefined") {
+    // Ukryta podpowiedź 2: Wpisz adventure() w konsoli...
+    console.log("%cWpisz adventure() w konsoli, aby rozpocząć przygodę!", "color: transparent; font-size: 1px;");
+    
     window.flag_solved = function() {
       const studentId = localStorage.getItem("studentId");
       if (!studentId) return;
@@ -86,6 +97,12 @@ export default App;
 `, "color: #00bfae; font-size: 20px; font-weight: bold;");
       });
     };
+
+    window.adventure = function() {
+      console.log("%cRozpoczynasz przygodę...", "color: #4CAF50; font-size: 18px; font-weight: bold;");
+      window.location.href = '/adventure';
+    };
+
     setTimeout(() => {
       if (window.console) {
         console.log("%cWpisz flag_solved() w konsoli, aby zaliczyć wszystkie zadania!", "color: green; font-size: 18px;");
