@@ -158,10 +158,18 @@ io.on("connection", (sock) => {
 	});
 
 	sock.on("send_packet", (src_id, des_id, protocol, port) => {
+		console.log(src_id, des_id)
 		let network = translationTab[cid].task.network;
 		if(!(0 <= Number(src_id) && Number(src_id) < network.devices.length)) return;
-		if(!(0 <= Number(des_id) && Number(des_id) < network.devices.length)) return;
+		try{
+			des_id = network.findId(des_id);
+		}
+		catch(err){
+			console.log(err);
+		}
+		if(!(0 <= Number(des_id) && Number(des_id) < network.devices.length) && des_id !== false) return;
 		let res = network.simulate(src_id, des_id, {src: network.devices[src_id].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port});
+		console.log("HI")
 		sock.emit("packet_response", JSON.stringify(res));
 	});
 
@@ -201,25 +209,32 @@ io.on("connection", (sock) => {
 				case "sp": case "send_packet":{
 					//console.log(device)
 					if (args.length === 4 && device.routability == 1) {
-						let des_id = network.findId(args[1])
+						
 						let protocol = args[2]
 						let port = args[3]
 
-						console.log(des_id)
+						try{
+							let des_id = network.findId(args[1])
+							console.log(des_id)
+	
+							if(!(0 <= des_id && des_id < network.devices.length && des_id !== false)){
+								output = `Invalid des device ind`;
+								break;
+							}
 
-						if(!(0 <= des_id && des_id < network.devices.length && des_id !== false)){
-							output = `Invalid des device ind`;
-							break;
+							result = (network.simulate(deviceId, des_id, {src: network.devices[deviceId].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port}));
+
+							req = result.result[0].filter((e) => e.res[0] === true || e.res[0] === "permit").length == result.result[0].length
+							res = result.result[1].filter((e) => e.res[0] === true || e.res[0] === "permit").length == result.result[1].length
+							//console.log(result.result[0].filter((e) => e.res[0] === true || e.res[0] === "permit").length, result.result[0].length);
+							//console.log(result.result[1].filter((e) => e.res[0] === true || e.res[0] === "permit").length, result.result[1].length);
+	
+							output = "Result: "+(req && res)+"\n"+JSON.stringify(result)
+						}
+						catch(err){
+							console.log(err)
 						}
 						
-						result = (network.simulate(deviceId, des_id, {src: network.devices[deviceId].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port}));
-
-						req = result.result[0].filter((e) => e.res[0] === true || e.res[0] === "permit").length == result.result[0].length
-						res = result.result[1].filter((e) => e.res[0] === true || e.res[0] === "permit").length == result.result[1].length
-						console.log(result.result[0].filter((e) => e.res[0] === true || e.res[0] === "permit").length, result.result[0].length);
-						console.log(result.result[1].filter((e) => e.res[0] === true || e.res[0] === "permit").length, result.result[1].length);
-
-						output = "Result: "+(req && res)+"\n"+JSON.stringify(result)
 
 					} else if(device.routability == 1) {
 						output = `Invalid interface syntax. Usage: send_packet <des_device_id> <tcp|udp|icmp|ip> <?port>`;
@@ -449,7 +464,7 @@ io.on("connection", (sock) => {
 			*/
 
 		translationTab[cid].consoleHistory.push(output);
-
+		//console.log("HI")
 		sock.emit("console_output", { deviceId, output });
 	});
 
