@@ -579,7 +579,7 @@ function Task() {
                     },
                     {
                         name: "Test 6: Validate R_2 input rules for blocking PC_2",
-                        endpoints: [3, 4],
+                        endpoints: [1, 4],
                         packet: { src: "192.168.10.3", des: "172.16.20.3", protocol: "tcp:80" },
                         expected: false,
                         description: "R_2 should block traffic from PC_2 to PC_4.",
@@ -598,12 +598,12 @@ function Task() {
                 ];
 
                 // Add required rules
-                this.network.configure(3, 0, "output", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.2", protocol: "tcp:21" }); // R_1 for FTP
-                this.network.configure(4, 0, "input", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.2", protocol: "tcp:21" }); // R_2 for FTP
-                this.network.configure(3, 0, "output", "add", -1, { action: "deny", src: "192.168.10.3", des: "172.16.20.3", protocol: "any" }); // R_1 to block PC_2 to PC_4
-                this.network.configure(4, 0, "input", "add", -1, { action: "deny", src: "192.168.10.3", des: "172.16.20.3", protocol: "any" }); // R_2 to block PC_2 to PC_4
-                this.network.configure(3, 0, "output", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.3", protocol: "tcp:25" }); // R_1 for SMTP
-                this.network.configure(4, 0, "input", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.3", protocol: "tcp:25" }); // R_2 for SMTP
+                // this.network.configure(3, 0, "output", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.2", protocol: "tcp:21" }); // R_1 for FTP
+                // this.network.configure(4, 0, "input", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.2", protocol: "tcp:21" }); // R_2 for FTP
+                // this.network.configure(3, 0, "output", "add", -1, { action: "deny", src: "192.168.10.3", des: "172.16.20.3", protocol: "any" }); // R_1 to block PC_2 to PC_4
+                // this.network.configure(4, 0, "input", "add", -1, { action: "deny", src: "192.168.10.3", des: "172.16.20.3", protocol: "any" }); // R_2 to block PC_2 to PC_4
+                // this.network.configure(3, 0, "output", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.3", protocol: "tcp:25" }); // R_1 for SMTP
+                // this.network.configure(4, 0, "input", "add", -1, { action: "permit", src: "192.168.10.2", des: "172.16.20.3", protocol: "tcp:25" }); // R_2 for SMTP
             } break;
 
             // for next

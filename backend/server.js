@@ -164,7 +164,7 @@ io.on("connection", (sock) => {
         try{
             des_id = network.findId(des_id);
             if(!(0 <= Number(des_id) && Number(des_id) < network.devices.length) && des_id !== false) return;
-            let res = network.simulate(src_id, des_id, {src: network.devices[src_id].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port});
+            let res = network.simulate(src_id, des_id, {src: network.devices[src_id].interfaces[0].inet, des: network.devices[des_id].interfaces[0].inet, protocol: protocol+":"+port});
             console.log("HI")
             sock.emit("packet_response", JSON.stringify(res));
         }
@@ -222,7 +222,7 @@ io.on("connection", (sock) => {
 								break;
 							}
 
-							result = (network.simulate(deviceId, des_id, {src: network.devices[deviceId].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port}));
+							result = (network.simulate(deviceId, des_id, {src: network.devices[deviceId].interfaces[0].inet, des: network.devices[des_id].interfaces[0].inet, protocol: protocol+":"+port}));
 
 							req = result.result[0].filter((e) => e.res[0] === true || e.res[0] === "permit").length == result.result[0].length
 							res = result.result[1].filter((e) => e.res[0] === true || e.res[0] === "permit").length == result.result[1].length
