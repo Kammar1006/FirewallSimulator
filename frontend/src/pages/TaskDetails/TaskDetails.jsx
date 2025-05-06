@@ -170,6 +170,8 @@ const TaskDetails = () => {
                     socket.once("packet_response", (response) => {
                         const { success, blockingDevice } = JSON.parse(response);
 
+                        console.log(JSON.parse(response))
+
                         const finalPosition = success
                             ? targetPosition
                             : devicePositions[blockingDevice];
@@ -179,6 +181,10 @@ const TaskDetails = () => {
                             y: sourcePosition.y - 10,
                             icon: null,
                         });
+
+                        console.log(
+                            Object.entries(devicePositions)
+                        )
 
                         setTimeout(() => {
                             const speed = 200;
@@ -206,7 +212,7 @@ const TaskDetails = () => {
                                         const [, devicePos] = devicesOnPath[pauseIndex];
                                         if (Math.abs(nextX - devicePos.x) < 5) {
                                             pauseIndex++;
-                                            const isBlocked = pauseIndex === devicesOnPath.length && !success;
+                                            const isBlocked = pauseIndex === !success;
                                             setPacketAnimation({
                                                 x: nextX,
                                                 y: sourcePosition.y - 10,
@@ -265,6 +271,14 @@ const TaskDetails = () => {
                                 requestAnimationFrame(() => animateToNext(lastX, finalPosition.x, performance.now()));
                             }
                         }, 1500);
+
+
+
+
+
+
+
+
                     });
                 }
             }

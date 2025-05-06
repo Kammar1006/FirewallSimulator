@@ -58,7 +58,7 @@ function Network(){
                     break;
                 }
                 let inResult = this.devices[current].packet_in(packet, inInterface);
-                result[0].push(inResult);
+                result[0].push([inResult, current]);
                 if (!inResult[0]) {
                     forward_success = false;
                     blockingDevice = current;
@@ -74,7 +74,7 @@ function Network(){
                 break;
             }
             let outResult = this.devices[current].packet_out(packet, outInterface);
-            result[0].push(outResult);
+            result[0].push(outResult, current);
             if (!outResult[0]) {
                 forward_success = false;
                 blockingDevice = current;
@@ -92,7 +92,7 @@ function Network(){
                 blockingDevice = final;
             } else {
                 let inResult = this.devices[final].packet_in(packet, inInterface);
-                result[0].push(inResult);
+                result[0].push(inResult, final);
                 if (!inResult[0]) {
                     forward_success = false;
                     blockingDevice = final;
@@ -117,7 +117,7 @@ function Network(){
                         break;
                     }
                     let inResult = this.devices[current].packet_in(packet, inInterface);
-                    result[1].push(inResult);
+                    result[1].push(inResult, current);
                     if (!inResult[0]) {
                         forward_success = false;
                         blockingDevice = current;
@@ -133,7 +133,7 @@ function Network(){
                     break;
                 }
                 let outResult = this.devices[current].packet_out(packet, outInterface);
-                result[1].push(outResult);
+                result[1].push(outResult, current);
                 if (!outResult[0]) {
                     forward_success = false;
                     blockingDevice = current;
@@ -142,30 +142,21 @@ function Network(){
             }
         }
 
-        // Explicitly validate R_2 rules for Task 6
-        if (forward_success && this.devices[4]) { // Device 4 is R_2
-            const r2InputRules = this.devices[4].interfaces[0].input_rules.simulate(packet);
-            if (!r2InputRules[0]) {
+        // Check input rules on final device
+        if (forward_success) {
+            let final = return_path[return_path.length - 1];
+            let prev = return_path[return_path.length - 2];
+            let inInterface = this.connections[final].indexOf(prev);
+            if (inInterface === -1 || !this.devices[final].interfaces[inInterface]) {
                 forward_success = false;
-                blockingDevice = 4; // R_2 blocks the packet
-            }
-        }
-
-        // Explicitly validate R_Y rules for Test 5
-        if (forward_success && this.devices[2]) { // Device 2 is R_Y
-            const rYOutputRules = this.devices[2].interfaces[0].output_rules.simulate(packet);
-            if (!rYOutputRules[0]) {
-                forward_success = false;
-                blockingDevice = 2; // R_Y blocks the packet
-            }
-        }
-
-        // Explicitly validate R_Z rules for Test 6
-        if (forward_success && this.devices[6]) { // Device 6 is R_Z
-            const rZInputRules = this.devices[6].interfaces[0].input_rules.simulate(packet);
-            if (!rZInputRules[0]) {
-                forward_success = false;
-                blockingDevice = 6; // R_Z blocks the packet
+                blockingDevice = final;
+            } else {
+                let inResult = this.devices[final].packet_in(packet, inInterface);
+                result[1].push(inResult, final);
+                if (!inResult[0]) {
+                    forward_success = false;
+                    blockingDevice = final;
+                }
             }
         }
 
