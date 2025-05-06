@@ -53,7 +53,7 @@ function Firewall(){
     this.simulate = (packet) => {
         // If no rules, default permit
         if (this.list.length === 0) {
-            console.log("No rules configured. Default permit.");
+            //console.log("No rules configured. Default permit.");
             return [true, ["default_permit"]];
         }
 
@@ -64,8 +64,8 @@ function Firewall(){
             packet.protocol = packet.protocol + ":any";
         }
 
-        console.log("Simulating packet:", packet);
-        console.log("Against rules:", this.list);
+        //console.log("Simulating packet:", packet);
+        //console.log("Against rules:", this.list);
 
         // Check each rule in order
         for (const rule of this.list) {
@@ -73,21 +73,21 @@ function Firewall(){
             const desMatch = compareDES(packet.des, rule.des);
             const protocolMatch = compareProtocol(packet.protocol, rule.protocol);
 
-            console.log(`Rule check:`, rule);
-            console.log(`Matches - src: ${srcMatch}, des: ${desMatch}, protocol: ${protocolMatch}`);
+            //console.log(`Rule check:`, rule);
+            //console.log(`Matches - src: ${srcMatch}, des: ${desMatch}, protocol: ${protocolMatch}`);
 
             if (srcMatch && desMatch && protocolMatch) {
                 // Rule matches - apply action and stop processing
                 const action = rule.action === "permit";
                 score.push(rule.action);
-                console.log(`Rule matched. Action: ${rule.action}`);
+                //console.log(`Rule matched. Action: ${rule.action}`);
                 return [action, score];
             }
             score.push("no_match");
         }
 
         // If no rules matched, implicit deny
-        console.log("No matching rules. Implicit deny.");
+        //console.log("No matching rules. Implicit deny.");
         return [false, [...score, "implicit_deny"]];
     }
 
@@ -126,7 +126,7 @@ function Firewall(){
             packet = e.packet;
             result = e.result;
 
-            console.log(this.simulate(packet)[0], result)
+            //console.log(this.simulate(packet)[0], result)
 
             if(this.simulate(packet)[0] != result){
                 status = false;

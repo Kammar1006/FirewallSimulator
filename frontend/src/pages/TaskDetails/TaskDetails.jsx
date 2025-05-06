@@ -161,13 +161,12 @@ const TaskDetails = () => {
             
             const args = command.split(" ");
             if (args[0].toLowerCase() === "send_packet" && args.length === 4) {
-                const targetDeviceId = parseInt(args[1], 10);
-                if (!isNaN(targetDeviceId) && devicePositions[deviceId] && devicePositions[targetDeviceId]) {
-                    const sourcePosition = devicePositions[deviceId];
-                    const targetPosition = devicePositions[targetDeviceId];
+                const targetDeviceId = args[1];
+                if (devicePositions[deviceId]) {
 
                     socket.emit("send_packet", deviceId, targetDeviceId, args[2], args[3]);
                     socket.once("packet_response", (response) => {
+                        console.log(response)
                         const { result, success, blockingDevice } = JSON.parse(response);
                     
                         console.log("Animacja - wyniki backendu:", result);
