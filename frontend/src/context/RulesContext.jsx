@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 export const RulesContext = createContext();
 
 export const SERVER_CONFIG = {
-  address: "localhost:5003"
+  address: "http://localhost:5003"
 };
 
 const RulesContextProvider = ({ children }) => {
@@ -15,7 +15,7 @@ const RulesContextProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const newSocket = io({ withCredentials: true });
+    const newSocket = io( { withCredentials: true });
     setSocket(newSocket);
 
     newSocket.on("connect", () => {

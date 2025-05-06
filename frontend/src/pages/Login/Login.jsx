@@ -118,7 +118,8 @@ const Login = () => {
   const handleAddStudent = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`students`, {
+      const response = await fetch(`/students`, {
+
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
