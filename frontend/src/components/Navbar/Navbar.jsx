@@ -29,9 +29,9 @@ const Navbar = () => {
             {location.pathname !== '/login' && (
                 <div className="navbarContainerRight">
                     <div className="navbarContainerRightContainer">
-                        <div className="navbarContainerRightContainerButtonTwo">
+                        {/* <div className="navbarContainerRightContainerButtonTwo">
                             <button className="navbarContainerRightContainerButtonTwoBtn">Settings</button>
-                        </div>
+                        </div> */}
 
                         <NavLink to={`/tasks?token=${token}`} className="navbarContainerRightContainerButtonTasks">
                             <button className="navbarContainerRightContainerButtonTasksBtn">Tasks</button>
