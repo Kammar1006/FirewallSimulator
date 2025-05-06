@@ -65,7 +65,11 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
     }, [output]);
 
     return (
-        <Draggable handle=".consoleTitleBar" nodeRef={consoleRef}>
+        <Draggable 
+            handle=".consoleTitleBar" 
+            nodeRef={consoleRef}
+            bounds="body"
+        >
             <div className="consoleModal" ref={consoleRef}>
                 <div className="consoleTitleBar">
                     <span>Console: {deviceName}</span>
