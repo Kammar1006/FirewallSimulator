@@ -97,9 +97,9 @@ function Task() {
                     new Device("PC_A", ["10.0.0.2"]),
                     new Device("S_1", ["", ""], 0, 0), // Switch between PC_A and R_A
                     new Device("R_A", ["10.0.0.1", "172.16.0.1", "192.168.2.1"]), // R_A with 3 interfaces
-                    new Device("R_B", ["192.168.2.2", "192.168.1.1"]), // Adjusted R_B to connect to R_A's third interface
-                    new Device("PC_B", ["192.168.1.2"]),
-                    new Device("PC_C", ["192.168.1.3"]),
+                    new Device("R_B", ["172.16.0.2", "192.168.1.1"]), // Adjusted R_B to connect to R_A's third interface
+                    new Device("PC_B", ["192.168.2.2"]),
+                    new Device("PC_C", ["192.168.1.2"]),
                 ];
                 const connections = [
                     [1],       // PC_A -> S_1
@@ -132,37 +132,30 @@ function Task() {
                     {
                         name: "Test 1: Zezwól na ruch z PC_A do PC_B",
                         endpoints: [0, 4],
-                        packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "tcp:80" },
+                        packet: { src: "10.0.0.2", des: "192.168.2.2", protocol: "tcp:80" },
                         expected: true,
                         description: "Powinien zezwolić na ruch z PC_A do PC_B na porcie 80. Wymaga reguł na R_A i R_B.",
                     },
                     {
                         name: "Test 2: Zablokuj ruch z PC_A do PC_C",
                         endpoints: [0, 5],
-                        packet: { src: "10.0.0.2", des: "192.168.1.3", protocol: "tcp:80" },
+                        packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "tcp:80" },
                         expected: false,
                         description: "Powinien zablokować ruch z PC_A do PC_C. Wymaga reguł na R_A i R_B.",
                     },
                     {
                         name: "Test 3: Zezwól na ruch między PC_B a PC_C",
                         endpoints: [4, 5],
-                        packet: { src: "192.168.1.2", des: "192.168.1.3", protocol: "udp:53" },
+                        packet: { src: "192.168.2.2", des: "192.168.1.2", protocol: "udp:53" },
                         expected: true,
                         description: "Powinien zezwolić na ruch między PC_B a PC_C. Wymaga reguł na R_B.",
                     },
                     {
                         name: "Test 4: Weryfikacja reguł na R_A",
                         endpoints: [0, 2],
-                        packet: { src: "10.0.0.2", des: "192.168.1.2", protocol: "tcp:80" },
+                        packet: { src: "10.0.0.2", des: "10.0.0.1", protocol: "tcp:80" },
                         expected: true,
                         description: "Powinien zezwolić na ruch z PC_A przez R_A. Wymaga reguł na R_A.",
-                    },
-                    {
-                        name: "Test 5: Weryfikacja reguł na R_B",
-                        endpoints: [2, 5],
-                        packet: { src: "10.0.0.2", des: "192.168.1.3", protocol: "tcp:80" },
-                        expected: false,
-                        description: "Powinien zablokować ruch z PC_A do PC_C na R_B. Wymaga reguł na R_B.",
                     }
                 ];
                 this.difficulty = "Medium";
@@ -183,11 +176,11 @@ function Task() {
                 const devices = [
                     new Device("PC_X", ["192.168.100.2"]),
                     new Device("R_X", ["192.168.100.1", "10.10.10.1"]),
-                    new Device("R_Y", ["10.10.10.2", "172.16.10.1", "172.16.10.5"]),
+                    new Device("R_Y", ["10.10.10.2", "10.10.20.1", "172.16.10.1", "172.16.20.1"]),
                     new Device("S_2", ["", ""], 0, 0), // Switch
-                    new Device("PC_Y", ["172.16.10.2"]),
-                    new Device("PC_Z", ["172.16.10.3"]),
-                    new Device("R_Z", ["172.16.10.4", "192.168.200.1"]),
+                    new Device("PC_Y", ["10.10.20.2"]),
+                    new Device("PC_Z", ["172.16.10.2"]),
+                    new Device("R_Z", ["172.16.20.2", "192.168.200.1"]),
                     new Device("PC_W", ["192.168.200.2"]),
                 ];
                 const connections = [
@@ -665,7 +658,8 @@ function Task() {
             }
 
             // Check if the packet was handled as expected
-            const packetPermitted = result.result[0].every(r => r[0] === true);
+            console.log(result.result[0]);
+            const packetPermitted = result.result[0].every(r => r.res[0] === true);
             const testPassed = packetPermitted === test.expected;
 
             if (testPassed) {
@@ -673,6 +667,18 @@ function Task() {
             } else {
                 console.log(`❌ Test failed: Packet was ${packetPermitted ? 'permitted' : 'blocked'}, expected ${test.expected ? 'permit' : 'block'}`);
                 allTestsPassed = false;
+            }
+
+            if(packetPermitted){
+                const packetPermitted = result.result[1].every(r => r.res[0] === true);
+                const testPassed = packetPermitted === test.expected;
+
+                if (testPassed) {
+                    console.log(`✅ Test response passed: ${test.description}`);
+                } else {
+                    console.log(`❌ Test response failed: Packet was ${packetPermitted ? 'permitted' : 'blocked'}, expected ${test.expected ? 'permit' : 'block'}`);
+                    allTestsPassed = false;
+                }
             }
 
             testResults.push({

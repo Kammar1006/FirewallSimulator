@@ -186,7 +186,7 @@ const TaskDetails = () => {
                     
                                 const [resSuccess, reasons] = next.res;
                     
-                                console.log(`Hop ${i + 1}: z ${current.id} do ${next.id} | Dozwolone: ${resSuccess} | Powody: ${reasons.join(", ")}`);
+                                console.log(`Hop ${i + 1}: Device ${current.id} | ${current !== next ? "output" : "input"} | Status: ${resSuccess} | Powody: ${reasons.join(", ")}`);
                     
                                 await movePacket(from, to, resSuccess, reasons);
                             }
