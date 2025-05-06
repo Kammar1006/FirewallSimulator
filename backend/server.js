@@ -158,20 +158,20 @@ io.on("connection", (sock) => {
 	});
 
 	sock.on("send_packet", (src_id, des_id, protocol, port) => {
-		console.log(src_id, des_id)
-		let network = translationTab[cid].task.network;
-		if(!(0 <= Number(src_id) && Number(src_id) < network.devices.length)) return;
-		try{
-			des_id = network.findId(des_id);
-		}
-		catch(err){
-			console.log(err);
-		}
-		if(!(0 <= Number(des_id) && Number(des_id) < network.devices.length) && des_id !== false) return;
-		let res = network.simulate(src_id, des_id, {src: network.devices[src_id].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port});
-		console.log("HI")
-		sock.emit("packet_response", JSON.stringify(res));
-	});
+        console.log(src_id, des_id)
+        let network = translationTab[cid].task.network;
+        if(!(0 <= Number(src_id) && Number(src_id) < network.devices.length)) return;
+        try{
+            des_id = network.findId(des_id);
+            if(!(0 <= Number(des_id) && Number(des_id) < network.devices.length) && des_id !== false) return;
+            let res = network.simulate(src_id, des_id, {src: network.devices[src_id].interfaces[0], des: network.devices[des_id].interfaces[0], protocol: protocol+":"+port});
+            console.log("HI")
+            sock.emit("packet_response", JSON.stringify(res));
+        }
+        catch(err){
+            console.log(err);
+        }
+    });
 
 	sock.on("console_command", ({ deviceId, command }) => {
 		console.log(`Received command "${command}" for device ${deviceId}`);
