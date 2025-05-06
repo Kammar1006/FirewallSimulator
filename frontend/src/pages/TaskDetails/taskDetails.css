@@ -729,3 +729,34 @@
         transform: translateY(0);
     }
 }
+
+.deviceAclInfo {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    min-width: 250px;
+    max-width: 300px;
+}
+
+.deviceAclInfo .aclReason {
+    margin-bottom: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.deviceAclInfo .aclReason.permit {
+    background-color: rgba(19, 241, 0, 0.2);
+    color: #13F100;
+}
+
+.deviceAclInfo .aclReason.deny {
+    background-color: rgba(255, 45, 0, 0.2);
+    color: #FF2D00;
+}

@@ -22,11 +22,14 @@ const TaskDetails = () => {
     const [taskCompleted, setTaskCompleted] = useState(false);
     const [devicePositions, setDevicePositions] = useState({});
     const [packetAnimation, setPacketAnimation] = useState(null);
+    const [ruleProcessingInfo, setRuleProcessingInfo] = useState(null);
     const [hoveredDevice, setHoveredDevice] = useState(null);
     const [totalTasks, setTotalTasks] = useState(0);
     const [completedTasks, setCompletedTasks] = useState(0);
     const [showHints, setShowHints] = useState(false);
     const [currentHint, setCurrentHint] = useState(0);
+    const [currentRuleIndex, setCurrentRuleIndex] = useState(0);
+    const [deviceHopInfo, setDeviceHopInfo] = useState({});
 
     const predefinedPositions = {
         1: {
@@ -187,13 +190,13 @@ const TaskDetails = () => {
                     
                                 console.log(`Hop ${i + 1}: Device ${current.id} | ${current !== next ? "output" : "input"} | Status: ${resSuccess} | Powody: ${reasons.join(", ")}`);
                     
-                                await movePacket(from, to, resSuccess, reasons);
+                                await movePacket(from, to, resSuccess, reasons, next.id, i + 1, current !== next ? "output" : "input");
                             }
                     
                             setTimeout(() => setPacketAnimation(null), 500);
                         };
                     
-                        const movePacket = (from, to, isPermitted, reasons) => {
+                        const movePacket = (from, to, isPermitted, reasons, deviceId, hopNumber, direction) => {
                             return new Promise((resolve) => {
                                 const dx = to.x - from.x;
                                 const dy = to.y - from.y;
@@ -209,18 +212,46 @@ const TaskDetails = () => {
                                     const x = from.x + dx * progress;
                                     const y = from.y + dy * progress;
                     
+                                    // During movement, show normal packet
                                     setPacketAnimation({
                                         x,
                                         y: y - 10,
-                                        icon: isPermitted
-                                            ? <MdMarkEmailRead style={{ width: "36px", height: "36px", color: "#13F100" }} />
-                                            : <RiMailCloseFill style={{ width: "36px", height: "36px", color: "#FF2D00" }} />,
+                                        icon: <IoMdMail style={{ width: "36px", height: "36px", color: "#111111" }} />,
                                     });
                     
                                     if (progress < 1) {
                                         requestAnimationFrame(animate);
                                     } else {
-                                        setTimeout(resolve, 1000); // Zatrzymanie na urządzeniu
+                                        // When packet reaches device, show hop info
+                                        setDeviceHopInfo(prev => ({
+                                            ...prev,
+                                            [deviceId]: {
+                                                hopNumber,
+                                                direction,
+                                                status: isPermitted,
+                                                reasons,
+                                                timestamp: Date.now()
+                                            }
+                                        }));
+                    
+                                        // Update packet color based on status
+                                        setPacketAnimation({
+                                            x: to.x,
+                                            y: to.y - 10,
+                                            icon: isPermitted
+                                                ? <MdMarkEmailRead style={{ width: "36px", height: "36px", color: "#13F100" }} />
+                                                : <RiMailCloseFill style={{ width: "36px", height: "36px", color: "#FF2D00" }} />,
+                                        });
+                    
+                                        // Clear hop info after delay
+                                        setTimeout(() => {
+                                            setDeviceHopInfo(prev => {
+                                                const newInfo = { ...prev };
+                                                delete newInfo[deviceId];
+                                                return newInfo;
+                                            });
+                                            resolve();
+                                        }, 1000);
                                     }
                                 };
                     
@@ -501,23 +532,61 @@ const TaskDetails = () => {
                         {/* Render packet animation */}
                         {packetAnimation && (
                             <div
+                                className="packetAnimation"
                                 style={{
-                                    position: "absolute",
                                     left: packetAnimation.x,
                                     top: packetAnimation.y,
-                                    width: "36px",
-                                    height: "36px",
                                 }}
                             >
                                 {packetAnimation.icon || (
                                     <IoMdMail
-                                        className="packetIcon"
-                                        style={{
-                                            width: "36px",
-                                            height: "36px",
-                                        }}
+                                        className={`packetIcon ${packetAnimation.isPermitted ? 'packetIconPermit' : 'packetIconDeny'}`}
                                     />
                                 )}
+                            </div>
+                        )}
+
+                        {/* Render rule processing info */}
+                        {ruleProcessingInfo && (
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    left: ruleProcessingInfo.x,
+                                    top: ruleProcessingInfo.y,
+                                    backgroundColor: "rgba(0, 0, 0, 0.8)",
+                                    color: "white",
+                                    padding: "12px",
+                                    borderRadius: "8px",
+                                    fontSize: "14px",
+                                    fontWeight: "500",
+                                    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                                    zIndex: 1000,
+                                    minWidth: "250px",
+                                    maxWidth: "300px",
+                                }}
+                            >
+                                <div style={{ marginBottom: "8px", borderBottom: "1px solid rgba(255,255,255,0.2)", paddingBottom: "8px" }}>
+                                    Processing ACL Rules:
+                                </div>
+                                {ruleProcessingInfo.reasons.map((reason, index) => (
+                                    <div 
+                                        key={index} 
+                                        style={{ 
+                                            marginBottom: "4px",
+                                            padding: "4px 8px",
+                                            borderRadius: "4px",
+                                            backgroundColor: index === currentRuleIndex ? "rgba(255,255,255,0.1)" : "transparent",
+                                            color: index === currentRuleIndex ? "#fff" : "rgba(255,255,255,0.7)",
+                                            transition: "all 0.3s ease"
+                                        }}
+                                    >
+                                        {reason === "default_permit" ? "Default Permit" :
+                                         reason === "implicit_deny" ? "Implicit Deny" :
+                                         reason === "permit" ? "Rule: Permit" :
+                                         reason === "deny" ? "Rule: Deny" :
+                                         reason === "no_match" ? "No Match" : reason}
+                                    </div>
+                                ))}
                             </div>
                         )}
 
@@ -534,6 +603,45 @@ const TaskDetails = () => {
                                 {getDeviceTooltip(hoveredDevice.device, hoveredDevice.index)}
                             </div>
                         )}
+
+                        {/* Render device hop info */}
+                        {Object.entries(deviceHopInfo).map(([deviceId, info]) => {
+                            const position = devicePositions[deviceId];
+                            if (!position) return null;
+
+                            return (
+                                <div
+                                    key={`${deviceId}-${info.timestamp}`}
+                                    className="deviceHopInfo"
+                                    style={{
+                                        left: position.x,
+                                        top: position.y - 90,
+                                        border: `2px solid ${info.status ? "#13F100" : "#FF2D00"}`,
+                                    }}
+                                >
+                                    <div className="deviceHopInfoHeader">
+                                        <span>Hop #{info.hopNumber}</span>
+                                        <span className={`deviceHopInfoStatus ${info.status ? 'deviceHopInfoStatusPermit' : 'deviceHopInfoStatusDeny'}`}>
+                                            {info.status ? "PERMIT" : "DENY"}
+                                        </span>
+                                    </div>
+                                    <div className="deviceHopInfoDevice">
+                                        Device {deviceId} | {info.direction}
+                                    </div>
+                                    <div className="deviceHopInfoReasons">
+                                        {info.reasons.map((reason, index) => (
+                                            <div key={index} className="deviceHopInfoReason">
+                                                {reason === "default_permit" ? "Default Permit" :
+                                                 reason === "implicit_deny" ? "Implicit Deny" :
+                                                 reason === "permit" ? "Rule: Permit" :
+                                                 reason === "deny" ? "Rule: Deny" :
+                                                 reason === "no_match" ? "No Match" : reason}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
@@ -549,6 +657,40 @@ const TaskDetails = () => {
                     output={consoleOutput[deviceId]}
                 />
             ))}
+
+            {/* keyframes for animations */}
+            <style>
+            {`
+                @keyframes contentChange {
+                    0% {
+                        opacity: 0.5;
+                        transform: scale(0.98);
+                        filter: blur(1px);
+                    }
+                    50% {
+                        opacity: 0.8;
+                        transform: scale(1.02);
+                        filter: blur(0.5px);
+                    }
+                    100% {
+                        opacity: 1;
+                        transform: scale(1);
+                        filter: blur(0);
+                    }
+                }
+
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `}
+            </style>
         </div>
     );
 };

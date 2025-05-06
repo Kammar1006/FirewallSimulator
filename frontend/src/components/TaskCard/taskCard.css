@@ -134,3 +134,85 @@
     padding-bottom: 2px;
     letter-spacing: 0.5px
 }
+
+@media (max-width: 1700px) {
+    .taskCard {
+      min-height: 280px;
+      padding: 16px;
+    }
+    .taskCardContainerFirstContainerLeftText {
+      font-size: 18px;
+    }
+    .taskCardContainerSecondText,
+    .taskCardContainerThirdText {
+      font-size: 16px;
+    }
+  }
+
+@media (max-width: 1500px) {
+    .taskCard {
+      min-height: 300px;
+      padding: 16px;
+    }
+    .taskCardContainerFirstContainerLeftText {
+      font-size: 18px;
+    }
+    .taskCardContainerSecondText,
+    .taskCardContainerThirdText {
+      font-size: 16px;
+    }
+  }
+
+@media (max-width: 900px) {
+  .taskCard {
+    height: 300px;
+    padding: 16px;
+  }
+  .taskCardContainerFirstContainerLeftText {
+    font-size: 18px;
+  }
+  .taskCardContainerSecondText,
+  .taskCardContainerThirdText {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .taskCard {
+    height: auto;
+    min-height: 220px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .taskCardContainerFirstContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .taskCardContainerFirstContainerLeftText {
+    font-size: 16px;
+  }
+  .taskCardContainerSecondText,
+  .taskCardContainerThirdText {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .taskCardContainerFourth {
+    position: static;
+    margin-top: 16px;
+    left: unset;
+    right: unset;
+    bottom: unset;
+    width: 100%;
+  }
+  .taskCardContainerFourthBtn {
+    height: 32px;
+    font-size: 14px;
+  }
+  .taskCardContainerFourthBtnText {
+    font-size: 14px;
+    line-height: 32px;
+  }
+}
