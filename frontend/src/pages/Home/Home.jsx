@@ -269,7 +269,7 @@ const Home = () => {
                 </div>
                 <div className="homeContainerFirstContainerFirstContainerRight">
                   <p className="homeContainerFirstContainerFirstContainerRightText">
-                    Grupa 5: Wizualizacja i Konfiguracja ACL i Firewall
+                    Group 5: ACL and Firewall Visualization and Configuration
                   </p>
                 </div>
               </div>
@@ -277,7 +277,7 @@ const Home = () => {
             <div className="homeContainerFirstContainerSecond">
               <div className="homeContainerFirstContainerSecondContainer">
                 <p className="homeContainerFirstContainerSecondContainerText">
-                  Interaktywna aplikacja do nauki i testowania reguł firewalla poprzez wizualizację i symulację.
+                  Interactive application for learning and testing firewall rules through visualization and simulation.
                 </p>
               </div>
             </div>
@@ -295,14 +295,14 @@ const Home = () => {
                   <div className="homeContainerSecondContainerElementContainerTopContainer">
                     <HiComputerDesktop className="homeContainerSecondContainerElementContainerTopContainerIcon" />
                     <p className="homeContainerSecondContainerElementContainerTopContainerText">
-                      Wizualizacja Interaktywna
+                      Interactive Visualization
                     </p>
                   </div>
                 </div>
                 {/* Bottom Part */}
                 <div className="homeContainerSecondContainerElementContainerBottom">
                   <p className="homeContainerSecondContainerElementContainerBottomText">
-                    Aplikacja webowa z unikalną wizualizacją w formie gry komputerowej dla lepszego zrozumienia działania firewalla.
+                    Web application with unique visualization in the form of a computer game for better understanding of firewall operation.
                   </p>
                 </div>
               </div>
@@ -316,14 +316,14 @@ const Home = () => {
                   <div className="homeContainerSecondContainerElementContainerTopContainer">
                     <FaCode className="homeContainerSecondContainerElementContainerTopContainerIcon" />
                     <p className="homeContainerSecondContainerElementContainerTopContainerText">
-                      Edytor Reguł
+                      Rules Editor
                     </p>
                   </div>
                 </div>
                 {/* Bottom Part */}
                 <div className="homeContainerSecondContainerElementContainerBottom">
                   <p className="homeContainerSecondContainerElementContainerBottomText">
-                    Zaawansowany edytor reguł iptables i ACL z opcją wyboru interfejsu graficznego lub tekstowego.
+                    Advanced iptables and ACL rules editor with option to choose between graphical or text interface.
                   </p>
                 </div>
               </div>
@@ -337,14 +337,14 @@ const Home = () => {
                   <div className="homeContainerSecondContainerElementContainerTopContainer">
                     <PiTestTubeFill className="homeContainerSecondContainerElementContainerTopContainerIcon" />
                     <p className="homeContainerSecondContainerElementContainerTopContainerText">
-                      Środowisko Testowe
+                      Testing Environment
                     </p>
                   </div>
                 </div>
                 {/* Bottom Part */}
                 <div className="homeContainerSecondContainerElementContainerBottom">
                   <p className="homeContainerSecondContainerElementContainerBottomText">
-                    Symulator do testowania reguł i wizualizacji efektów na wzorcach pakietów.
+                    Simulator for testing rules and visualizing effects on packet patterns.
                   </p>
                 </div>
               </div>
@@ -359,7 +359,7 @@ const Home = () => {
             <div className="homeContainerThirdContainerTop">
               <div className="homeContainerThirdContainerTopContainer">
                 <p className="homeContainerThirdContainerTopContainerText">
-                  Rozpocznij Pracę
+                  Get Started
                 </p>
               </div>
             </div>
@@ -380,10 +380,10 @@ const Home = () => {
                     <div className="homeContainerThirdContainerBottomContainerLeftContainerRight">
                       <div className="homeContainerThirdContainerBottomContainerLeftContainerRightContainer">
                         <p className="homeContainerThirdContainerBottomContainerLeftContainerRightContainerTextOne">
-                          Dokumentacja
+                          Documentation
                         </p>
                         <p className="homeContainerThirdContainerBottomContainerLeftContainerRightContainerTextTwo">
-                          Szczegółowy przewodnik użytkownika
+                          Detailed user guide
                         </p>
                       </div>
                     </div>
@@ -399,10 +399,10 @@ const Home = () => {
                     <div className="homeContainerThirdContainerBottomContainerLeftContainerRight">
                       <div className="homeContainerThirdContainerBottomContainerLeftContainerRightContainer">
                         <p className="homeContainerThirdContainerBottomContainerLeftContainerRightContainerTextOne">
-                          Samouczek
+                          Tutorial
                         </p>
                         <p className="homeContainerThirdContainerBottomContainerLeftContainerRightContainerTextTwo">
-                          Interkatywny kurs konfiguracji
+                          Interactive configuration course
                         </p>
                       </div>
                     </div>

@@ -420,7 +420,7 @@ const TaskDetails = () => {
                                         onClick={handleRunTests}
                                     >
                                         <p className="taskDetailsContainerTopFirstContainerRightContainerBtnOneText">
-                                            Run Tests
+                                            Check
                                         </p>
                                     </button>
                                 <div className="hintsContainer">
@@ -477,13 +477,13 @@ const TaskDetails = () => {
                             </div>
 
                             {/* Second Part */}
-                            <div className="taskDetailsContainerTopElementContainerSecond">
+                            {/* <div className="taskDetailsContainerTopElementContainerSecond">
                                 <div className="taskDetailsContainerTopElementContainerSecondContainer">
                                     <p className="taskDetailsContainerTopElementContainerSecondContainerText">
                                         Time: 45 minutes
                                     </p>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
