@@ -39,7 +39,7 @@ const App = () => {
     const interval = setInterval(() => {
       const studentId = localStorage.getItem("studentId");
       if (studentId) {
-        console.log(`Logged-in Student ID: ${studentId}`);
+        //console.log(`Logged-in Student ID: ${studentId}`);
       }
     }, 1000);
 

@@ -58,7 +58,7 @@ function Network(){
                     break;
                 }
                 let inResult = this.devices[current].packet_in(packet, inInterface);
-                result[0].push([inResult, current]);
+                result[0].push({res: inResult, id: current});
                 if (!inResult[0]) {
                     forward_success = false;
                     blockingDevice = current;
@@ -74,7 +74,7 @@ function Network(){
                 break;
             }
             let outResult = this.devices[current].packet_out(packet, outInterface);
-            result[0].push(outResult, current);
+            result[0].push({res: outResult, id: current});
             if (!outResult[0]) {
                 forward_success = false;
                 blockingDevice = current;
@@ -92,7 +92,7 @@ function Network(){
                 blockingDevice = final;
             } else {
                 let inResult = this.devices[final].packet_in(packet, inInterface);
-                result[0].push(inResult, final);
+                result[0].push({res: inResult, id: final});
                 if (!inResult[0]) {
                     forward_success = false;
                     blockingDevice = final;
@@ -117,7 +117,7 @@ function Network(){
                         break;
                     }
                     let inResult = this.devices[current].packet_in(packet, inInterface);
-                    result[1].push(inResult, current);
+                    result[1].push({res: inResult, id: current});
                     if (!inResult[0]) {
                         forward_success = false;
                         blockingDevice = current;
@@ -133,7 +133,7 @@ function Network(){
                     break;
                 }
                 let outResult = this.devices[current].packet_out(packet, outInterface);
-                result[1].push(outResult, current);
+                result[1].push({res: outResult, id: current});
                 if (!outResult[0]) {
                     forward_success = false;
                     blockingDevice = current;
@@ -152,7 +152,7 @@ function Network(){
                 blockingDevice = final;
             } else {
                 let inResult = this.devices[final].packet_in(packet, inInterface);
-                result[1].push(inResult, final);
+                result[1].push({res: inResult, id: final});
                 if (!inResult[0]) {
                     forward_success = false;
                     blockingDevice = final;
@@ -166,6 +166,19 @@ function Network(){
     this.configure = (device_id, inet, type, action, id, data) => {
         if(0 <= device_id && device_id < this.devices.length){
             return this.devices[device_id].configure(inet, type, action, id, data);
+        }
+        return false;
+    }
+
+    this.findId = (ip) => {
+        for(dev in this.devices){
+            for(int in this.devices[dev].interfaces){
+                console.log(this.devices[dev].interfaces[int].inet)
+                if(this.devices[dev].interfaces[int].inet == ip && ip !== "127.0.0.1"){
+                    console.log(ip, dev);
+                    return dev;
+                }
+            }
         }
         return false;
     }
