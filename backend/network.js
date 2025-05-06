@@ -100,6 +100,7 @@ function Network(){
             }
         }
 
+        packet.src, packet.des = packet.des, packet.src;
         // Only simulate return path if forward path succeeded
         if (forward_success) {
             // Simulate return path

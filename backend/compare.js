@@ -41,7 +41,7 @@ function compareIP(packetIP, ruleIP) {
     if (ruleIP === "any") return true;
     
     const packetParts = packetIP.split(".").map(Number);
-    const ruleParts = ruleIP.split(" ");
+    const ruleParts = ruleIP.split("/");
     
     // Exact IP match
     if (ruleParts.length === 1) {
