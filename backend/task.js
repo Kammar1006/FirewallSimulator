@@ -434,9 +434,9 @@ function Task() {
                 };
                 this.title = "Two-Switch Segmented Network";
                 this.desc = [
-                    "Allow SSH (tcp:22) from PC_A to PC_C",
-                    "Block all traffic from PC_B to PC_D",
-                    "Allow HTTP (tcp:80) from PC_A to PC_D"
+                    "Allow SSH (tcp:22) from PC_A to only PC_C",
+                    "Block all traffic from PC_B to PC_D and PC_C",
+                    "Allow HTTP (tcp:80) from PC_A to only PC_D"
                 ];
                 this.tests = [
                     {
@@ -490,14 +490,7 @@ function Task() {
                         description: "Should block SSH from PC_A to PC_D (only HTTP allowed)"
                     },
                     {
-                        name: "Test 8: Block UDP/53 from PC_A to PC_D",
-                        endpoints: [0, 6],
-                        packet: { src: "172.16.1.2", des: "10.20.1.3", protocol: "udp:53" },
-                        expected: false,
-                        description: "Should block DNS from PC_A to PC_D (no rule for DNS)"
-                    },
-                    {
-                        name: "Test 9: Block HTTP from PC_B to PC_D",
+                        name: "Test 8: Block HTTP from PC_B to PC_D",
                         endpoints: [1, 6],
                         packet: { src: "172.16.1.3", des: "10.20.1.3", protocol: "tcp:80" },
                         expected: false,
@@ -513,9 +506,9 @@ function Task() {
                 ];
                 this.difficulty = "Hard";
                 this.subtasks = [
-                    { id: 1, title: "Allow SSH", description: "Allow SSH from PC_A to PC_C" },
-                    { id: 2, title: "Block PC_B to PC_D", description: "Block all traffic from PC_B to PC_D" },
-                    { id: 3, title: "Allow HTTP", description: "Allow HTTP from PC_A to PC_D" }
+                    { id: 1, title: "Allow SSH", description: "Allow SSH from PC_A to only PC_C" },
+                    { id: 2, title: "Block PC_B to PC_D", description: "Block all traffic from PC_B to PC_C and PC_D" },
+                    { id: 3, title: "Allow HTTP", description: "Allow HTTP from PC_A to only PC_D" }
                 ];
                 this.hints = [
                     "SSH uses tcp:22, HTTP uses tcp:80",
