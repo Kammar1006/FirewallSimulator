@@ -216,7 +216,7 @@ const TaskDetails = () => {
                                     setPacketAnimation({
                                         x,
                                         y: y - 10,
-                                        icon: <IoMdMail style={{ width: "36px", height: "36px", color: "#111111" }} />,
+                                        icon: <IoMdMail style={{ width: "36px", height: "36px", color: "#000000" }} />,
                                     });
                     
                                     if (progress < 1) {
@@ -658,7 +658,7 @@ const TaskDetails = () => {
                 />
             ))}
 
-            {/* keyframes for animations */}
+            {/* Add keyframes for animations */}
             <style>
             {`
                 @keyframes contentChange {
