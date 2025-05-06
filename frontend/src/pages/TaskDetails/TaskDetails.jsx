@@ -168,117 +168,69 @@ const TaskDetails = () => {
 
                     socket.emit("send_packet", deviceId, targetDeviceId, args[2], args[3]);
                     socket.once("packet_response", (response) => {
-                        const { success, blockingDevice } = JSON.parse(response);
-
-                        console.log(JSON.parse(response))
-
-                        const finalPosition = success
-                            ? targetPosition
-                            : devicePositions[blockingDevice];
-
-                        setPacketAnimation({
-                            x: sourcePosition.x,
-                            y: sourcePosition.y - 10,
-                            icon: null,
-                        });
-
-                        console.log(
-                            Object.entries(devicePositions)
-                        )
-
-                        setTimeout(() => {
-                            const speed = 200;
-                            const devicesOnPath = Object.entries(devicePositions)
-                                .filter(([, pos]) => pos.y === sourcePosition.y && pos.x > sourcePosition.x && pos.x <= finalPosition.x)
-                                .sort(([, a], [, b]) => a.x - b.x);
-
-                            let pauseIndex = 0;
-                            let lastX = sourcePosition.x;
-
-                            const animateToNext = (currentX, nextX, startTime) => {
-                                const distance = Math.abs(nextX - currentX);
-                                const duration = (distance / speed) * 1000;
-                                const elapsedTime = performance.now() - startTime;
-                                const progress = Math.min(elapsedTime / duration, 1);
-
-                                const newX = currentX + (nextX - currentX) * progress;
-                                setPacketAnimation({ x: newX, y: sourcePosition.y - 10, icon: null });
-
-                                if (progress < 1) {
-                                    requestAnimationFrame(() => animateToNext(currentX, nextX, startTime));
-                                } else {
-                                    lastX = nextX;
-                                    if (pauseIndex < devicesOnPath.length) {
-                                        const [, devicePos] = devicesOnPath[pauseIndex];
-                                        if (Math.abs(nextX - devicePos.x) < 5) {
-                                            pauseIndex++;
-                                            const isBlocked = pauseIndex === !success;
-                                            setPacketAnimation({
-                                                x: nextX,
-                                                y: sourcePosition.y - 10,
-                                                icon: isBlocked ? <RiMailCloseFill style={{ width: "36px", height: "36px", color: "#FF2D00" }} /> : <MdMarkEmailRead style={{ width: "36px", height: "36px", color: "#13F100" }} />,
-                                            });
-
-                                            if (isBlocked) {
-                                                setTimeout(() => {
-                                                    setPacketAnimation(null);
-                                                }, 1500);
-                                            }
-
-                                            setTimeout(() => {
-                                                if (!isBlocked && pauseIndex < devicesOnPath.length) {
-                                                    const [, nextDevicePos] = devicesOnPath[pauseIndex];
-                                                    requestAnimationFrame(() => animateToNext(nextX, nextDevicePos.x, performance.now()));
-                                                } else if (!isBlocked) {
-                                                    requestAnimationFrame(() => animateToNext(nextX, finalPosition.x, performance.now()));
-                                                }
-                                            }, 1000);
-                                            return;
-                                        }
-                                    } else if (nextX !== finalPosition.x) {
-                                        requestAnimationFrame(() => animateToNext(nextX, finalPosition.x, performance.now()));
-                                    } else {
-                                        
-                                        const verticalDistance = Math.abs(finalPosition.y - sourcePosition.y);
-                                        const verticalDuration = (verticalDistance / speed) * 1000;
-                                        const verticalStartTime = performance.now();
-
-                                        const animateVertical = (currentTime) => {
-                                            const verticalElapsedTime = currentTime - verticalStartTime;
-                                            const verticalProgress = Math.min(verticalElapsedTime / verticalDuration, 1);
-
-                                            const newY = sourcePosition.y + (finalPosition.y - sourcePosition.y) * verticalProgress;
-                                            setPacketAnimation({ x: finalPosition.x, y: newY - 10, icon: null });
-
-                                            if (verticalProgress < 1) {
-                                                requestAnimationFrame(animateVertical);
-                                            } else {
-                                                setTimeout(() => {
-                                                    setPacketAnimation(null);
-                                                }, 500);
-                                            }
-                                        };
-
-                                        requestAnimationFrame(animateVertical);
-                                    }
-                                }
-                            };
-
-                            if (devicesOnPath.length > 0) {
-                                const [, firstDevicePos] = devicesOnPath[0];
-                                requestAnimationFrame(() => animateToNext(lastX, firstDevicePos.x, performance.now()));
-                            } else {
-                                requestAnimationFrame(() => animateToNext(lastX, finalPosition.x, performance.now()));
+                        const { result, success, blockingDevice } = JSON.parse(response);
+                    
+                        console.log("Animacja - wyniki backendu:", result);
+                    
+                        const fullPath = [...result[0], ...result[1].reverse()];
+                    
+                        const runAnimation = async (path) => {
+                            for (let i = 0; i < path.length - 1; i++) {
+                                const current = path[i];
+                                const next = path[i + 1];
+                    
+                                const from = devicePositions[current.id];
+                                const to = devicePositions[next.id];
+                    
+                                if (!from || !to) continue;
+                    
+                                const [resSuccess, reasons] = next.res;
+                    
+                                console.log(`Hop ${i + 1}: z ${current.id} do ${next.id} | Dozwolone: ${resSuccess} | Powody: ${reasons.join(", ")}`);
+                    
+                                await movePacket(from, to, resSuccess, reasons);
                             }
-                        }, 1500);
-
-
-
-
-
-
-
-
+                    
+                            setTimeout(() => setPacketAnimation(null), 500);
+                        };
+                    
+                        const movePacket = (from, to, isPermitted, reasons) => {
+                            return new Promise((resolve) => {
+                                const dx = to.x - from.x;
+                                const dy = to.y - from.y;
+                                const distance = Math.sqrt(dx * dx + dy * dy);
+                                const duration = (distance / 200) * 1000;
+                    
+                                const startTime = performance.now();
+                    
+                                const animate = (now) => {
+                                    const elapsed = now - startTime;
+                                    const progress = Math.min(elapsed / duration, 1);
+                    
+                                    const x = from.x + dx * progress;
+                                    const y = from.y + dy * progress;
+                    
+                                    setPacketAnimation({
+                                        x,
+                                        y: y - 10,
+                                        icon: isPermitted
+                                            ? <MdMarkEmailRead style={{ width: "36px", height: "36px", color: "#13F100" }} />
+                                            : <RiMailCloseFill style={{ width: "36px", height: "36px", color: "#FF2D00" }} />,
+                                    });
+                    
+                                    if (progress < 1) {
+                                        requestAnimationFrame(animate);
+                                    } else {
+                                        setTimeout(resolve, 1000); // Zatrzymanie na urządzeniu
+                                    }
+                                };
+                    
+                                requestAnimationFrame(animate);
+                            });
+                        };
+                    
+                        runAnimation(result[0])
+                            .then(() => runAnimation(result[1].slice().reverse()));
                     });
                 }
             }
