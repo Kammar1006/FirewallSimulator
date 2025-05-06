@@ -15,7 +15,7 @@ const RulesContextProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(SERVER_CONFIG.address, { withCredentials: true });
+    const newSocket = io( { withCredentials: true });
     setSocket(newSocket);
 
     newSocket.on("connect", () => {

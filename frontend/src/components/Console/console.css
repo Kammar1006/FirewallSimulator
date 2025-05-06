@@ -16,7 +16,7 @@
 .consoleTitleBar {
     background-color: #222;
     padding: 8px;
-    cursor: none;
+    /* cursor: none; */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,7 +30,7 @@
     border: none;
     color: #fff;
     font-size: 14px;
-    cursor: none;
+    /* cursor: none; */
 }
 
 .consoleTitleBar .closeButton:hover {
@@ -84,7 +84,7 @@
     border-radius: 4px;
     padding: 8px;
     font-family: "Courier New", monospace;
-    cursor: none;
+    /* cursor: none; */
 }
 
 .consolePrompt input:focus {

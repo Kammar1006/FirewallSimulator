@@ -78,7 +78,7 @@ export default App;
     window.flag_solved = function() {
       const studentId = localStorage.getItem("studentId");
       if (!studentId) return;
-      fetch(`${window.serverConfig.address}/students/${studentId}/progress`, {
+      fetch(`/students/${studentId}/progress`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ taskIndex: "all", value: 1 })

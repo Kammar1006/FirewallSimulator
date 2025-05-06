@@ -74,9 +74,9 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
                 <div className="consoleContent">
                     <div className="consoleOutput" ref={outputRef}>
                         <pre>
-                            {history.map((cmd, index) => (
+                            {/* {history.map((cmd, index) => (
                                 <div key={index}>{cmd}</div>
-                            ))}
+                            ))} */}
                             {output && <div>{output}</div>}
                         </pre>
                     </div>

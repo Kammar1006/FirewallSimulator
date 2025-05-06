@@ -15,12 +15,12 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static(`${__dirname}/../frontend`));
+app.use(express.static(`${__dirname}/../frontend/dist`));
 
 const server = http.createServer(app);
 const io = socketio(server, {
 	cors: {
-		origin: "http://localhost:5173",
+		origin: "*",
 		methods: ["GET", "POST"],
 		credentials: true,
 	},
