@@ -251,7 +251,7 @@ const TaskDetails = () => {
                                                 return newInfo;
                                             });
                                             resolve();
-                                        }, 1000);
+                                        }, 2000);
                                     }
                                 };
                     
@@ -260,6 +260,10 @@ const TaskDetails = () => {
                         };
                     
                         runAnimation(result[0])
+                            .then(() => {
+                                // delay between animations
+                                return new Promise(resolve => setTimeout(resolve, 1000));
+                            })
                             .then(() => runAnimation(result[1].slice().reverse()));
                     });
                 }
