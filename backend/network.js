@@ -169,6 +169,19 @@ function Network(){
         }
         return false;
     }
+
+    this.findId = (ip) => {
+        for(dev in this.devices){
+            for(int in this.devices[dev].interfaces){
+                console.log(this.devices[dev].interfaces[int].inet)
+                if(this.devices[dev].interfaces[int].inet == ip && ip !== "127.0.0.1"){
+                    console.log(ip, dev);
+                    return dev;
+                }
+            }
+        }
+        return false;
+    }
 }
 
 module.exports = {Network}
