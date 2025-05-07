@@ -370,19 +370,19 @@ const Home = () => {
                 {/* Left Part */}
                 <div
                   className="homeContainerThirdContainerBottomContainerLeft"
-                  onClick={handleDocumentationClick}
                   style={{ cursor: "pointer" }}
+                  onClick={() => window.open('/documentation.pdf', '_blank')}
                 >
-                  <div className="homeContainerThirdContainerBottomContainerLeftContainer">
+                  <div  className="homeContainerThirdContainerBottomContainerLeftContainer">
                     <div className="homeContainerThirdContainerBottomContainerLeftContainerLeft">
                       <FaBook className="homeContainerThirdContainerBottomContainerLeftContainerLeftIcon" />
                     </div>
                     <div className="homeContainerThirdContainerBottomContainerLeftContainerRight">
                       <div className="homeContainerThirdContainerBottomContainerLeftContainerRightContainer">
-                        <p className="homeContainerThirdContainerBottomContainerLeftContainerRightContainerTextOne">
+                        <p className="homeContainerThirdContainerBottomContainerRightContainerTextOne">
                           Documentation
                         </p>
-                        <p className="homeContainerThirdContainerBottomContainerLeftContainerRightContainerTextTwo">
+                        <p className="homeContainerThirdContainerBottomContainerRightContainerTextTwo">
                           Detailed user guide
                         </p>
                       </div>

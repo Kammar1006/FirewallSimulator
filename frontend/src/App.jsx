@@ -7,7 +7,7 @@ import Tasks from './pages/Tasks/Tasks';
 import Navbar from './components/Navbar/Navbar';
 import TaskDetails from './pages/TaskDetails/TaskDetails';
 import Login from './pages/Login/Login';
-// import Documentation from './pages/Documentation/Documentation';
+import Documentation from './pages/Documentation/Documentation';
 import Adventure from './pages/Adventure/Adventure';
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import { RulesContext } from './context/RulesContext';
@@ -57,7 +57,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/task/:taskId" element={<TaskDetails />} />
-            {/* <Route path="/documentation" element={<Documentation />} /> */}
+            <Route path="/documentation.pdf" element={<Documentation />} />
             <Route path="/adventure" element={<Adventure />} />
             {/* <Route path="/test" element={<Test />} /> */}
           </Routes>
