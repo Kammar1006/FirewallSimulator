@@ -1,7 +1,7 @@
 .consoleModal {
     position: absolute;
-    width: 820px;
-    height: 400px;
+    min-width: 820px;
+    min-height: 400px;
     background-color: #000;
     color: #0f0;
     border: 2px solid #555;
@@ -11,6 +11,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    resize: both;
 }
 
 .consoleTitleBar {
@@ -90,4 +91,14 @@
 .consolePrompt input:focus {
 
     color: #0f0;
+}
+
+.resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+    cursor: se-resize;
+    background: linear-gradient(135deg, transparent 50%, #555 50%);
 }
