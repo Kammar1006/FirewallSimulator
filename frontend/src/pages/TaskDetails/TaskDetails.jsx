@@ -192,9 +192,9 @@ const TaskDetails = () => {
                     
                                 const [resSuccess, reasons] = next.res;
                     
-                                console.log(`Hop ${i + 1}: Device ${current.id} | ${current !== next ? "output" : "input"} | Status: ${resSuccess} | Powody: ${reasons.join(", ")}`);
+                                console.log(`Hop ${i + 1}: Device ${current.id} | ${current.id !== next.id ? "output" : "input"} | Status: ${resSuccess} | Powody: ${reasons.join(", ")}`);
                     
-                                await movePacket(from, to, resSuccess, reasons, next.id, i + 1, current !== next ? "output" : "input");
+                                await movePacket(from, to, resSuccess, reasons, next.id, i + 1, current.id !== next.id ? "input" : "output");
                             }
                     
                             setTimeout(() => setPacketAnimation(null), 500);

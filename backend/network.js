@@ -100,9 +100,9 @@ function Network(){
             }
         }
 
-        // let temp = packet.src;
-        // packet.src = packet.des;
-        // packet.des = temp;
+        let temp = packet.src;
+        packet.src = packet.des;
+        packet.des = temp;
         // Only simulate return path if forward path succeeded
         if (forward_success) {
             // Simulate return path

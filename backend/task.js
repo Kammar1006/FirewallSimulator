@@ -149,13 +149,6 @@ function Task() {
                         packet: { src: "192.168.2.2", des: "192.168.1.2", protocol: "udp:53" },
                         expected: true,
                         description: "Should allow traffic between PC_B and PC_C. Requires rules on R_B.",
-                    },
-                    {
-                        name: "Test 4: Verify rules on R_A",
-                        endpoints: [0, 2],
-                        packet: { src: "10.0.0.2", des: "10.0.0.1", protocol: "tcp:80" },
-                        expected: true,
-                        description: "Should allow traffic from PC_A through R_A. Requires rules on R_A.",
                     }
                 ];
                 this.difficulty = "Medium";
@@ -247,13 +240,6 @@ function Task() {
                         packet: { src: "10.10.20.2", des: "192.168.200.2", protocol: "tcp:443" },
                         expected: true,
                         description: "Should allow traffic from PC_Y to PC_W. Requires rules on R_Y and R_Z.",
-                    },
-                    {
-                        name: "Test 6: Allow traffic from PC_X to R_Y",
-                        endpoints: [0, 2],
-                        packet: { src: "192.168.100.2", des: "10.10.10.2", protocol: "tcp:22" },
-                        expected: true,
-                        description: "Should allow traffic from PC_X to R_Y. Requires rules on R_X.",
                     }
                 ];
                 this.difficulty = "Hard";
@@ -340,7 +326,7 @@ function Task() {
                     },
                     {
                         name: "Test 5: Allow DNS from PC_1 to PC_3",
-                        endpoints: [0, 5],
+                        endpoints: [0, 1],
                         packet: { src: "10.10.1.2", des: "10.10.1.4", protocol: "udp:53" },
                         expected: true,
                         description: "Should allow DNS from PC_1 to Internet server"
