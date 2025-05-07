@@ -151,7 +151,7 @@ const Home = () => {
   }, []);
 
   const handleDocumentationClick = () => {
-    window.open("/documentation", "_blank");
+    window.open("https://beige-carry-53.tiiny.site", "_blank");
   };
 
   if (showAdminPanel) {
@@ -391,7 +391,7 @@ const Home = () => {
                 </div>
 
                 {/* Right Part */}
-                <div className="homeContainerThirdContainerBottomContainerLeft">
+                {/* <div className="homeContainerThirdContainerBottomContainerLeft">
                   <div className="homeContainerThirdContainerBottomContainerLeftContainer">
                     <div className="homeContainerThirdContainerBottomContainerLeftContainerLeft">
                       <GiGraduateCap className="homeContainerThirdContainerBottomContainerLeftContainerLeftIcon" />
@@ -407,7 +407,7 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

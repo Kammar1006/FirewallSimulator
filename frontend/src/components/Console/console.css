@@ -31,7 +31,11 @@
     border: none;
     color: #fff;
     font-size: 14px;
-    /* cursor: none; */
+    cursor: pointer;
+}
+
+.closeButton {
+    cursor: pointer;
 }
 
 .consoleTitleBar .closeButton:hover {

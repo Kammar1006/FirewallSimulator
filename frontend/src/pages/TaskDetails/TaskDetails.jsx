@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { RulesContext } from "../../context/RulesContext";
 import Console from "../../components/Console/Console";
+import CongratulationsDialog from "../../components/CongratulationsDialog/CongratulationsDialog";
 import "./taskDetails.css";
 import assets from "../../assets/assets";
 import { IoMdMail } from "react-icons/io";
@@ -30,6 +31,8 @@ const TaskDetails = () => {
     const [currentHint, setCurrentHint] = useState(0);
     const [currentRuleIndex, setCurrentRuleIndex] = useState(0);
     const [deviceHopInfo, setDeviceHopInfo] = useState({});
+    const [showCongratulations, setShowCongratulations] = useState(false);
+    const navigate = useNavigate();
 
     const predefinedPositions = {
         1: {
@@ -334,6 +337,15 @@ const TaskDetails = () => {
                         position: "top-right",
                         autoClose: 3000,
                     });
+                    
+                    // Check if this was the last task
+                    if (completedTasks + 1 === totalTasks) {
+                        setShowCongratulations(true);
+                        // Redirect to Tasks page after 3 seconds
+                        setTimeout(() => {
+                            navigate('/tasks');
+                        }, 3000);
+                    }
                 } else {
                     toast.error("Failed to submit the task. Please try again.", {
                         position: "top-right",
@@ -665,6 +677,11 @@ const TaskDetails = () => {
                     output={consoleOutput[deviceId]}
                 />
             ))}
+
+            <CongratulationsDialog
+                isOpen={showCongratulations}
+                onClose={() => setShowCongratulations(false)}
+            />
 
             {/* Add keyframes for animations */}
             <style>
