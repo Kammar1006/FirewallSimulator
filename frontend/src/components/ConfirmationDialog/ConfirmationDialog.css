@@ -46,6 +46,7 @@
     /* cursor: pointer; */
     font-weight: 500;
     transition: background-color 0.2s;
+    cursor: pointer;
 }
 
 .confirmation-dialog-button.cancel {

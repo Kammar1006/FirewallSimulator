@@ -184,6 +184,7 @@ input:focus {
   border-radius: 7px;
   transition: all 0.3s ease-in-out;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .loginContainerElementContainerThirdContainerBtn:hover {
