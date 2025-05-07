@@ -146,7 +146,7 @@ const Home = () => {
   useEffect(() => {
     window.showHiddenAdminPanel = () => {
       setShowAdminPanel(true);
-      console.log("%cPanel administratora został odblokowany!", "color: #00c853; font-size: 18px;");
+      // console.log("%cPanel administratora został odblokowany!", "color: #00c853; font-size: 18px;");
     };
   }, []);
 

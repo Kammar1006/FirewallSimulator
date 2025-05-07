@@ -7,6 +7,8 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
     const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
     const [mode, setMode] = useState("");
+    const [dimensions, setDimensions] = useState({ width: 760, height: 360 });
+    const [isResizing, setIsResizing] = useState(false);
     const consoleRef = useRef(null);
     const outputRef = useRef(null);
 
@@ -55,6 +57,25 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
         }
     };
 
+    const handleResize = (e, direction) => {
+        if (!isResizing) return;
+        
+        const newDimensions = { ...dimensions };
+        const rect = consoleRef.current.getBoundingClientRect();
+        
+        if (direction.includes('right')) {
+            newDimensions.width = Math.max(820, e.clientX - rect.left);
+        }
+        if (direction.includes('bottom')) {
+            newDimensions.height = Math.max(400, e.clientY - rect.top);
+        }
+        
+        setDimensions(newDimensions);
+    };
+
+    const startResize = () => setIsResizing(true);
+    const stopResize = () => setIsResizing(false);
+
     useEffect(() => {
         if (output === "") {
             setHistory([]);
@@ -64,13 +85,28 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
         }
     }, [output]);
 
+    useEffect(() => {
+        if (isResizing) {
+            window.addEventListener('mouseup', stopResize);
+            window.addEventListener('mousemove', (e) => handleResize(e, 'right bottom'));
+        }
+        return () => {
+            window.removeEventListener('mouseup', stopResize);
+            window.removeEventListener('mousemove', (e) => handleResize(e, 'right bottom'));
+        };
+    }, [isResizing]);
+
     return (
         <Draggable 
             handle=".consoleTitleBar" 
             nodeRef={consoleRef}
             bounds="body"
         >
-            <div className="consoleModal" ref={consoleRef}>
+            <div 
+                className="consoleModal" 
+                ref={consoleRef}
+                style={{ width: dimensions.width, height: dimensions.height }}
+            >
                 <div className="consoleTitleBar">
                     <span>Console: {deviceName}</span>
                     <button onClick={onClose} className="closeButton">X</button>
@@ -95,6 +131,10 @@ const Console = ({ deviceName, deviceId, onClose, onCommand, output }) => {
                         />
                     </div>
                 </div>
+                <div 
+                    className="resize-handle"
+                    onMouseDown={startResize}
+                />
             </div>
         </Draggable>
     );
