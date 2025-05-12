@@ -27,6 +27,7 @@ Application for visualisations and configurations firewalls and ACL's.
 4. **Access the application**:
    Open your browser and navigate to `http://localhost:5173`.
 
+
 5. **Build for production** (optional):
    ```bash
    npm run build
